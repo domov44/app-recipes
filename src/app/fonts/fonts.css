@@ -1,0 +1,42 @@
+  /*               Candal             */
+
+  /* Candal Regular */
+  @font-face {
+    font-family: 'Candal';
+    src: url('Candal-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+
+     /*               BeVietnam            */
+
+
+     
+  /* Betvietnam light */
+  @font-face {
+    font-family: 'BeVietnam light';
+    src: url('BeVietnamPro-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Betvietnam Medium */
+  @font-face {
+    font-family: 'BeVietnam medium';
+    src: url('BeVietnamPro-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+    /* Betvietnam Semi bold */
+    @font-face {
+      font-family: 'BeVietnam semi bold';
+      src: url('BeVietnamPro-SemiBold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+      font-display: swap;
+    }
