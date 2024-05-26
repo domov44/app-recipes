@@ -1,22 +1,4 @@
 {
-  "ronantest": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-recipesapp-ronantest-133345-authRole",
-      "UnauthRoleArn": "arn:aws:iam::381491883556:role/amplify-recipesapp-ronantest-133345-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::381491883556:role/amplify-recipesapp-ronantest-133345-authRole",
-      "Region": "eu-west-3",
-      "DeploymentBucketName": "amplify-recipesapp-ronantest-133345-deployment",
-      "UnauthRoleName": "amplify-recipesapp-ronantest-133345-unauthRole",
-      "StackName": "amplify-recipesapp-ronantest-133345",
-      "StackId": "arn:aws:cloudformation:eu-west-3:381491883556:stack/amplify-recipesapp-ronantest-133345/7e79f8c0-19c1-11ef-93b3-0add0f423749",
-      "AmplifyAppId": "d2deow3wf3ojwm"
-    },
-    "categories": {
-      "auth": {
-        "recipesapp4f20ed6a": {}
-      }
-    }
-  },
   "develop": {
     "awscloudformation": {
       "AuthRoleName": "amplify-recipesapp-develop-140900-authRole",
@@ -28,6 +10,24 @@
       "StackName": "amplify-recipesapp-develop-140900",
       "StackId": "arn:aws:cloudformation:eu-west-3:767398119788:stack/amplify-recipesapp-develop-140900/c24f1790-1b58-11ef-aaad-0aeab007d8bb",
       "AmplifyAppId": "d27slxhbjbcdgx"
+    },
+    "categories": {
+      "auth": {
+        "recipesapp4f20ed6a": {}
+      }
+    }
+  },
+  "production": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-recipesapp-production-234552-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267104987:role/amplify-recipesapp-production-234552-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267104987:role/amplify-recipesapp-production-234552-authRole",
+      "Region": "eu-west-3",
+      "DeploymentBucketName": "amplify-recipesapp-production-234552-deployment",
+      "UnauthRoleName": "amplify-recipesapp-production-234552-unauthRole",
+      "StackName": "amplify-recipesapp-production-234552",
+      "StackId": "arn:aws:cloudformation:eu-west-3:533267104987:stack/amplify-recipesapp-production-234552/56bbb5a0-1ba9-11ef-91d3-0a55fb476827",
+      "AmplifyAppId": "d3ckf36uaz2dch"
     },
     "categories": {
       "auth": {
