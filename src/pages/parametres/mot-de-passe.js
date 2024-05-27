@@ -71,7 +71,7 @@ export default function Comptes() {
                             </Title>
                         </Stack>
                         <Tips variant="success">
-                            Pensez à choisir un mot de passe d'au moins 8 caractères.
+                            Pensez à choisir un mot de passe d&apos;au moins 8 caractères.
                         </Tips>
                         <Form>
                             <PasswordInput

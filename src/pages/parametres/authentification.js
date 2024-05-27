@@ -98,7 +98,7 @@ export default function Authentification() {
                         <Bento>
                             <Stack separator direction="column">
                                 <Title level={3}>
-                                    Changer l'email
+                                    Changer l&apos;email
                                 </Title>
                             </Stack>
                             {user.email && user.email !== 0 && (
@@ -131,7 +131,7 @@ export default function Authentification() {
                                                 </Title>
 
                                                 <Tips variant="success">
-                                                    Nous devons vérifier que vous avez bien accès à {updatedEmail}, c'est pourquoi nous vous avons envoyé un petit code de confirmation.
+                                                    Nous devons vérifier que vous avez bien accès à {updatedEmail}, c&apos;est pourquoi nous vous avons envoyé un petit code de confirmation.
                                                 </Tips>
                                             </>
                                         )}
