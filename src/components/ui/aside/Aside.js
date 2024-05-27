@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import NavComponent from '../button/NavComponent';
-import { PiTicket, PiMosque, PiUser, PiGearSix, PiBell, PiRepeat, PiListBullets, PiUsersThree, PiCookingPot, PiStorefront, PiMegaphone, PiQuestion, PiProhibit, PiCarrot } from 'react-icons/pi';
-import Chip from '../textual/Chip';
-import Title from '../textual/Title';
+import { PiMosque } from 'react-icons/pi';
 import Text from '../textual/Text';
-import Button from '../button/Button';
 import Logo from '../Logo';
 import TextLink from '../textual/TextLink';
+import Logout from '@/utils/Logout';
+import { useUser } from '@/utils/UserContext';
+import MainMenu from '@/components/menu/MainMenu';
 
 const slideIn = keyframes`
   from {
@@ -71,17 +71,30 @@ const StyledAsideContent = styled.div`
 `;
 
 function Aside({ isopen, toggleSidebar }) {
+  const { isLoggedIn } = useUser();
 
   return (
     <>
       <Overlay $isopen={isopen} onClick={toggleSidebar} />
       <StyledAside className="banner" $isopen={isopen}>
-
         <StyledAsideContent>
           <Logo />
-          <ul className='menu'>
-            <NavComponent href="/" icon={PiMosque}>Accueil</NavComponent>
-          </ul>
+          <MainMenu />
+          {isLoggedIn &&
+            <ul className='menu'>
+               <NavComponent href="/profil" icon={PiMosque}>Profil</NavComponent>
+            </ul>
+          }
+          {isLoggedIn &&
+            <ul className='menu'>
+              <Logout />
+            </ul>
+          }
+          {!isLoggedIn &&
+            <ul className='menu'>
+              <NavComponent href="/se-connecter" icon={PiMosque}>Se connecter</NavComponent>
+            </ul>
+          }
           <Text>
             Développé avec ❤ par
             <TextLink href="https://www.ronanscotet.com/">

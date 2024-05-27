@@ -6,6 +6,7 @@ import InvisibleLink from '../button/InvisibleLink';
 import HeaderSearch from './HeaderSearch';
 import Stack from '../wrapper/Stack';
 import { PiMagnifyingGlass } from 'react-icons/pi';
+import { useUser } from '@/utils/UserContext';
 
 
 const StyledHeader = styled.header`
@@ -92,6 +93,8 @@ const StyledAsideButton = styled.button`
 `;
 
 function Header({ isopen, toggleSidebar }) {
+    const { user, isLoggedIn } = useUser();
+    console.log(user)
 
     return (
         <>
@@ -103,11 +106,11 @@ function Header({ isopen, toggleSidebar }) {
                             <HeaderSearch icon={PiMagnifyingGlass}>
                                 Rechercher
                             </HeaderSearch>
-                            {/* {authStatus === 'Authenticated' &&
+                            {isLoggedIn &&
                                 <InvisibleLink href="/profil" lineheight="0">
-                                    <img className="user-picture-2" alt={userData.name} src={userData.picture}></img>
+                                    <img className="user-picture-2" alt={user.pseudo} src="https://lh3.googleusercontent.com/ogw/AF2bZyjtjwRu-VKvzKCDe2olcMFTJRDJ4H5mTLcw6q8kBTggCRY=s32-c-mo"></img>
                                 </InvisibleLink>
-                            } */}
+                            }
                         </>
                     </Stack>
                 </Container>
