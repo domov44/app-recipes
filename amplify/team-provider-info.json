@@ -16,5 +16,23 @@
         "recipesapp4f20ed6a": {}
       }
     }
+  },
+  "production": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-recipesapp-production-234552-authRole",
+      "UnauthRoleArn": "arn:aws:iam::533267104987:role/amplify-recipesapp-production-234552-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::533267104987:role/amplify-recipesapp-production-234552-authRole",
+      "Region": "eu-west-3",
+      "DeploymentBucketName": "amplify-recipesapp-production-234552-deployment",
+      "UnauthRoleName": "amplify-recipesapp-production-234552-unauthRole",
+      "StackName": "amplify-recipesapp-production-234552",
+      "StackId": "arn:aws:cloudformation:eu-west-3:533267104987:stack/amplify-recipesapp-production-234552/56bbb5a0-1ba9-11ef-91d3-0a55fb476827",
+      "AmplifyAppId": "d3ckf36uaz2dch"
+    },
+    "categories": {
+      "auth": {
+        "recipesapp4f20ed6a": {}
+      }
+    }
   }
 }

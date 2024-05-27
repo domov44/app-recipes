@@ -17,11 +17,12 @@ export const UserProvider = ({children}) => {
       try {
         await getCurrentUser();
         const session = await fetchAuthSession();
+        console.log(session)
         const cognitoGroups = session.tokens.idToken.payload["cognito:groups"];
         setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
         setIsAdmin(cognitoGroups && cognitoGroups.includes('Admin'));
         const currentUser = await fetchUserAttributes();
-        setUser({...currentUser, age: (currentUser.birthdate ? calculateAge(currentUser.birthdate) : 0)});
+        setUser({...currentUser, age: (currentUser.birthdate ? calculateAge(currentUser.birthdate) : 0), pseudo: (session ? session.tokens.signInDetails.loginId : 'User')});
         setLoggedIn(true);
         fetchProfilePictureURL(currentUser.picture);
       } catch (error) {
@@ -97,6 +98,7 @@ export const UserProvider = ({children}) => {
     return <Loading/>;
   }
 
+  console.log(isLoggedIn)
   return (
       <UserContext.Provider value={{
         isLoggedIn,
