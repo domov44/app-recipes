@@ -14,6 +14,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import Stack from '@/components/ui/wrapper/Stack';
 import Text from '@/components/ui/textual/Text';
 import Tips from '@/components/ui/textual/Tips';
+import Router from 'next/router';
 
 function RegisterForm() {
     const { login } = useUser();
@@ -58,6 +59,7 @@ function RegisterForm() {
             } else if (nextStep.signUpStep === 'DONE') {
                 notifySuccess("Inscription réussie et utilisateur connecté automatiquement");
                 login();
+                refreshUser();
                 setDisable(false);
             }
         } catch (error) {
@@ -86,6 +88,7 @@ function RegisterForm() {
                 notifySuccess("Inscription confirmée avec succès");
                 handleAutoSignIn()
                 login();
+                Router.push('/')
             }
         } catch (error) {
             console.log('Erreur lors de la confirmation de l\'inscription :', error);

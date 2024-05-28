@@ -14,6 +14,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import Stack from '@/components/ui/wrapper/Stack';
 import Text from '@/components/ui/textual/Text';
 import Tips from '@/components/ui/textual/Tips';
+import Router from 'next/router';
 
 function LoginForm() {
     const { login } = useUser();
@@ -52,6 +53,7 @@ function LoginForm() {
             if (isSignedIn) {
                 notifySuccess("Connexion établie avec succès");
                 login();
+                Router.push('/')
             } else {
                 console.log('La connexion a échoué.');
                 setError("Nom d'utilisateur ou mot de passe incorrect.");

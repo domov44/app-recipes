@@ -39,7 +39,7 @@ export const UserProvider = ({children}) => {
       setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
       setIsAdmin(cognitoGroups && cognitoGroups.includes('Admin'));
       const currentUser = await fetchUserAttributes();
-      setUser({...currentUser, age: calculateAge(currentUser.birthdate)});
+      setUser({...currentUser, age: (currentUser.birthdate ? calculateAge(currentUser.birthdate) : 0), pseudo: (session ? session.tokens.signInDetails.loginId : 'User')});
       setLoggedIn(true);
       fetchProfilePictureURL(currentUser.picture);
     } catch (error) {
