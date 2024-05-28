@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
 import NavComponent from '../button/NavComponent';
-import { PiMosque } from 'react-icons/pi';
+import { PiMosque, PiUser, PiStorefront } from 'react-icons/pi';
 import Text from '../textual/Text';
 import Logo from '../Logo';
 import TextLink from '../textual/TextLink';
 import Logout from '@/utils/Logout';
 import { useUser } from '@/utils/UserContext';
 import MainMenu from '@/components/menu/MainMenu';
+import Button from '../button/Button';
+import Chip from '../textual/Chip';
 
 const slideIn = keyframes`
   from {
@@ -82,7 +84,9 @@ function Aside({ isopen, toggleSidebar }) {
           <MainMenu />
           {isLoggedIn &&
             <ul className='menu'>
-               <NavComponent href="/profil" icon={PiMosque}>Profil</NavComponent>
+              <Chip variant="success">Mon espace</Chip>
+              <NavComponent href="/profil" icon={PiStorefront}>Mes recettes</NavComponent>
+              <NavComponent href="/profil" icon={PiUser}>Profil</NavComponent>
             </ul>
           }
           {isLoggedIn &&
@@ -92,7 +96,8 @@ function Aside({ isopen, toggleSidebar }) {
           }
           {!isLoggedIn &&
             <ul className='menu'>
-              <NavComponent href="/se-connecter" icon={PiMosque}>Se connecter</NavComponent>
+              <Text>Vous n&apos;êtes pas connecté</Text>
+              <Button variant="primary" width="full-width" href="/se-connecter">Se connecter</Button>
             </ul>
           }
           <Text>
