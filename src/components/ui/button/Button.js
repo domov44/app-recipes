@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import Link from 'next/link';
+import ButtonLoading from "@/components/ButtonLoading";
 
 const StyledComponent = styled.button`
   border: none;
@@ -28,8 +29,8 @@ const StyledComponent = styled.button`
   transition: 1.25s;
   z-index: ${props => props.$zindex || ""};
 
-  ${({ $variant }) => {
-    if ($variant === "primary") {
+  ${({ $variant, $disable }) => {
+    if ($variant === "primary" && !$disable) {
       return css`
         background-image: radial-gradient(circle at ${props => props.$mouseX}px ${props => props.$mouseY}px, var(--main-color), var(--secondary-color));
         background-size: 100% auto;
@@ -39,7 +40,7 @@ const StyledComponent = styled.button`
           background-image: radial-gradient(circle at ${props => props.$mouseX}px ${props => props.$mouseY}px, var(--main-color), var(--secondary-color));
         }
       `;
-    } else if ($variant === "secondary") {
+    } else if ($variant === "secondary" && !$disable) {
       return css`
         background-color: var(--bg-color);
         border: 1px solid var(--color-title);
@@ -50,10 +51,23 @@ const StyledComponent = styled.button`
         }
       `;
     }
+
+    else if ($disable) {
+      return css`
+        cursor: default;
+        filter:grayscale(90%);
+        background-color: var(--main-color);
+        color: rgba(0, 0, 0, 0.5);
+
+        &:hover {
+          background-color: var(--main-color);
+        }
+      `;
+    }
   }}
 `;
 
-const Button = ({ type, variant, width, className, id, onClick, position, zindex, top, right, bottom, left, href, children, icon: Icon }) => {
+const Button = ({ type, variant, width, className, id, onClick, position, zindex, top, right, bottom, left, href, children, disable, icon: Icon }) => {
   const [mousePosition, setMousePosition] = useState({ x: 267, y: 13 });
 
   const handleMouseMove = (e) => {
@@ -72,6 +86,7 @@ const Button = ({ type, variant, width, className, id, onClick, position, zindex
       $position={position}
       $top={top}
       $right={right}
+      $disable={disable}
       $bottom={bottom}
       $left={left}
       className={className ? `btn-component ${className}` : "btn-component"}
@@ -82,6 +97,7 @@ const Button = ({ type, variant, width, className, id, onClick, position, zindex
       $mouseY={mousePosition.y}
       href={href}
     >
+      {disable && <ButtonLoading />}
       {Icon && <Icon />}{children}
     </StyledComponent>
   );
