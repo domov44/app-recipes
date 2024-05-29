@@ -12,7 +12,7 @@ const rotateAnimation = keyframes`
 `;
 
 const LoadingSpinner = styled.div`
-    border: 2px solid rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--color-title);
     border-left-color: var(--main-color);
     border-radius: 50%;
     width: 15px;

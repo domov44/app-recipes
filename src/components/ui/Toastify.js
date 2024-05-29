@@ -14,7 +14,7 @@ const showToast = (message, options = {}) => {
 
   const toastOptions = {
     theme: currentTheme === 'light' ? 'light' : 'dark',
-    position: "top-center",
+    position: "bottom-right",
     autoClose: 2500,
     hideProgressBar: false,
     closeOnClick: true,
