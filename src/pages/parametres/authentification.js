@@ -109,7 +109,7 @@ export default function Authentification() {
                                     Changer l&apos;email
                                 </Title>
                             </Stack>
-                            {user.email && user.email !== 0 && (
+                            {user?.email && user?.email !== 0 && (
                                 <Tips variant="success">
                                     Votre email actuel est {user.email}
                                 </Tips>
