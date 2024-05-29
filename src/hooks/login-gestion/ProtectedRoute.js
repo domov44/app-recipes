@@ -1,11 +1,20 @@
-import React from 'react';
-import Navigation from 'next/navigation';
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 import { useUser } from '@/utils/UserContext';
 
 function ProtectedRoutes({ children }) {
     const { isLoggedIn } = useUser();
 
-    return isLoggedIn ? children : Navigation.push('/se-connecter')
+    useEffect(() => {
+        if (!isLoggedIn) {
+            Router.push('/se-connecter');
+        }
+    }, [isLoggedIn]);
+
+    if (isLoggedIn) {
+        return children;
+    }
+    return null;
 }
 
 export default ProtectedRoutes;

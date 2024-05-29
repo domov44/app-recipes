@@ -17,6 +17,8 @@ import { updateUserAttributes, confirmUserAttribute } from 'aws-amplify/auth';
 import { useUser } from '@/utils/UserContext';
 import TextInput from '@/components/ui/form/TextInput';
 import IconButton from '@/components/ui/button/IconButton';
+import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
+import Head from 'next/head';
 
 export default function Pseudo() {
     const { user, updateUser } = useUser();
@@ -84,6 +86,12 @@ export default function Pseudo() {
 
 
     return (
+        <ProtectedRoutes>
+            <Head>
+                <title>Modifiez votre pseudo</title>
+                <meta name="description" content="Description de la page" />
+                <meta property="og:image" content="URL_de_votre_image" />
+            </Head>
             <Hero>
                 <Title level={1}>
                     Paramètres
@@ -106,52 +114,53 @@ export default function Pseudo() {
                                     Votre pseudo actuel est {user.pseudo}
                                 </Tips>
                             )}
-                                {showPseudoForm && (
-                                    <Stack direction="column" animationType={backButtonClicked ? "moveFromLeft" : "fadeIn"}>
-                                        <Title level={5}>
-                                            Rentrez votre nouveau pseudo
-                                        </Title>
-                                        <TextInput
-                                            variant="blue"
-                                            type="pseudo"
-                                            label="Nouvel pseudo"
-                                            value={updatedPseudo}
-                                            onChange={(e) => { setUpdatedPseudo(e.target.value); handleInputChange(); }}
-                                        />
-                                        {error && <FormError variant="error">{error}</FormError>}
-                                        <Button variant="primary" onClick={handleUpdatePseudo}>Étape suivante</Button>
-                                    </Stack>
-                                )}
-                                {!showPseudoForm && showConfirmForm && (
-                                    <Stack direction="column" animationType={"moveFromRight"}>
-                                        {updatedPseudo && (
-                                            <>
-                                                <Title level={5}>
-                                                    Rentrez le code de validation envoyé à {updatedPseudo}
-                                                </Title>
+                            {showPseudoForm && (
+                                <Stack direction="column" animationType={backButtonClicked ? "moveFromLeft" : "fadeIn"}>
+                                    <Title level={5}>
+                                        Rentrez votre nouveau pseudo
+                                    </Title>
+                                    <TextInput
+                                        variant="blue"
+                                        type="pseudo"
+                                        label="Nouvel pseudo"
+                                        value={updatedPseudo}
+                                        onChange={(e) => { setUpdatedPseudo(e.target.value); handleInputChange(); }}
+                                    />
+                                    {error && <FormError variant="error">{error}</FormError>}
+                                    <Button variant="primary" onClick={handleUpdatePseudo}>Étape suivante</Button>
+                                </Stack>
+                            )}
+                            {!showPseudoForm && showConfirmForm && (
+                                <Stack direction="column" animationType={"moveFromRight"}>
+                                    {updatedPseudo && (
+                                        <>
+                                            <Title level={5}>
+                                                Rentrez le code de validation envoyé à {updatedPseudo}
+                                            </Title>
 
-                                                <Tips variant="success">
-                                                    Nous devons vérifier que vous avez bien accès à {updatedPseudo}, c&apos;est pourquoi nous vous avons envoyé un petit code de confirmation.
-                                                </Tips>
-                                            </>
-                                        )}
-                                        <TextInput
-                                            variant="blue"
-                                            type="number"
-                                            label="Code de confirmation"
-                                            value={confirmationCode}
-                                            onChange={(e) => setConfirmationCode(e.target.value)}
-                                        />
-                                        {error && <FormError variant="error">{error}</FormError>}
-                                        <Stack align="center" justify="flex-end">
-                                            <IconButton variant="secondary-action" onClick={handleback}>Retour</IconButton>
-                                            <Button variant="primary" onClick={handleConfirmPseudoChange}>Valider le code</Button>
-                                        </Stack>
+                                            <Tips variant="success">
+                                                Nous devons vérifier que vous avez bien accès à {updatedPseudo}, c&apos;est pourquoi nous vous avons envoyé un petit code de confirmation.
+                                            </Tips>
+                                        </>
+                                    )}
+                                    <TextInput
+                                        variant="blue"
+                                        type="number"
+                                        label="Code de confirmation"
+                                        value={confirmationCode}
+                                        onChange={(e) => setConfirmationCode(e.target.value)}
+                                    />
+                                    {error && <FormError variant="error">{error}</FormError>}
+                                    <Stack align="center" justify="flex-end">
+                                        <IconButton variant="secondary-action" onClick={handleback}>Retour</IconButton>
+                                        <Button variant="primary" onClick={handleConfirmPseudoChange}>Valider le code</Button>
                                     </Stack>
-                                )}
+                                </Stack>
+                            )}
                         </Bento>
                     </Column>
                 </Container>
             </Hero>
+        </ProtectedRoutes>
     );
 }

@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/Toastify';
 import FormError from '@/components/ui/form/formError';
 import { useUser } from '@/utils/UserContext';
+import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
+import Head from 'next/head';
 
 
 export default function Comptes() {
@@ -44,33 +46,40 @@ export default function Comptes() {
     };
 
     return (
-        <Hero>
-            <Title level={1}>
-                Paramètres
-            </Title>
-            <Container direction="row" align="start" width="100%">
-                <Column width="25%" gap="20px">
-                    <Bento highlight="highlight">
-                        <SettingMenu />
-                    </Bento>
-                </Column>
-                <Column width="75%">
-                    <Bento>
-                        <Stack separator>
-                            <Title level={3} variant="danger">
-                                Supprimer votre compte
-                            </Title>
-                        </Stack>
-                        <Stack spacing="20px" direction="column">
-                            <Text>
-                                Vous pouvez supprimer votre compte, mais cette action est définitive.
-                            </Text>
-                            <IconButton variant="danger" onClick={handleDeleteCurrentAccount}>Supprimer mon compte</IconButton>
-                            {error && <FormError variant="error">{error}</FormError>}
-                        </Stack>
-                    </Bento>
-                </Column>
-            </Container>
-        </Hero>
+        <ProtectedRoutes>
+            <Head>
+                <title>Modifiez votre compte</title>
+                <meta name="description" content="Description de la page" />
+                <meta property="og:image" content="URL_de_votre_image" />
+            </Head>
+            <Hero>
+                <Title level={1}>
+                    Paramètres
+                </Title>
+                <Container direction="row" align="start" width="100%">
+                    <Column width="25%" gap="20px">
+                        <Bento highlight="highlight">
+                            <SettingMenu />
+                        </Bento>
+                    </Column>
+                    <Column width="75%">
+                        <Bento>
+                            <Stack separator>
+                                <Title level={3} variant="danger">
+                                    Supprimer votre compte
+                                </Title>
+                            </Stack>
+                            <Stack spacing="20px" direction="column">
+                                <Text>
+                                    Vous pouvez supprimer votre compte, mais cette action est définitive.
+                                </Text>
+                                <IconButton variant="danger" onClick={handleDeleteCurrentAccount}>Supprimer mon compte</IconButton>
+                                {error && <FormError variant="error">{error}</FormError>}
+                            </Stack>
+                        </Bento>
+                    </Column>
+                </Container>
+            </Hero>
+        </ProtectedRoutes>
     );
 }
