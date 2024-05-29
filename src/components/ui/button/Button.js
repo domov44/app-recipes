@@ -32,12 +32,12 @@ const StyledComponent = styled.button`
   ${({ $variant, $disable }) => {
     if ($variant === "primary" && !$disable) {
       return css`
-        background-image: radial-gradient(circle at ${props => props.$mouseX}px ${props => props.$mouseY}px, var(--main-color), var(--secondary-color));
+        background-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--main-color), var(--secondary-color));
         background-size: 100% auto;
         color: #fff;
         
         &:hover {
-          background-image: radial-gradient(circle at ${props => props.$mouseX}px ${props => props.$mouseY}px, var(--main-color), var(--secondary-color));
+          background-image: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--main-color), var(--secondary-color));
         }
       `;
     } else if ($variant === "secondary" && !$disable) {
@@ -50,14 +50,12 @@ const StyledComponent = styled.button`
           background-color: var(--bg-color);
         }
       `;
-    }
-
-    else if ($disable) {
+    } else if ($disable) {
       return css`
         cursor: default;
-        filter:grayscale(90%);
+        filter: grayscale(90%);
         background-color: var(--main-color);
-        color: rgba(0, 0, 0, 0.5);
+        color: var(--color-title);
 
         &:hover {
           background-color: var(--main-color);
@@ -72,6 +70,8 @@ const Button = ({ type, variant, width, className, id, onClick, position, zindex
 
   const handleMouseMove = (e) => {
     setMousePosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+    e.currentTarget.style.setProperty('--mouse-x', `${e.nativeEvent.offsetX}px`);
+    e.currentTarget.style.setProperty('--mouse-y', `${e.nativeEvent.offsetY}px`);
   };
 
   const Component = href ? Link : 'button';
@@ -80,6 +80,7 @@ const Button = ({ type, variant, width, className, id, onClick, position, zindex
     <StyledComponent
       as={Component}
       type={type ? (type === "input" ? ["button", "input"] : type) : "button"}
+      disabled={disable}
       $variant={variant}
       $zindex={zindex}
       $width={width}
@@ -91,10 +92,8 @@ const Button = ({ type, variant, width, className, id, onClick, position, zindex
       $left={left}
       className={className ? `btn-component ${className}` : "btn-component"}
       id={id}
-      onClick={onClick}
+      onClick={!disable ? onClick : null}
       onMouseMove={handleMouseMove}
-      $mouseX={mousePosition.x}
-      $mouseY={mousePosition.y}
       href={href}
     >
       {disable && <ButtonLoading />}

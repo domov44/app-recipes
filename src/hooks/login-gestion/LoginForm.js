@@ -14,10 +14,12 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import Stack from '@/components/ui/wrapper/Stack';
 import Text from '@/components/ui/textual/Text';
 import Tips from '@/components/ui/textual/Tips';
+import Router from 'next/router';
+import TextLink from '@/components/ui/textual/TextLink';
 
 function LoginForm() {
     const { login } = useUser();
-
+    const [disable, setDisable] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -33,6 +35,7 @@ function LoginForm() {
 
 
     const handleSignIn = async () => {
+        setDisable(true);
         try {
             const { isSignedIn, nextStep } = await signIn({ username, password });
             console.log('Réponse de l\'API après connexion :', { isSignedIn, nextStep });
@@ -41,10 +44,12 @@ function LoginForm() {
                 try {
                     setShowResetPasswordForm(true);
                     setShowLoginForm(false);
+                    setDisable(false);
                 } catch (error) {
                     console.log('Erreur lors de la réinitialisation du mot de passe :', error);
                     setError("Erreur lors de la réinitialisation du mot de passe.");
                     notifyError("Réinitialisation du mot de passe échouée");
+                    setDisable(false);
                 }
                 return;
             }
@@ -52,9 +57,12 @@ function LoginForm() {
             if (isSignedIn) {
                 notifySuccess("Connexion établie avec succès");
                 login();
+                setDisable(false);
+                Router.push('/')
             } else {
                 console.log('La connexion a échoué.');
                 setError("Nom d'utilisateur ou mot de passe incorrect.");
+                setDisable(false);
                 notifyError("Connexion échouée");
             }
         } catch (error) {
@@ -62,9 +70,11 @@ function LoginForm() {
             if (error.code === 'NotAuthorizedException') {
                 setError("Nom d'utilisateur ou mot de passe incorrect.");
                 notifyError("Nom d'utilisateur ou mot de passe incorrect.");
+                setDisable(false);
             } else {
                 setError(error.message);
                 notifyError("Connexion échouée");
+                setDisable(false);
             }
         }
     };
@@ -110,9 +120,11 @@ function LoginForm() {
     };
 
     const handleForgetPassword = async () => {
+        setDisable(true);
         try {
             if (!username) {
                 setError("Veuillez saisir votre adresse e-mail.");
+                setDisable(false);
                 return;
             }
 
@@ -120,27 +132,33 @@ function LoginForm() {
             notifySuccess("Email envoyé avec succès");
             setShowForgetPasswordFormstep1(false);
             setShowForgetPasswordFormstep2(true);
+            setDisable(false);
         } catch (error) {
             console.log('Erreur lors de l\'envoi de l\'email :', error);
             setError("Erreur lors de l'envoi de l'email");
             notifyError("L'envoi de l'email a échoué");
+            setDisable(false);
         }
     };
 
     const handleConfirmResetPassword = async () => {
+        setDisable(true);
         if (newPassword !== confirmPassword) {
             setError("Les 2 mots de passe ne correspondent pas");
             notifyError("Changement du mot de passe échouée");
+            setDisable(false);
             return;
         }
 
         try {
             await confirmResetPassword({ username, confirmationCode, newPassword });
-            notifySuccess("Mot de passe changé, bienvenue");
-            navigate('/');
+            notifySuccess("Mot de passe changé");
+            setDisable(false);
+            Router.push('/se-connecter');
         } catch (error) {
             console.log('Erreur lors de la confirmation de la réinitialisation du mot de passe :', error);
             setError("Erreur lors de la confirmation de la réinitialisation du mot de passe.");
+            setDisable(false);
             notifyError("Changement du mot de passe échouée");
         }
     };
@@ -169,10 +187,11 @@ function LoginForm() {
                         required
                     />
                     {error && <FormError variant="error">{error}</FormError>}
-                    <Button width="full-width" variant="primary" onClick={handleSignIn}>Se connecter</Button>
+                    <Button width="full-width" variant="primary" disable={disable} onClick={handleSignIn}>Se connecter</Button>
                     <Stack justify="end">
-                        <IconButton variant="secondary-action" onClick={handleForget}>Mot de passe oublié ?</IconButton>
+                        <IconButton variant="secondary-action" disable={disable} onClick={handleForget}>Mot de passe oublié ?</IconButton>
                     </Stack>
+                    <TextLink href="/creer-un-compte">Pas encore membre ?</TextLink>
                 </Stack>
             )}
             {showForgetPasswordForm && (
@@ -237,7 +256,7 @@ function LoginForm() {
                             {error && <FormError variant="error">{error}</FormError>}
                             <Stack align="center" justify="flex-end">
                                 <IconButton variant="secondary-action" onClick={handleback}><FaArrowLeftLong />Retour</IconButton>
-                                <Button variant="primary" onClick={handleConfirmResetPassword}>Je confirme</Button>
+                                <Button variant="primary" disable={disable} onClick={handleConfirmResetPassword}>Je confirme</Button>
                             </Stack>
                         </Stack>
                     )}
@@ -270,7 +289,7 @@ function LoginForm() {
                     {error && <FormError variant="error">{error}</FormError>}
                     <Stack align="center" justify="flex-end">
                         <IconButton variant="secondary-action" onClick={handleback}><FaArrowLeftLong />Retour</IconButton>
-                        <Button variant="primary" onClick={handlePasswordReset}>Je confirme</Button>
+                        <Button variant="primary" disable={disable} onClick={handlePasswordReset}>Je confirme</Button>
                     </Stack>
                 </Stack>
             )}
