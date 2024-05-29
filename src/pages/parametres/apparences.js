@@ -13,7 +13,7 @@ export default function Appearance() {
     return (
         <Hero>
             <Head>
-                <title>Modifiez le thème</title>
+                <title>Modifiez l&apos;apparence de Miamze</title>
                 <meta name="description" content="Description de la page" />
                 <meta property="og:image" content="URL_de_votre_image" />
             </Head>
