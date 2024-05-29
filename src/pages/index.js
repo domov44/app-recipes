@@ -8,7 +8,7 @@ function Login() {
     return (
         <>
             <Head>
-                <title>L'application de recette Miamze</title>
+                <title>L&apos;application de recette Miamze</title>
                 <meta name="description" content="Description de la page" />
                 <meta property="og:image" content="URL_de_votre_image" />
             </Head>
@@ -18,7 +18,7 @@ function Login() {
                         mobilePadding: "20px"
                     }}>
                     <Title level={1}>Bienvenue sur Miamze,</Title>
-                    <Text>On cuisine quoi aujourd'hui ?</Text>
+                    <Text>On cuisine quoi aujourd&apos;hui ?</Text>
                 </Bento>
             </Hero>
         </>
