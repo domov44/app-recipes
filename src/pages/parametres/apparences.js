@@ -7,11 +7,16 @@ import Bento from '@/components/ui/wrapper/Bento';
 import Column from '@/components/ui/wrapper/Column';
 import Stack from '@/components/ui/wrapper/Stack';
 import SettingMenu from '@/components/menu/SettingMenu';
-
+import Head from 'next/head';
 
 export default function Appearance() {
     return (
         <Hero>
+            <Head>
+                <title>Modifiez l&apos;apparence de Miamze</title>
+                <meta name="description" content="Description de la page" />
+                <meta property="og:image" content="URL_de_votre_image" />
+            </Head>
             <Title level={1}>
                 Paramètres
             </Title>

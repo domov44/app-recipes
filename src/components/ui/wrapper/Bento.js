@@ -2,12 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 
 const BentoDiv = styled.div`
+  position: relative;
   overflow: hidden;
-  position: ${props => props.$position || "" };
-  right: ${props => props.$right || "" };
-  left: ${props => props.$left || "" };
-  top: ${props => props.$top || "" };
-  bottom: ${props => props.$bottom || "" };
   gap: 10px;
   display: flex;
   flex-direction: ${props => (props.$direction === "row" ? "row" : "column")};
@@ -18,11 +14,28 @@ const BentoDiv = styled.div`
   padding: ${props => (props.$padding ? props.$padding : "24px")};
   border-radius: ${props => (props.$highlight ? "10px" : "")};
   box-shadow: ${props => (props.$highlight ? "rgba(0, 0, 0, 0.2) 0px 0px 2px 0px, rgba(0, 0, 0, 0.03) 0px 12px 24px -4px;" : "")};
+
+  @media (max-width: 1000px) {
+    width: ${props => (props.$responsive && props.$responsive.tabletWidth ? props.$responsive.tabletWidth : props.$width)};
+    padding: ${props => (props.$responsive && props.$responsive.tabletPadding ? props.$responsive.tabletPadding : props.$padding)};
+  }
+
+  @media (max-width: 750px) {
+    width: ${props => (props.$responsive && props.$responsive.mobileWidth ? props.$responsive.mobileWidth : props.$responsive && props.$responsive.tabletWidth ? props.$responsive.tabletWidth : props.$width)};
+    padding: ${props => (props.$responsive && props.$responsive.mobilePadding ? props.$responsive.mobilePadding : props.$responsive && props.$responsive.tabletPadding ? props.$responsive.tabletPadding : props.$padding)};
+  }
 `;
 
-function Bento({ children, align, direction, highlight, width, padding, position, right, left, top, bottom, }) {
+function Bento({ children, align, direction, highlight, width, padding, responsive }) {
   return (
-    <BentoDiv $align={align} $direction={direction} $highlight={highlight} $width={width} $padding={padding} $position={position} $right={right} $left={left} $bottom={bottom} $top={top}>
+    <BentoDiv
+      $align={align}
+      $direction={direction}
+      $highlight={highlight}
+      $width={width}
+      $padding={padding}
+      $responsive={responsive}
+    >
       {children}
     </BentoDiv>
   );
