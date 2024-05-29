@@ -102,10 +102,6 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  if (isLoggedIn === null) {
-    return <Loading />;
-  }
-
   return (
     <UserContext.Provider value={{
       isLoggedIn,

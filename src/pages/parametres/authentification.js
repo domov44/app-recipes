@@ -17,6 +17,8 @@ import { updateUserAttributes, confirmUserAttribute } from 'aws-amplify/auth';
 import { useUser } from '@/utils/UserContext';
 import TextInput from '@/components/ui/form/TextInput';
 import IconButton from '@/components/ui/button/IconButton';
+import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
+import Head from 'next/head';
 
 export default function Authentification() {
     const { user, updateUser } = useUser();
@@ -84,6 +86,12 @@ export default function Authentification() {
 
 
     return (
+        <ProtectedRoutes>
+            <Head>
+                <title>Modifiez votre email</title>
+                <meta name="description" content="Description de la page" />
+                <meta property="og:image" content="URL_de_votre_image" />
+            </Head>
             <Hero>
                 <Title level={1}>
                     Paramètres
@@ -106,52 +114,53 @@ export default function Authentification() {
                                     Votre email actuel est {user.email}
                                 </Tips>
                             )}
-                                {showEmailForm && (
-                                    <Stack direction="column" animationType={backButtonClicked ? "moveFromLeft" : "fadeIn"}>
-                                        <Title level={5}>
-                                            Rentrez votre nouvel email
-                                        </Title>
-                                        <TextInput
-                                            variant="blue"
-                                            type="email"
-                                            label="Nouvel email"
-                                            value={updatedEmail}
-                                            onChange={(e) => { setUpdatedEmail(e.target.value); handleInputChange(); }}
-                                        />
-                                        {error && <FormError variant="error">{error}</FormError>}
-                                        <Button variant="primary" onClick={handleUpdateEmail}>Étape suivante</Button>
-                                    </Stack>
-                                )}
-                                {!showEmailForm && showConfirmForm && (
-                                    <Stack direction="column" animationType={"moveFromRight"}>
-                                        {updatedEmail && (
-                                            <>
-                                                <Title level={5}>
-                                                    Rentrez le code de validation envoyé à {updatedEmail}
-                                                </Title>
+                            {showEmailForm && (
+                                <Stack direction="column" animationType={backButtonClicked ? "moveFromLeft" : "fadeIn"}>
+                                    <Title level={5}>
+                                        Rentrez votre nouvel email
+                                    </Title>
+                                    <TextInput
+                                        variant="blue"
+                                        type="email"
+                                        label="Nouvel email"
+                                        value={updatedEmail}
+                                        onChange={(e) => { setUpdatedEmail(e.target.value); handleInputChange(); }}
+                                    />
+                                    {error && <FormError variant="error">{error}</FormError>}
+                                    <Button variant="primary" onClick={handleUpdateEmail}>Étape suivante</Button>
+                                </Stack>
+                            )}
+                            {!showEmailForm && showConfirmForm && (
+                                <Stack direction="column" animationType={"moveFromRight"}>
+                                    {updatedEmail && (
+                                        <>
+                                            <Title level={5}>
+                                                Rentrez le code de validation envoyé à {updatedEmail}
+                                            </Title>
 
-                                                <Tips variant="success">
-                                                    Nous devons vérifier que vous avez bien accès à {updatedEmail}, c&apos;est pourquoi nous vous avons envoyé un petit code de confirmation.
-                                                </Tips>
-                                            </>
-                                        )}
-                                        <TextInput
-                                            variant="blue"
-                                            type="number"
-                                            label="Code de confirmation"
-                                            value={confirmationCode}
-                                            onChange={(e) => setConfirmationCode(e.target.value)}
-                                        />
-                                        {error && <FormError variant="error">{error}</FormError>}
-                                        <Stack align="center" justify="flex-end">
-                                            <IconButton variant="secondary-action" onClick={handleback}>Retour</IconButton>
-                                            <Button variant="primary" onClick={handleConfirmEmailChange}>Valider le code</Button>
-                                        </Stack>
+                                            <Tips variant="success">
+                                                Nous devons vérifier que vous avez bien accès à {updatedEmail}, c&apos;est pourquoi nous vous avons envoyé un petit code de confirmation.
+                                            </Tips>
+                                        </>
+                                    )}
+                                    <TextInput
+                                        variant="blue"
+                                        type="number"
+                                        label="Code de confirmation"
+                                        value={confirmationCode}
+                                        onChange={(e) => setConfirmationCode(e.target.value)}
+                                    />
+                                    {error && <FormError variant="error">{error}</FormError>}
+                                    <Stack align="center" justify="flex-end">
+                                        <IconButton variant="secondary-action" onClick={handleback}>Retour</IconButton>
+                                        <Button variant="primary" onClick={handleConfirmEmailChange}>Valider le code</Button>
                                     </Stack>
-                                )}
+                                </Stack>
+                            )}
                         </Bento>
                     </Column>
                 </Container>
             </Hero>
+        </ProtectedRoutes>
     );
 }

@@ -16,7 +16,8 @@ import {
 import FormError from '@/components/ui/form/formError';
 import Tips from '@/components/ui/textual/Tips';
 import Button from '@/components/ui/button/Button';
-
+import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
+import Head from 'next/head';
 
 export default function Comptes() {
     const [oldPassword, setOldPassword] = useState("");
@@ -53,51 +54,58 @@ export default function Comptes() {
     }
 
     return (
-        <Hero>
-            <Title level={1}>
-                Paramètres
-            </Title>
-            <Container direction="row" align="start" width="100%">
-                <Column width="25%" gap="20px">
-                    <Bento highlight="highlight">
-                        <SettingMenu />
-                    </Bento>
-                </Column>
-                <Column width="75%">
-                    <Bento>
-                        <Stack separator>
-                            <Title level={3}>
-                                Changer le mot de passe
-                            </Title>
-                        </Stack>
-                        <Tips variant="success">
-                            Pensez à choisir un mot de passe d&apos;au moins 8 caractères.
-                        </Tips>
-                        <Form>
-                            <PasswordInput
-                                variant="blue"
-                                label="Mot de passe actuel"
-                                value={oldPassword}
-                                onChange={(e) => { setOldPassword(e.target.value); handleInputChange(); }}
-                            />
-                            <PasswordInput
-                                variant="blue"
-                                label="Nouveau mot de passe"
-                                value={newPassword}
-                                onChange={(e) => { setNewPassword(e.target.value); handleInputChange(); }}
-                            />
-                            <PasswordInput
-                                variant="blue"
-                                label="Confirmer le nouveau mot de passe"
-                                value={confirmNewPassword}
-                                onChange={(e) => { setConfirmNewPassword(e.target.value); handleInputChange(); }}
-                            />
-                            {error && <FormError variant="error">{error}</FormError>}
-                            <Button variant="primary" onClick={handleUpdatePassword}>Mettre à jour le mot de passe</Button>
-                        </Form>
-                    </Bento>
-                </Column>
-            </Container>
-        </Hero>
+        <ProtectedRoutes>
+            <Head>
+                <title>Modifiez votre mot de passe</title>
+                <meta name="description" content="Description de la page" />
+                <meta property="og:image" content="URL_de_votre_image" />
+            </Head>
+            <Hero>
+                <Title level={1}>
+                    Paramètres
+                </Title>
+                <Container direction="row" align="start" width="100%">
+                    <Column width="25%" gap="20px">
+                        <Bento highlight="highlight">
+                            <SettingMenu />
+                        </Bento>
+                    </Column>
+                    <Column width="75%">
+                        <Bento>
+                            <Stack separator>
+                                <Title level={3}>
+                                    Changer le mot de passe
+                                </Title>
+                            </Stack>
+                            <Tips variant="success">
+                                Pensez à choisir un mot de passe d&apos;au moins 8 caractères.
+                            </Tips>
+                            <Form>
+                                <PasswordInput
+                                    variant="blue"
+                                    label="Mot de passe actuel"
+                                    value={oldPassword}
+                                    onChange={(e) => { setOldPassword(e.target.value); handleInputChange(); }}
+                                />
+                                <PasswordInput
+                                    variant="blue"
+                                    label="Nouveau mot de passe"
+                                    value={newPassword}
+                                    onChange={(e) => { setNewPassword(e.target.value); handleInputChange(); }}
+                                />
+                                <PasswordInput
+                                    variant="blue"
+                                    label="Confirmer le nouveau mot de passe"
+                                    value={confirmNewPassword}
+                                    onChange={(e) => { setConfirmNewPassword(e.target.value); handleInputChange(); }}
+                                />
+                                {error && <FormError variant="error">{error}</FormError>}
+                                <Button variant="primary" onClick={handleUpdatePassword}>Mettre à jour le mot de passe</Button>
+                            </Form>
+                        </Bento>
+                    </Column>
+                </Container>
+            </Hero>
+        </ProtectedRoutes>
     );
 }
