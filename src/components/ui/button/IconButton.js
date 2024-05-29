@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Link from "next/link";
 
 const IconButtonComponent = styled.button`
@@ -10,22 +10,6 @@ gap:5px;
   align-items: center;
   width: fit-content;
   height: fit-content;
-    color: ${props =>
-        props.$variant === "action"
-            ? "var(--success-color)"
-            : props.$variant === "secondary-action"
-                ? "var(--colored-text)"
-                : props.$variant === "basique"
-                    ? "var(--paragraph)"
-                    : props.$variant === "danger"
-                        ? "var(--error-color)"
-                        : "none"};
-  background: ${props =>
-        props.$variant === "action"
-            ? "var(--success-bg)"
-            : props.$enable === "notactive"
-                ? "none"
-                : "none"};
   border:  none;
   padding: ${props =>
         props.$wtext === "yes"
@@ -40,58 +24,76 @@ gap:5px;
             : props.$wtext === "no"
                 ? "50%"
                 : "5px"};
-  filter: ${props =>
-        props.$enable === "active"
-            ? "none"
-            : props.$enable === "notactive"
-                ? "grayscale(100%);"
-                : "none"};
-  cursor: ${props =>
-        props.$enable === "active"
-            ? "pointer"
-            : props.$enable === "notactive"
-                ? "default"
-                : "pointer"};
-    opacity: ${props =>
-        props.$enable === "active"
-            ? "1"
-            : props.$enable === "notactive"
-                ? "0.5"
-                : "1"};
+  cursor: pointer;
   transition: 0.3s;
 
-  &:hover{
-    background: ${props =>
-        props.$variant === "action"
-            ? "var(--success-bg-darker)"
-            : props.$variant === "secondary-action"
-                ? "var(--nav-bg-hover)"
-                : props.$variant === "basique"
-                    ? "var(--nav-bg-hover)"
-                    : props.$enable === "notactive"
-                        ? "none"
-                        : props.$variant === "danger"
-                            ? "var(--error-bg)"
-                            : "none"};
-  }
+  ${({ $variant, $disable }) => {
+        if ($variant === "action" && !$disable) {
+            return css`
+        background: var(--success-bg);
+        color: var(--success-color);
+        
+        &:hover {
+            background: var(--success-bg-darker);
+        }
 
-  &:active{
-    background: ${props =>
-        props.$variant === "action"
-            ? "var(--success-bg-darker)"
-            : props.$variant === "secondary-action"
-                ? "var(--nav-bg-active)"
-                : props.$variant === "basique"
-                    ? "var(--nav-bg-active)"
-                    : props.$enable === "notactive"
-                        ? "none"
-                        : props.$variant === "danger"
-                            ? "var(--error-bg-darker)"
-                            : "none"};
-  }
+        &:active {
+            background: var(--success-bg-darker);
+        }
+      `;
+        } else if ($variant === "secondary-action" && !$disable) {
+            return css`
+            background: none;
+            color:var(--colored-text);
+        
+        &:hover {
+            background: var(--nav-bg-hover);
+        }
+
+        &:active {
+            background: var(--nav-bg-active);
+        }
+      `;
+
+        } else if ($variant === "basique" && !$disable) {
+            return css`
+            background: none;
+            color:var(--paragraph);
+        
+        &:hover {
+            background: var(--nav-bg-hover);
+        }
+
+        &:active {
+            background: var(--nav-bg-active);
+        }
+      `;
+
+        } else if ($variant === "danger" && !$disable) {
+            return css`
+            background: none;
+            color:var(--error-color);
+        
+        &:hover {
+            background: var(--error-bg);
+        }
+
+        &:active {
+            background: var(--error-bg-darker);
+        }
+      `;
+        } else if ($disable) {
+            return css`
+        cursor: default;
+        background: none;
+        color: var(--color-title);
+        opacity: 0.2;
+      `;
+        }
+    }}
 `;
 
-const IconButton = ({ type, variant, enable, wtext, width, className, id, onClick, to, href, children }) => {
+const IconButton = ({ type, variant, wtext, width, className, id, onClick, to, href, children, disable }) => {
     const Component = href || to ? Link : 'button';
     const linkProps = href ? { href } : { to };
 
@@ -101,11 +103,12 @@ const IconButton = ({ type, variant, enable, wtext, width, className, id, onClic
             type={type ? (type === "input" ? ["button", "input"] : type) : "button"}
             $wtext={wtext}
             $variant={variant}
-            $enable={enable}
+            $disable={disable}
+            disabled={disable}
             $width={width}
             className={className ? `btn-component ${className}` : "btn-component"}
             id={id}
-            onClick={onClick}
+            onClick={!disable ? onClick : null}
             {...linkProps}
         >
             {children}
