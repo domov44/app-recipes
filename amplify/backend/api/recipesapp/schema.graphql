@@ -1,0 +1,33 @@
+input AMPLIFY {
+  globalAuthRule: AuthRule = {allow: public, operations: [read]}
+}
+
+type User @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+  avatar: String
+  description: String
+  birthdate: AWSDate
+  recipes: [Recipe] @hasMany(indexName: "byUser", fields: ["id"])
+}
+
+type Recipe @model @auth(rules: [{allow: public, operations: [read]}, {allow: owner, operations: [read, create, update, delete]}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  title: String!
+  image: String
+  userID: ID! @index(name: "byUser")
+  steps: AWSJSON
+  ingredients: [RecipeIngredient] @hasMany(indexName: "byRecipe", fields: ["id"])
+}
+
+type Ingredient @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]}]) {
+  id: ID!
+  name: String!
+}
+
+type RecipeIngredient @model @auth(rules: [{allow: groups, groups: ["Members"], operations: [read, create, update, delete]}, {allow: public, operations: [read]}]) {
+  id: ID!
+  recipeID: ID! @index(name: "byRecipe")
+  ingredientID: ID!
+  quantity: String
+} 
