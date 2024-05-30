@@ -1,0 +1,16 @@
+{
+  "resourceName": "s3cffd06a6",
+  "policyUUID": "cffd06a6",
+  "bucketName": "recipesappea0631f8364f439bb0004d59ea016d09",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
