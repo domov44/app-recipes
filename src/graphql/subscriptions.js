@@ -1,12 +1,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateUser = /* GraphQL */ `
-  subscription OnCreateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onCreateProfile = /* GraphQL */ `
+  subscription OnCreateProfile(
+    $filter: ModelSubscriptionProfileFilterInput
     $owner: String
   ) {
-    onCreateUser(filter: $filter, owner: $owner) {
+    onCreateProfile(filter: $filter, owner: $owner) {
       id
       name
       avatar
@@ -23,12 +23,12 @@ export const onCreateUser = /* GraphQL */ `
     }
   }
 `;
-export const onUpdateUser = /* GraphQL */ `
-  subscription OnUpdateUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onUpdateProfile = /* GraphQL */ `
+  subscription OnUpdateProfile(
+    $filter: ModelSubscriptionProfileFilterInput
     $owner: String
   ) {
-    onUpdateUser(filter: $filter, owner: $owner) {
+    onUpdateProfile(filter: $filter, owner: $owner) {
       id
       name
       avatar
@@ -45,12 +45,12 @@ export const onUpdateUser = /* GraphQL */ `
     }
   }
 `;
-export const onDeleteUser = /* GraphQL */ `
-  subscription OnDeleteUser(
-    $filter: ModelSubscriptionUserFilterInput
+export const onDeleteProfile = /* GraphQL */ `
+  subscription OnDeleteProfile(
+    $filter: ModelSubscriptionProfileFilterInput
     $owner: String
   ) {
-    onDeleteUser(filter: $filter, owner: $owner) {
+    onDeleteProfile(filter: $filter, owner: $owner) {
       id
       name
       avatar
@@ -82,6 +82,14 @@ export const onCreateRecipe = /* GraphQL */ `
         nextToken
         __typename
       }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -102,6 +110,14 @@ export const onUpdateRecipe = /* GraphQL */ `
       steps
       ingredients {
         nextToken
+        __typename
+      }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
         __typename
       }
       createdAt
@@ -126,6 +142,14 @@ export const onDeleteRecipe = /* GraphQL */ `
         nextToken
         __typename
       }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -140,6 +164,14 @@ export const onCreateIngredient = /* GraphQL */ `
     onCreateIngredient(filter: $filter) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -153,6 +185,14 @@ export const onUpdateIngredient = /* GraphQL */ `
     onUpdateIngredient(filter: $filter) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -166,6 +206,110 @@ export const onDeleteIngredient = /* GraphQL */ `
     onDeleteIngredient(filter: $filter) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateIngredientType = /* GraphQL */ `
+  subscription OnCreateIngredientType(
+    $filter: ModelSubscriptionIngredientTypeFilterInput
+  ) {
+    onCreateIngredientType(filter: $filter) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateIngredientType = /* GraphQL */ `
+  subscription OnUpdateIngredientType(
+    $filter: ModelSubscriptionIngredientTypeFilterInput
+  ) {
+    onUpdateIngredientType(filter: $filter) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteIngredientType = /* GraphQL */ `
+  subscription OnDeleteIngredientType(
+    $filter: ModelSubscriptionIngredientTypeFilterInput
+  ) {
+    onDeleteIngredientType(filter: $filter) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateCategory = /* GraphQL */ `
+  subscription OnCreateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onCreateCategory(filter: $filter) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateCategory = /* GraphQL */ `
+  subscription OnUpdateCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onUpdateCategory(filter: $filter) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteCategory = /* GraphQL */ `
+  subscription OnDeleteCategory($filter: ModelSubscriptionCategoryFilterInput) {
+    onDeleteCategory(filter: $filter) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename

@@ -11,6 +11,7 @@ export default function Profil() {
                     <>
                         <p>{user?.pseudo}</p>
                         <p>{user?.email}</p>
+                        <p>{user?.id}</p>
                     </>
                 }
             </Hero>
