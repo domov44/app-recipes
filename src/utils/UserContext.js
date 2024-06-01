@@ -16,15 +16,18 @@ export const UserProvider = ({ children }) => {
     const checkAuthState = async () => {
       try {
         const currentUser = await getCurrentUser();
+        console.log(currentUser)
         const session = await fetchAuthSession();
         const cognitoGroups = session.tokens.idToken.payload["cognito:groups"];
+        console.log(cognitoGroups)
         setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
-        setIsAdmin(cognitoGroups && cognitoGroups.includes('Admin'));
+        setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
         const userAttributes = await fetchUserAttributes();
         setUser({
           ...userAttributes,
           age: userAttributes.birthdate ? calculateAge(userAttributes.birthdate) : 0,
-          pseudo: currentUser ? currentUser.username : 'User'
+          pseudo: currentUser ? currentUser.username : 'User',
+          id: currentUser ? currentUser.userId : 0
         });
         setLoggedIn(true);
         fetchProfilePictureURL(userAttributes.picture);
@@ -42,7 +45,7 @@ export const UserProvider = ({ children }) => {
       const session = await fetchAuthSession();
       const cognitoGroups = session.tokens.idToken.payload["cognito:groups"];
       setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
-      setIsAdmin(cognitoGroups && cognitoGroups.includes('Admin'));
+      setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
       const userAttributes = await fetchUserAttributes();
       setLoggedIn(true);
       setUser({
