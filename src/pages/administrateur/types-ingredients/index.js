@@ -27,7 +27,7 @@ function TypesPage() {
 
     return (
         <div>
-            <h1>Liste des types d'ingrédients</h1>
+            <h1>Liste des types d`&apos;ingrédients</h1>
             <ul>
                 {types.map(type => (
                     <li key={type.id}>{type.name} {type.id}</li>
