@@ -1,12 +1,12 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createUser = /* GraphQL */ `
-  mutation CreateUser(
-    $input: CreateUserInput!
-    $condition: ModelUserConditionInput
+export const createProfile = /* GraphQL */ `
+  mutation CreateProfile(
+    $input: CreateProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    createUser(input: $input, condition: $condition) {
+    createProfile(input: $input, condition: $condition) {
       id
       name
       avatar
@@ -23,12 +23,12 @@ export const createUser = /* GraphQL */ `
     }
   }
 `;
-export const updateUser = /* GraphQL */ `
-  mutation UpdateUser(
-    $input: UpdateUserInput!
-    $condition: ModelUserConditionInput
+export const updateProfile = /* GraphQL */ `
+  mutation UpdateProfile(
+    $input: UpdateProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    updateUser(input: $input, condition: $condition) {
+    updateProfile(input: $input, condition: $condition) {
       id
       name
       avatar
@@ -45,12 +45,12 @@ export const updateUser = /* GraphQL */ `
     }
   }
 `;
-export const deleteUser = /* GraphQL */ `
-  mutation DeleteUser(
-    $input: DeleteUserInput!
-    $condition: ModelUserConditionInput
+export const deleteProfile = /* GraphQL */ `
+  mutation DeleteProfile(
+    $input: DeleteProfileInput!
+    $condition: ModelProfileConditionInput
   ) {
-    deleteUser(input: $input, condition: $condition) {
+    deleteProfile(input: $input, condition: $condition) {
       id
       name
       avatar
@@ -82,6 +82,14 @@ export const createRecipe = /* GraphQL */ `
         nextToken
         __typename
       }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -102,6 +110,14 @@ export const updateRecipe = /* GraphQL */ `
       steps
       ingredients {
         nextToken
+        __typename
+      }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
         __typename
       }
       createdAt
@@ -126,6 +142,14 @@ export const deleteRecipe = /* GraphQL */ `
         nextToken
         __typename
       }
+      categoryID
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       owner
@@ -141,6 +165,14 @@ export const createIngredient = /* GraphQL */ `
     createIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -155,6 +187,14 @@ export const updateIngredient = /* GraphQL */ `
     updateIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -169,6 +209,122 @@ export const deleteIngredient = /* GraphQL */ `
     deleteIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
+      type {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createIngredientType = /* GraphQL */ `
+  mutation CreateIngredientType(
+    $input: CreateIngredientTypeInput!
+    $condition: ModelIngredientTypeConditionInput
+  ) {
+    createIngredientType(input: $input, condition: $condition) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateIngredientType = /* GraphQL */ `
+  mutation UpdateIngredientType(
+    $input: UpdateIngredientTypeInput!
+    $condition: ModelIngredientTypeConditionInput
+  ) {
+    updateIngredientType(input: $input, condition: $condition) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteIngredientType = /* GraphQL */ `
+  mutation DeleteIngredientType(
+    $input: DeleteIngredientTypeInput!
+    $condition: ModelIngredientTypeConditionInput
+  ) {
+    deleteIngredientType(input: $input, condition: $condition) {
+      id
+      name
+      ingredients {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createCategory = /* GraphQL */ `
+  mutation CreateCategory(
+    $input: CreateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    createCategory(input: $input, condition: $condition) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCategory = /* GraphQL */ `
+  mutation UpdateCategory(
+    $input: UpdateCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    updateCategory(input: $input, condition: $condition) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCategory = /* GraphQL */ `
+  mutation DeleteCategory(
+    $input: DeleteCategoryInput!
+    $condition: ModelCategoryConditionInput
+  ) {
+    deleteCategory(input: $input, condition: $condition) {
+      id
+      name
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename

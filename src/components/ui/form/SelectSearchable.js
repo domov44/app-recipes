@@ -108,7 +108,7 @@ const SelectSearchable = ({ options, onSelect, defaultText, value, label }) => {
     const handleClickOutside = (event) => {
       if (selectRef.current && !selectRef.current.contains(event.target)) {
         setIsOpen(false);
-        const matchedOption = options.find(option => option.label.toLowerCase() === searchTerm.toLowerCase());
+        const matchedOption = options.find(option => option.name.toLowerCase() === searchTerm.toLowerCase());
         if (!matchedOption && searchTerm.trim() !== '') {
           setSearchTerm('');
         }
@@ -125,14 +125,14 @@ const SelectSearchable = ({ options, onSelect, defaultText, value, label }) => {
   const handleOptionClick = (option) => {
     setSelectedOption(option);
     onSelect(option);
-    setSearchTerm(option.label);
+    setSearchTerm(option.name);
     setIsOpen(false);
   };
 
   const handleSearchChange = (event) => {
     const inputText = event.target.value;
     setSearchTerm(inputText);
-    const matchedOption = options.find(option => option.label.toLowerCase() === inputText.toLowerCase());
+    const matchedOption = options.find(option => option.name.toLowerCase() === inputText.toLowerCase());
     if (matchedOption) {
       setSelectedOption(matchedOption);
       onSelect(matchedOption);
@@ -144,7 +144,7 @@ const SelectSearchable = ({ options, onSelect, defaultText, value, label }) => {
   };
 
   const filteredOptions = options.filter(option =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -162,8 +162,8 @@ const SelectSearchable = ({ options, onSelect, defaultText, value, label }) => {
         ) : (
           filteredOptions.map((option) => (
             <OptionItem key={option.id} onClick={() => handleOptionClick(option)}>
-              {option.label}
-              {option.icon && <img src={option.icon} alt={option.label} />}
+              {option.name}
+              {option.icon && <img src={option.icon} alt={option.name} />}
             </OptionItem>
           ))
         )}
