@@ -63,6 +63,22 @@
       "service": "Cognito"
     }
   },
+  "function": {
+    "createProfileOnSignup": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "recipesapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
   "storage": {
     "s3cffd06a6": {
       "dependsOn": [],
