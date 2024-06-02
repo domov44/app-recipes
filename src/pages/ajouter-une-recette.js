@@ -26,6 +26,9 @@ import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from 'react-icons/ci';
 import { confirm } from '@/utils/ConfirmGlobal';
 import { PiPlus } from 'react-icons/pi';
+import { createRecipe, createRecipeIngredient } from "@/graphql/mutations";
+import { generateClient } from "aws-amplify/api";
+const client = generateClient();
 
 const AjouterRecette = () => {
 
@@ -40,6 +43,40 @@ const AjouterRecette = () => {
 
     const categoriesOptions = useCategoriesOptions();
     const ingredientsOptions = useIngredientsOptions();
+
+    async function create() {
+        try {
+            const newRecipe = await client.graphql({
+                query: createRecipe,
+                variables: {
+                    input: {
+                        "title": formData1.nom,
+                        "image": formData5.image,
+                        "steps": formData4.map((step, index) => ({ ...step, step_number: index + 1 })),
+                        "categoryID": formData2.categorie,
+                        "userID": 1,
+                    }
+                }
+            });
+
+            const newRecipeIngredient = await client.graphql({
+                query: createRecipeIngredient,
+                variables: {
+                    input: {
+                        "recipeID": formData1.nom,
+                        "ingredientID": formData1.nom,
+                        "quantity": formData3.ingredients.quantity,
+                    }
+                }
+            });
+            notifySuccess("Recette ajouté");
+            console.log("Nouvelle recette :", newRecipe);
+            console.log("Nouvel ingredients recette :", newRecipeIngredient);
+        } catch (error) {
+            notifyError("Erreur lors de la création du client");
+            console.error("Erreur lors de la création du client :", error);
+        }
+    }
 
     const handleImageDelete = () => {
         setFormData5({ image: null });
@@ -73,64 +110,21 @@ const AjouterRecette = () => {
             setFormData4({ ...formData4 });
             setStep(5);
         } else if (step === 5) {
-            submitCompleteForm();
+            create();
         }
     };
-
-    const submitCompleteForm = () => {
-        const completeFormData = new FormData();
-        Object.entries(formData1).forEach(([key, value]) => completeFormData.append(key, value));
-        Object.entries(formData2).forEach(([key, value]) => completeFormData.append(key, value));
-        const stepsData = formData4.steps || [];
-        completeFormData.append('steps', JSON.stringify(stepsData.map((step, index) => ({ ...step, step_number: index + 1 }))));
-
-        const ingredientsArray = formData3.ingredients.map(ingredient => ({
-            id: ingredient.id,
-            label: ingredient.label,
-            quantity: ingredient.quantity
-        }));
-        completeFormData.append('ingredients', JSON.stringify(ingredientsArray));
-
-        if (formData5.image) {
-            completeFormData.append('image', formData5.image);
-        }
-
-        axios
-            .post('http://localhost:8081/recettes/ajouter', completeFormData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                withCredentials: true,
-            })
-            .then((res) => {
-                console.log(res);
-                notifySuccess("Recette ajoutée avec succès");
-                Router.push('/mes-recettes');
-            })
-            .catch((err) => {
-                if (err.response && (err.response.status === 409 || err.response.status === 500)) {
-                    const errorMessage = err.response.data;
-                    notifyError("L'ajout a échoué");
-                    setErrors((prevErrors) => ({ ...prevErrors, email: errorMessage }));
-                }
-                else if (err.response && (err.response.status === 400)) {
-                    const errorMessage = err.response.data;
-                    notifyError("Ajout refusé vérifiez vos propos");
-                    setErrors((prevErrors) => ({ ...prevErrors, email: errorMessage }));
-                }
-            });
-    };
-
-
-console.log(ingredientsOptions)
 
     const calculateProgress = () => {
-        const totalFields = (Object.keys(formData1).length + Object.keys(formData2).length + Object.keys(formData3).length) + Object.keys(formData4).length;
-        const filledFields = Object.values(formData1).filter(value => value !== '').length +
-            Object.values(formData2).filter(value => value !== '').length +
-            Object.values(formData3).filter(value => value !== '').length;
-        Object.values(formData4).filter(value => value !== null).length;
+        const totalFields = Object.keys(formData1).length +
+            Object.keys(formData2).length +
+            Object.keys(formData3).length +
+            Object.keys(formData4).length;
+        const filledFields = Object.values(formData1).filter(value => value !== '' && value !== null).length +
+            Object.values(formData2).filter(value => value !== '' && value !== null).length +
+            Object.values(formData3).filter(value => value.length > 0).length +
+            Object.values(formData4).flat().filter(step => step.description !== '' && step.duration !== '').length;
         const progressPercentage = Math.round((filledFields / totalFields) * 100);
+
         return progressPercentage;
     };
 
