@@ -16,9 +16,9 @@ export const onCreateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -38,9 +38,9 @@ export const onUpdateProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -60,9 +60,9 @@ export const onDeleteProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -90,9 +90,9 @@ export const onCreateRecipe = /* GraphQL */ `
         updatedAt
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -120,9 +120,9 @@ export const onUpdateRecipe = /* GraphQL */ `
         updatedAt
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -150,9 +150,9 @@ export const onDeleteRecipe = /* GraphQL */ `
         updatedAt
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }

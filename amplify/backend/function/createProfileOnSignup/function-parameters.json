@@ -1,5 +1,10 @@
 {
   "permissions": {
+    "auth": {
+      "recipesapp4f20ed6a": [
+        "create"
+      ]
+    },
     "storage": {
       "Profile:@model(appsync)": [
         "create",

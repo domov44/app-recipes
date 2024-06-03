@@ -13,9 +13,9 @@ export const getProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -33,9 +33,9 @@ export const listProfiles = /* GraphQL */ `
         avatar
         description
         birthdate
+        owner
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -63,9 +63,9 @@ export const getRecipe = /* GraphQL */ `
         updatedAt
         __typename
       }
+      owner
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -84,9 +84,9 @@ export const listRecipes = /* GraphQL */ `
         userID
         steps
         categoryID
+        owner
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -116,9 +116,9 @@ export const recipesByUserID = /* GraphQL */ `
         userID
         steps
         categoryID
+        owner
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -148,9 +148,9 @@ export const recipesByCategoryID = /* GraphQL */ `
         userID
         steps
         categoryID
+        owner
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken

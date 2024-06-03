@@ -16,7 +16,9 @@
         "recipesapp4f20ed6a": {}
       },
       "function": {
-        "createProfileOnSignup": {}
+        "createProfileOnSignup": {},
+        "recipesapp": {},
+        "recipesapp4f20ed6a": {}
       }
     }
   },
