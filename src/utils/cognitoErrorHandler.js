@@ -2,8 +2,8 @@ export function handleCognitoError(error) {
     let errorMessage = 'Une erreur inconnue est survenue. Veuillez réessayer.';
 
     switch (error.message) {
-        case 'Incorrect username or password':
-            errorMessage = 'Le nom d\'utilisateur n\'existe pas. Veuillez vérifier et réessayer.';
+        case 'Incorrect username or password.':
+            errorMessage = 'Le nom d\'utilisateur ou le mot de passe est incorrect.';
             break;
         case 'Password attempts exceeded':
             errorMessage = 'Trop de tentatives. Veuillez réessayer plus tard.';
