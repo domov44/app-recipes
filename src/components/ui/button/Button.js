@@ -31,7 +31,7 @@ const StyledComponent = styled.button`
 
   &:disabled{
     cursor: default;
-    filter: grayscale(90%);
+    filter: grayscale(60%);
     background-color: var(--main-color);
     color: var(--color-title);
   }
