@@ -16,6 +16,7 @@ import Text from '@/components/ui/textual/Text';
 import Tips from '@/components/ui/textual/Tips';
 import Router from 'next/router';
 import TextLink from '@/components/ui/textual/TextLink';
+import { handleCognitoError } from '@/utils/cognitoErrorHandler';
 
 function RegisterForm() {
     const { login } = useUser();
@@ -72,7 +73,7 @@ function RegisterForm() {
             }
         } catch (error) {
             console.log('Erreur lors de l\'inscription :', error);
-            setError(error.message);
+            setError(handleCognitoError(error));
             notifyError("Inscription échouée");
             setDisable(false);
         }
@@ -101,7 +102,7 @@ function RegisterForm() {
             }
         } catch (error) {
             console.log('Erreur lors de la confirmation de l\'inscription :', error);
-            setError("Erreur lors de la confirmation de l'inscription.");
+            setError(handleCognitoError(error));
             notifyError("Confirmation de l'inscription échouée");
             setDisable(false);
         }

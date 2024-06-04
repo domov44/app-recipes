@@ -16,6 +16,7 @@ import Text from '@/components/ui/textual/Text';
 import Tips from '@/components/ui/textual/Tips';
 import Router from 'next/router';
 import TextLink from '@/components/ui/textual/TextLink';
+import { handleCognitoError } from '@/utils/cognitoErrorHandler';
 
 function LoginForm() {
     const { login } = useUser();
@@ -47,7 +48,7 @@ function LoginForm() {
                     setDisable(false);
                 } catch (error) {
                     console.log('Erreur lors de la réinitialisation du mot de passe :', error);
-                    setError("Erreur lors de la réinitialisation du mot de passe.");
+                    setError(handleCognitoError(error));
                     notifyError("Réinitialisation du mot de passe échouée");
                     setDisable(false);
                 }
@@ -61,18 +62,18 @@ function LoginForm() {
                 Router.push('/')
             } else {
                 console.log('La connexion a échoué.');
-                setError("Nom d'utilisateur ou mot de passe incorrect.");
+                setError(handleCognitoError(error));
                 setDisable(false);
                 notifyError("Connexion échouée");
             }
         } catch (error) {
             console.log('Erreur lors de la connexion :', error);
             if (error.code === 'NotAuthorizedException') {
-                setError("Nom d'utilisateur ou mot de passe incorrect.");
+                setError(handleCognitoError(error));
                 notifyError("Nom d'utilisateur ou mot de passe incorrect.");
                 setDisable(false);
             } else {
-                setError(error.message);
+                setError(handleCognitoError(error));
                 notifyError("Connexion échouée");
                 setDisable(false);
             }
@@ -113,7 +114,7 @@ function LoginForm() {
             navigate('/');
         } catch (error) {
             console.log('Erreur lors du changement du mot de passe :', error);
-            setError("Erreur lors du changement du mot de passe.");
+            setError(handleCognitoError(error));
             notifyError("Changement du mot de passe échouée");
         }
         return;
@@ -135,7 +136,7 @@ function LoginForm() {
             setDisable(false);
         } catch (error) {
             console.log('Erreur lors de l\'envoi de l\'email :', error);
-            setError("Erreur lors de l'envoi de l'email");
+            setError(handleCognitoError(error));
             notifyError("L'envoi de l'email a échoué");
             setDisable(false);
         }
@@ -157,7 +158,7 @@ function LoginForm() {
             Router.push('/se-connecter');
         } catch (error) {
             console.log('Erreur lors de la confirmation de la réinitialisation du mot de passe :', error);
-            setError("Erreur lors de la confirmation de la réinitialisation du mot de passe.");
+            setError(handleCognitoError(error));
             setDisable(false);
             notifyError("Changement du mot de passe échouée");
         }
