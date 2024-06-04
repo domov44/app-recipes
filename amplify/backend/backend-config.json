@@ -86,6 +86,24 @@
       "service": "Lambda"
     }
   },
+  "parameters": {
+    "AMPLIFY_function_createProfileOnSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createProfileOnSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_createProfileOnSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createProfileOnSignup"
+        }
+      ]
+    }
+  },
   "storage": {
     "s3cffd06a6": {
       "dependsOn": [],
