@@ -10,6 +10,7 @@ import { useUser } from '@/utils/UserContext';
 import MainMenu from '@/components/menu/MainMenu';
 import Button from '../button/Button';
 import Chip from '../textual/Chip';
+import AdminMenu from '@/components/menu/AdminMenu';
 
 const slideIn = keyframes`
   from {
@@ -73,7 +74,7 @@ const StyledAsideContent = styled.div`
 `;
 
 function Aside({ isopen, toggleSidebar }) {
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn, isAdmin } = useUser();
 
   return (
     <>
@@ -87,6 +88,11 @@ function Aside({ isopen, toggleSidebar }) {
               <Chip variant="success">Mon espace</Chip>
               <NavComponent href="/profil" icon={PiStorefront}>Mes recettes</NavComponent>
               <NavComponent href="/profil" icon={PiUser}>Profil</NavComponent>
+            </ul>
+          }
+          {isAdmin &&
+            <ul className='menu'>
+              <AdminMenu />
             </ul>
           }
           {isLoggedIn &&

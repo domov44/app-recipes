@@ -133,7 +133,7 @@ const AjouterRecette = () => {
         newIngredients[index] = {
             ...newIngredients[index],
             id: selectedOption.id,
-            label: selectedOption.label
+            name: selectedOption.name
         };
         setFormData3({ ...formData3, ingredients: newIngredients });
     };
@@ -238,7 +238,7 @@ const AjouterRecette = () => {
                                         <Title>Ingredients</Title>
                                         {formData3.ingredients.map((ingredient, index) => (
                                             <Stack key={index} align="center">
-                                                <Accordion title={ingredient.id ? `Ingrédient ${index + 1} : ` + ingredient.label : `Ingrédient ${index + 1} : choisissez un ingrédient`} defaultOpen={true}>
+                                                <Accordion title={ingredient.id ? `Ingrédient ${index + 1} : ` + ingredient.name : `Ingrédient ${index + 1} : choisissez un ingrédient`} defaultOpen={true}>
                                                     <Stack direction="column">
                                                         <SelectSearchable
                                                             options={ingredientsOptions}

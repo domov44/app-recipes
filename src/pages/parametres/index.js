@@ -1,5 +1,10 @@
-import SettingMenu from "@/components/menu/SettingMenu"
+import { useEffect } from 'react';
+import Router from 'next/router';
 
 export default function Page() {
-    return <SettingMenu />
+  useEffect(() => {
+    Router.push('/parametres/apparences');
+  }, []);
+
+  return null;
 }
