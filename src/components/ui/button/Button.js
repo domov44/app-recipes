@@ -26,8 +26,20 @@ const StyledComponent = styled.button`
   font-size: 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: 1.25s;
+  background-color: var(--main-color);
   z-index: ${props => props.$zindex || ""};
+
+  &:disabled{
+    cursor: default;
+    filter: grayscale(90%);
+    background-color: var(--main-color);
+    color: var(--color-title);
+  }
+
+  &:disabled:hover{
+    background-color: var(--main-color);
+    color: var(--color-title);
+  }
 
   ${({ $variant, $disable }) => {
     if ($variant === "primary" && !$disable) {
@@ -48,17 +60,6 @@ const StyledComponent = styled.button`
         
         &:hover {
           background-color: var(--bg-color);
-        }
-      `;
-    } else if ($disable) {
-      return css`
-        cursor: default;
-        filter: grayscale(90%);
-        background-color: var(--main-color);
-        color: var(--color-title);
-
-        &:hover {
-          background-color: var(--main-color);
         }
       `;
     }

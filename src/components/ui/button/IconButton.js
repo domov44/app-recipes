@@ -27,6 +27,18 @@ gap:5px;
   cursor: pointer;
   transition: 0.3s;
 
+  &:disabled{
+    cursor: default;
+    opacity: 0.2;
+    background:none;
+    color: var(--color-title);
+  }
+
+  &:disabled:hover{
+    color: var(--color-title);
+    background:none;
+  }
+
   ${({ $variant, $disable }) => {
         if ($variant === "action" && !$disable) {
             return css`
@@ -81,13 +93,6 @@ gap:5px;
         &:active {
             background: var(--error-bg-darker);
         }
-      `;
-        } else if ($disable) {
-            return css`
-        cursor: default;
-        background: none;
-        color: var(--color-title);
-        opacity: 0.2;
       `;
         }
     }}

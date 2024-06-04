@@ -16,7 +16,10 @@
         "recipesapp4f20ed6a": {}
       },
       "function": {
-        "createProfileOnSignup": {},
+        "createProfileOnSignup": {
+          "deploymentBucketName": "amplify-recipesapp-develop-140900-deployment",
+          "s3Key": "amplify-builds/createProfileOnSignup-346f64426a487831724b-build.zip"
+        },
         "recipesapp": {},
         "recipesapp4f20ed6a": {}
       }

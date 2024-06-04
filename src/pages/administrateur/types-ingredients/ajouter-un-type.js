@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 import Hero from "@/components/ui/wrapper/Hero";
 import { useUser } from '@/utils/UserContext';
@@ -7,19 +5,30 @@ import { generateClient } from "aws-amplify/api";
 import ProtectedRoutes from "@/hooks/login-gestion/ProtectedRoute";
 import { createIngredientType } from '@/graphql/mutations';
 import { notifySuccess, notifyError } from '@/components/ui/Toastify';
+import Router from 'next/router';
+import useTypesOptions from '@/utils/getTypes';
+import SelectSearchable from '@/components/ui/form/SelectSearchable';
+import Form from '@/components/ui/form/Form';
+import Stack from '@/components/ui/wrapper/Stack';
+import Bento from '@/components/ui/wrapper/Bento';
+import TextInput from '@/components/ui/form/TextInput';
+import Button from '@/components/ui/button/Button';
+import FormContainer from '@/components/ui/wrapper/FormContainer';
 
 const client = generateClient();
 
-export default function AddTypes() {
+export default function AddRecipes() {
     const { user } = useUser();
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const typesOptions = useTypesOptions();
+
     async function create() {
         try {
             setLoading(true);
-            const recipe = await client.graphql({
+            const category = await client.graphql({
                 query: createIngredientType,
                 variables: {
                     input: {
@@ -28,6 +37,7 @@ export default function AddTypes() {
                 }
             });
             notifySuccess("Type ajouté");
+            Router.push("/administrateur/types-ingredients")
             setTitle('');
         } catch (error) {
             notifyError("Erreur lors de la création");
@@ -41,22 +51,30 @@ export default function AddTypes() {
     return (
         <ProtectedRoutes>
             <Hero>
-                <form onSubmit={(e) => { e.preventDefault(); create(); }}>
-                    <div>
-                        <label htmlFor="title">Title:</label>
-                        <input
-                            type="text"
-                            id="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Submitting...' : 'Submit'}
-                    </button>
-                    {error && <p>Error: {error}</p>}
-                </form>
+                <FormContainer>
+                    <Bento width="450px" highlight="highlight" padding="40px"
+                        responsive={{
+                            mobilePadding: "20px"
+                        }}>
+                        <Form onSubmit={(e) => { e.preventDefault(); create(); }}>
+                            <Stack animationType="animateFadeIn" direction="column">
+                                <TextInput
+                                    type="text"
+                                    label="Type"
+                                    value={title}
+                                    onChange={(e) => { setTitle(e.target.value); }}
+                                    required
+                                    autoComplete="OFF"
+                                    variant="blue"
+                                />
+                                <Button width="full-width" variant="primary" type="submit" disable={loading}>
+                                    Valider
+                                </Button>
+                                {error && <p>Error: {error}</p>}
+                            </Stack>
+                        </Form>
+                    </Bento>
+                </FormContainer>
             </Hero>
         </ProtectedRoutes>
     );
