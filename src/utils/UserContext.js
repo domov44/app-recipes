@@ -1,13 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getCurrentUser, fetchUserAttributes, fetchAuthSession } from 'aws-amplify/auth';
-import { getUrl } from "aws-amplify/storage";
+import { getUrl } from 'aws-amplify/storage';
 import Loading from '@/components/Loading';
+import { getProfile } from '@/graphql/queries';
+import { generateClient } from 'aws-amplify/api'; // Assurez-vous que cela est correctement configuré et importé.
 
 const UserContext = createContext();
+const client = generateClient();
 
 export const UserProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(null);
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [profilePictureURL, setProfilePictureURL] = useState(null);
   const [cognitoGroups, setCognitoGroups] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -16,22 +20,28 @@ export const UserProvider = ({ children }) => {
     const checkAuthState = async () => {
       try {
         const currentUser = await getCurrentUser();
-        console.log(currentUser)
+        console.log(currentUser);
+        const userProfile = await getUserProfile(currentUser.userId);
+        console.log(userProfile);
         const session = await fetchAuthSession();
-        const cognitoGroups = session.tokens.idToken.payload["cognito:groups"];
-        console.log(cognitoGroups)
+        const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
+        console.log(cognitoGroups);
         setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
         setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
+
         const userAttributes = await fetchUserAttributes();
         setUser({
           ...userAttributes,
-          age: userAttributes.birthdate ? calculateAge(userAttributes.birthdate) : 0,
+          age: userProfile.birthdate ? calculateAge(userProfile.birthdate) : 0,
           pseudo: currentUser ? currentUser.username : 'User',
-          id: currentUser ? currentUser.userId : 0
+          id: currentUser ? currentUser.userId : 0,
+          profile: userProfile,
         });
+        setProfile(userProfile);
         setLoggedIn(true);
         fetchProfilePictureURL(userAttributes.picture);
       } catch (error) {
+        console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
         setLoggedIn(false);
       }
     };
@@ -42,20 +52,29 @@ export const UserProvider = ({ children }) => {
   const refreshUser = async () => {
     try {
       const currentUser = await getCurrentUser();
+      console.log(currentUser);
+      const userProfile = await getUserProfile(currentUser.userId);
+      console.log(userProfile);
       const session = await fetchAuthSession();
-      const cognitoGroups = session.tokens.idToken.payload["cognito:groups"];
+      const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
+      console.log(cognitoGroups);
       setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
       setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
+
       const userAttributes = await fetchUserAttributes();
-      setLoggedIn(true);
       setUser({
         ...userAttributes,
-        age: userAttributes.birthdate ? calculateAge(userAttributes.birthdate) : 0,
-        pseudo: currentUser ? currentUser.username : 'User'
+        age: userProfile.birthdate ? calculateAge(userProfile.birthdate) : 0,
+        pseudo: currentUser ? currentUser.username : 'User',
+        id: currentUser ? currentUser.userId : 0,
+        profile: userProfile,
       });
+      setProfile(userProfile);
+      setLoggedIn(true);
       fetchProfilePictureURL(userAttributes.picture);
     } catch (error) {
-      console.log('Erreur lors de la mise à jour des informations utilisateur :', error);
+      console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
+      setLoggedIn(false);
     }
   };
 
@@ -66,6 +85,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setProfile(null);
     setLoggedIn(false);
     setProfilePictureURL(null);
     setIsAdmin(false);
@@ -76,8 +96,19 @@ export const UserProvider = ({ children }) => {
   };
 
   const calculateAge = (birthdate) => {
-    const parts = (birthdate || '').split('/');
-    const birthDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    if (!birthdate || typeof birthdate !== 'string') {
+      return 0;
+    }
+    const parts = birthdate.split('-');
+    if (parts.length !== 3) {
+      return 0;
+    }
+
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+
+    const birthDate = new Date(year, month, day);
 
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -88,6 +119,7 @@ export const UserProvider = ({ children }) => {
     return age;
   };
 
+
   const fetchProfilePictureURL = async (pictureKey) => {
     try {
       if (pictureKey) {
@@ -95,8 +127,8 @@ export const UserProvider = ({ children }) => {
           key: pictureKey,
           options: {
             accessLevel: 'private',
-            expiresIn: 3600
-          }
+            expiresIn: 3600,
+          },
         });
         setProfilePictureURL(imageObject.url);
       }
@@ -105,10 +137,23 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  async function getUserProfile(id) {
+    try {
+      const profileTarget = await client.graphql({
+        query: getProfile,
+        variables: { id: id },
+      });
+      return profileTarget.data.getProfile;
+    } catch (error) {
+      console.error('Erreur lors de la récupération du profil utilisateur :', error);
+    }
+  }
+
   return (
     <UserContext.Provider value={{
       isLoggedIn,
       user,
+      profile,
       profilePictureURL,
       login,
       logout,
@@ -116,7 +161,7 @@ export const UserProvider = ({ children }) => {
       refreshUser,
       fetchProfilePictureURL,
       cognitoGroups,
-      isAdmin
+      isAdmin,
     }}>
       {children}
     </UserContext.Provider>

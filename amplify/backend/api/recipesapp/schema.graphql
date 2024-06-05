@@ -5,7 +5,9 @@ type Profile @model @auth(rules: [
   {allow: groups, groups: ["Members"], operations: [read]},
 ]) {
   id: ID!
+  pseudo: String!
   name: String!
+  surname: String!
   avatar: String
   description: String
   birthdate: AWSDate
