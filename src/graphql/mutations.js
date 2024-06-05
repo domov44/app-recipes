@@ -8,7 +8,9 @@ export const createProfile = /* GraphQL */ `
   ) {
     createProfile(input: $input, condition: $condition) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -30,7 +32,9 @@ export const updateProfile = /* GraphQL */ `
   ) {
     updateProfile(input: $input, condition: $condition) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -52,7 +56,9 @@ export const deleteProfile = /* GraphQL */ `
   ) {
     deleteProfile(input: $input, condition: $condition) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate

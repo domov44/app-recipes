@@ -8,7 +8,9 @@ export const onCreateProfile = /* GraphQL */ `
   ) {
     onCreateProfile(filter: $filter, owner: $owner) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -30,7 +32,9 @@ export const onUpdateProfile = /* GraphQL */ `
   ) {
     onUpdateProfile(filter: $filter, owner: $owner) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -52,7 +56,9 @@ export const onDeleteProfile = /* GraphQL */ `
   ) {
     onDeleteProfile(filter: $filter, owner: $owner) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate

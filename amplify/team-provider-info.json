@@ -42,5 +42,37 @@
         "recipesapp4f20ed6a": {}
       }
     }
+  },
+  "ronantest": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-recipesapp-ronantest-90925-authRole",
+      "UnauthRoleArn": "arn:aws:iam::381491883556:role/amplify-recipesapp-ronantest-90925-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::381491883556:role/amplify-recipesapp-ronantest-90925-authRole",
+      "Region": "eu-west-3",
+      "DeploymentBucketName": "amplify-recipesapp-ronantest-90925-deployment",
+      "UnauthRoleName": "amplify-recipesapp-ronantest-90925-unauthRole",
+      "StackName": "amplify-recipesapp-ronantest-90925",
+      "StackId": "arn:aws:cloudformation:eu-west-3:381491883556:stack/amplify-recipesapp-ronantest-90925/8dadd6c0-230a-11ef-a466-0ac0854572ed",
+      "AmplifyAppId": "d2zkxg84qe19rz"
+    },
+    "categories": {
+      "auth": {
+        "recipesapp4f20ed6a": {}
+      },
+      "function": {
+        "createProfileOnSignup": {
+          "deploymentBucketName": "amplify-recipesapp-ronantest-90925-deployment",
+          "s3Key": "amplify-builds/createProfileOnSignup-764453733452662f616a-build.zip"
+        },
+        "recipesapp4f20ed6a": {},
+        "recipesapp": {}
+      },
+      "api": {
+        "recipesapp": {}
+      },
+      "storage": {
+        "s3cffd06a6": {}
+      }
+    }
   }
 }

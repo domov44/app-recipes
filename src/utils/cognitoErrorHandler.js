@@ -20,6 +20,12 @@ export function handleCognitoError(error) {
         case 'Invalid code provided, please request a code again.':
             errorMessage = 'Code de vérification invalide. Veuillez en redemander un nouveau.';
             break;
+        case 'Invalid email address format.':
+            errorMessage = 'L\'adresse email n\'est pas dans un formal valide.';
+            break;
+        case 'User does not exist.':
+            errorMessage = 'Cet utilisateur n\'existe pas.';
+            break;
         default:
             console.log(error);
             break;

@@ -23,6 +23,7 @@ import { deleteIngredient } from "@/graphql/mutations";
 import AnimationComponent from "@/components/animation/Animation";
 import Empty from '@/components/animation/storageAnimation/empty.json';
 import TextLink from '@/components/ui/textual/TextLink';
+import { handleTypeIngredientVariant } from '@/utils/typeIngredientHandler';
 
 const ingredientClient = generateClient();
 
@@ -185,7 +186,7 @@ function IngredientsPage() {
                                         <TextLink href={`/ingredients/${ingredient.id}`}>{ingredient.name}</TextLink>
                                     </Td>
                                     <Td>
-                                        <Chip variant="success">{ingredient.type.name}</Chip>
+                                        <Chip variant={handleTypeIngredientVariant(ingredient.type.name)}>{ingredient.type.name}</Chip>
                                     </Td>
                                     {isAdmin && (
                                         <Td>
