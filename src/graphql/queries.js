@@ -5,7 +5,9 @@ export const getProfile = /* GraphQL */ `
   query GetProfile($id: ID!) {
     getProfile(id: $id) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -29,7 +31,9 @@ export const listProfiles = /* GraphQL */ `
     listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        pseudo
         name
+        surname
         avatar
         description
         birthdate
@@ -188,13 +192,6 @@ export const listIngredients = /* GraphQL */ `
         id
         name
         typeID
-        type {
-         id
-         name
-         createdAt
-         updatedAt
-         __typename
-      }
         createdAt
         updatedAt
         __typename
