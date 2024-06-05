@@ -4,7 +4,7 @@ import { useUser } from '@/utils/UserContext';
 import Head from "next/head";
 import Button from "@/components/ui/button/Button";
 import Chip from "@/components/ui/textual/Chip";
-import { PiCake, PiEnvelope, PiPlus } from 'react-icons/pi';
+import { PiCake, PiEnvelope, PiPlus, PiPen } from 'react-icons/pi';
 import Section from "@/components/ui/wrapper/Section";
 import Bento from "@/components/ui/wrapper/Bento";
 import Container from "@/components/ui/wrapper/Container";
@@ -36,7 +36,7 @@ export default function Profil() {
                         <img className="user-picture" alt={user?.pseudo} src={user?.profile.avatar}></img>
                         <Stack direction="column" spacing="0px">
                             <Title level={2}>
-                                {user?.pseudo} {user?.pseudo}
+                                {user?.profile.name} {user?.profile.surname}
                             </Title>
                             <Text>
                                 {user?.pseudo}
@@ -47,9 +47,12 @@ export default function Profil() {
                 <Container direction="row" responsive="yes">
                     <Column width="35%">
                         <Bento position="sticky" top="80px" highlight="highlight">
-                            <Title level={4}>
-                                Profil
-                            </Title>
+                            <Stack align="center">
+                                <Title level={4}>
+                                    Profil
+                                </Title>
+                                <IconButton variant="secondary-action" href="/profil/modifier-mon-profil"><PiPen/> Modifier</IconButton>
+                            </Stack>
                             <Text>
                                 {user?.profile.description}
                             </Text>
