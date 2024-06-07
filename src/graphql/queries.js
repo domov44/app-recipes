@@ -54,6 +54,19 @@ export const getRecipe = /* GraphQL */ `
       title
       image
       userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
@@ -173,6 +186,10 @@ export const getIngredient = /* GraphQL */ `
         name
         createdAt
         updatedAt
+        __typename
+      }
+      recipes {
+        nextToken
         __typename
       }
       createdAt
@@ -304,6 +321,16 @@ export const getRecipeIngredient = /* GraphQL */ `
       recipeID
       ingredientID
       quantity
+      ingredient {
+        id
+        name
+        typeID
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      typeName
       createdAt
       updatedAt
       __typename
@@ -326,6 +353,8 @@ export const listRecipeIngredients = /* GraphQL */ `
         recipeID
         ingredientID
         quantity
+        name
+        typeName
         createdAt
         updatedAt
         __typename
@@ -355,6 +384,39 @@ export const recipeIngredientsByRecipeID = /* GraphQL */ `
         recipeID
         ingredientID
         quantity
+        name
+        typeName
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const recipeIngredientsByIngredientID = /* GraphQL */ `
+  query RecipeIngredientsByIngredientID(
+    $ingredientID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeIngredientFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    recipeIngredientsByIngredientID(
+      ingredientID: $ingredientID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        recipeID
+        ingredientID
+        quantity
+        name
+        typeName
         createdAt
         updatedAt
         __typename
