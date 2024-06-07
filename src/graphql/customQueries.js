@@ -49,8 +49,18 @@ export const getRecipe = /* GraphQL */ `
       userID
       steps
       ingredients {
-        nextToken
-        __typename
+        items {
+          id
+          quantity
+          ingredient {
+            id
+            name
+            type {
+              id
+              name
+            }
+          }
+        }
       }
       categoryID
       category {
@@ -84,6 +94,29 @@ export const listRecipes = /* GraphQL */ `
         owner
         createdAt
         updatedAt
+        user{
+          id
+          pseudo
+          avatar
+        }
+        category {
+          id
+          name
+        }
+        ingredients {
+          items {
+            id
+            quantity
+            ingredient {
+              id
+              name
+              type {
+                id
+                name
+              }
+            }
+          }
+        }
         __typename
       }
       nextToken

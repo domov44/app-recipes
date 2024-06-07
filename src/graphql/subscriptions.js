@@ -83,6 +83,19 @@ export const onCreateRecipe = /* GraphQL */ `
       title
       image
       userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
@@ -113,6 +126,19 @@ export const onUpdateRecipe = /* GraphQL */ `
       title
       image
       userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
@@ -143,6 +169,19 @@ export const onDeleteRecipe = /* GraphQL */ `
       title
       image
       userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
@@ -178,6 +217,10 @@ export const onCreateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -199,6 +242,10 @@ export const onUpdateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -218,6 +265,10 @@ export const onDeleteIngredient = /* GraphQL */ `
         name
         createdAt
         updatedAt
+        __typename
+      }
+      recipes {
+        nextToken
         __typename
       }
       createdAt
@@ -331,6 +382,16 @@ export const onCreateRecipeIngredient = /* GraphQL */ `
       recipeID
       ingredientID
       quantity
+      ingredient {
+        id
+        name
+        typeID
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      typeName
       createdAt
       updatedAt
       __typename
@@ -346,6 +407,16 @@ export const onUpdateRecipeIngredient = /* GraphQL */ `
       recipeID
       ingredientID
       quantity
+      ingredient {
+        id
+        name
+        typeID
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      typeName
       createdAt
       updatedAt
       __typename
@@ -361,6 +432,16 @@ export const onDeleteRecipeIngredient = /* GraphQL */ `
       recipeID
       ingredientID
       quantity
+      ingredient {
+        id
+        name
+        typeID
+        createdAt
+        updatedAt
+        __typename
+      }
+      name
+      typeName
       createdAt
       updatedAt
       __typename
