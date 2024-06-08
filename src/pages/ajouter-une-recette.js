@@ -26,7 +26,7 @@ import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from 'react-icons/ci';
 import { confirm } from '@/utils/ConfirmGlobal';
 import { PiPlus } from 'react-icons/pi';
-import { createRecipe, createRecipeIngredient } from "@/graphql/mutations";
+import { createRecipe, createRecipeIngredient } from "@/graphql/customMutations";
 import { generateClient } from "aws-amplify/api";
 import { useUser } from '@/utils/UserContext';
 const client = generateClient();
