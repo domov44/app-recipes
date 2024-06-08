@@ -333,11 +333,36 @@ export const createRecipeIngredient = /* GraphQL */ `
   ) {
     createRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipeID
-      ingredientID
+      recipe {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      ingredient {
+        id
+        name
+        createdAt
+        updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
+        __typename
+      }
       quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }
