@@ -1,8 +1,8 @@
 type Profile @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: owner, ownerField: "owner"},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   pseudo: String!
@@ -11,66 +11,64 @@ type Profile @model @auth(rules: [
   avatar: String
   description: String
   birthdate: AWSDate
-  recipes: [Recipe] @hasMany(indexName: "byUser", fields: ["id"])
+  recipes: [Recipe] @hasMany
   owner: String
 }
 
-
 type Recipe @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: owner, ownerField: "owner"},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   title: String!
   image: String
-  userID: ID! @index(name: "byUser")
+  user: Profile @hasOne
   steps: AWSJSON
-  ingredients: [RecipeIngredient] @hasMany(indexName: "byRecipe", fields: ["id"])
-  categoryID: ID! @index(name: "byCategory")
-  category: Category @belongsTo(fields: ["categoryID"])
+  ingredients: [RecipeIngredient] @hasMany
+  category: Category @hasOne
   owner: String
 }
 
 type Ingredient @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String!
-  typeID: ID! @index(name: "byType")
-  type: IngredientType @belongsTo(fields: ["typeID"])
+  type: IngredientType @hasOne
+  recipes:[RecipeIngredient] @hasMany
 }
 
 type IngredientType @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String!
-  ingredients: [Ingredient] @hasMany(indexName: "byType", fields: ["id"])
+  ingredients: [Ingredient] @hasMany
 }
 
 type Category @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String!
-  recipes: [Recipe] @hasMany(indexName: "byCategory", fields: ["id"])
+  recipes: [Recipe] @hasMany
 }
 
 type RecipeIngredient @model @auth(rules: [
-  {allow: public, operations: [read]},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
-  recipeID: ID! @index(name: "byRecipe")
-  ingredientID: ID!
+  recipe: Recipe @hasOne
+  ingredient: Ingredient @hasOne
   quantity: String
 }

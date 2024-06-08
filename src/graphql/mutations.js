@@ -82,13 +82,24 @@ export const createRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
         __typename
       }
-      categoryID
       category {
         id
         name
@@ -99,6 +110,10 @@ export const createRecipe = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -112,13 +127,24 @@ export const updateRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
         __typename
       }
-      categoryID
       category {
         id
         name
@@ -129,6 +155,10 @@ export const updateRecipe = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -142,13 +172,24 @@ export const deleteRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
       steps
       ingredients {
         nextToken
         __typename
       }
-      categoryID
       category {
         id
         name
@@ -159,6 +200,10 @@ export const deleteRecipe = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -171,7 +216,6 @@ export const createIngredient = /* GraphQL */ `
     createIngredient(input: $input, condition: $condition) {
       id
       name
-      typeID
       type {
         id
         name
@@ -179,8 +223,14 @@ export const createIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      ingredientTypeIngredientsId
+      ingredientTypeId
       __typename
     }
   }
@@ -193,7 +243,6 @@ export const updateIngredient = /* GraphQL */ `
     updateIngredient(input: $input, condition: $condition) {
       id
       name
-      typeID
       type {
         id
         name
@@ -201,8 +250,14 @@ export const updateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      ingredientTypeIngredientsId
+      ingredientTypeId
       __typename
     }
   }
@@ -215,7 +270,6 @@ export const deleteIngredient = /* GraphQL */ `
     deleteIngredient(input: $input, condition: $condition) {
       id
       name
-      typeID
       type {
         id
         name
@@ -223,8 +277,14 @@ export const deleteIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
+      recipes {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
+      ingredientTypeIngredientsId
+      ingredientTypeId
       __typename
     }
   }
@@ -344,11 +404,36 @@ export const createRecipeIngredient = /* GraphQL */ `
   ) {
     createRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipeID
-      ingredientID
+      recipe {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      ingredient {
+        id
+        name
+        createdAt
+        updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
+        __typename
+      }
       quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }
@@ -360,11 +445,36 @@ export const updateRecipeIngredient = /* GraphQL */ `
   ) {
     updateRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipeID
-      ingredientID
+      recipe {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      ingredient {
+        id
+        name
+        createdAt
+        updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
+        __typename
+      }
       quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }
@@ -376,11 +486,36 @@ export const deleteRecipeIngredient = /* GraphQL */ `
   ) {
     deleteRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipeID
-      ingredientID
+      recipe {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      ingredient {
+        id
+        name
+        createdAt
+        updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
+        __typename
+      }
       quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }

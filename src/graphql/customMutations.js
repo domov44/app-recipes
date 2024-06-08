@@ -76,23 +76,18 @@ export const createRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
       steps
       ingredients {
         nextToken
         __typename
       }
-      categoryID
-      category {
-        id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -338,11 +333,13 @@ export const createRecipeIngredient = /* GraphQL */ `
   ) {
     createRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipeID
-      ingredientID
       quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }

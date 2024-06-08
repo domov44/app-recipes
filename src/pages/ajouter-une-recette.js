@@ -26,15 +26,15 @@ import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from 'react-icons/ci';
 import { confirm } from '@/utils/ConfirmGlobal';
 import { PiPlus } from 'react-icons/pi';
-import { createRecipe, createRecipeIngredient } from "@/graphql/mutations";
+import { createRecipe, createRecipeIngredient } from "@/graphql/customMutations";
 import { generateClient } from "aws-amplify/api";
+import { useUser } from '@/utils/UserContext';
 const client = generateClient();
 
 const AjouterRecette = () => {
-
+    const { user } = useUser();
     const [step, setStep] = useState(1);
     const [errors, setErrors] = useState({});
-    const [categorie, setCategorie] = useState('');
     const [formData1, setFormData1] = useState({ nom: '' });
     const [formData2, setFormData2] = useState({ description: '', categorie: null });
     const [formData3, setFormData3] = useState({ ingredients: [] });
@@ -50,33 +50,40 @@ const AjouterRecette = () => {
                 query: createRecipe,
                 variables: {
                     input: {
-                        "title": formData1.nom,
-                        "image": formData5.image,
-                        "steps": formData4.map((step, index) => ({ ...step, step_number: index + 1 })),
-                        "categoryID": formData2.categorie,
-                        "userID": 1,
+                        title: formData1.nom,
+                        image: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
+                        steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
+                        recipeCategoryId: formData2.categorie,
+                        recipeUserId: user.sub,
+                        owner: user.sub,
                     }
                 }
             });
 
-            const newRecipeIngredient = await client.graphql({
-                query: createRecipeIngredient,
-                variables: {
-                    input: {
-                        "recipeID": formData1.nom,
-                        "ingredientID": formData1.nom,
-                        "quantity": formData3.ingredients.quantity,
+            const recipeID = newRecipe.data.createRecipe.id;
+
+            for (const ingredient of formData3.ingredients) {
+                await client.graphql({
+                    query: createRecipeIngredient,
+                    variables: {
+                        input: {
+                            recipeIngredientRecipeId: recipeID,
+                            recipeIngredientIngredientId: ingredient.id,
+                            quantity: ingredient.quantity,
+                        }
                     }
-                }
-            });
-            notifySuccess("Recette ajouté");
+                });
+            }
+
+            notifySuccess("Recette ajoutée");
             console.log("Nouvelle recette :", newRecipe);
-            console.log("Nouvel ingredients recette :", newRecipeIngredient);
         } catch (error) {
-            notifyError("Erreur lors de la création du client");
-            console.error("Erreur lors de la création du client :", error);
+            notifyError("Erreur lors de la création de la recette");
+            console.error("Erreur lors de la création de la recette :", error);
         }
     }
+
+
 
     const handleImageDelete = () => {
         setFormData5({ image: null });
@@ -182,8 +189,6 @@ const AjouterRecette = () => {
         }
     };
 
-
-
     return (
         <ProtectedRoutes>
             <Head>
@@ -235,7 +240,7 @@ const AjouterRecette = () => {
                                 )}
                                 {step === 3 && (
                                     <>
-                                        <Title>Ingredients</Title>
+                                        <Title>Ingrédients</Title>
                                         {formData3.ingredients.map((ingredient, index) => (
                                             <Stack key={index} align="center">
                                                 <Accordion title={ingredient.id ? `Ingrédient ${index + 1} : ` + ingredient.name : `Ingrédient ${index + 1} : choisissez un ingrédient`} defaultOpen={true}>
@@ -256,7 +261,6 @@ const AjouterRecette = () => {
                                                 </Accordion>
                                                 <IconButton wtext="no" onClick={e => handleDeleteIngredients(index)} variant="danger"><CiTrash /></IconButton>
                                             </Stack>
-
                                         ))}
                                         <Button
                                             type="button"
@@ -270,6 +274,7 @@ const AjouterRecette = () => {
                                 )}
                                 {step === 4 && (
                                     <>
+                                        <Title>Étapes</Title>
                                         {formData4.steps.map((step, index) => (
                                             <Stack key={index} align="center">
                                                 <Accordion title={`Étape ${index + 1}`} defaultOpen={true}>
@@ -287,7 +292,7 @@ const AjouterRecette = () => {
                                                         <TextInput
                                                             type="number"
                                                             required
-                                                            label="Durée en minute"
+                                                            label="Durée en minutes"
                                                             value={step.duration}
                                                             onChange={(e) => {
                                                                 const newSteps = [...formData4.steps];
@@ -306,7 +311,6 @@ const AjouterRecette = () => {
                                                 </IconButton>
                                             </Stack>
                                         ))}
-
                                         <Button
                                             type="button"
                                             variant="secondary"

@@ -34,7 +34,7 @@ export default function AddRecipes() {
                 variables: {
                     input: {
                         name: title,
-                        typeID: type,
+                        ingredientTypeId: type,
                     }
                 }
             });

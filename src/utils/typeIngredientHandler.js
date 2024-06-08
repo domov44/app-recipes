@@ -14,7 +14,7 @@ export function handleTypeIngredientVariant(type) {
             variant = 'primary';
             break;
         default:
-            console.log(error);
+            variant = 'primary';
             break;
     }
 
