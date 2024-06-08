@@ -215,6 +215,7 @@ export const onCreateIngredient = /* GraphQL */ `
     onCreateIngredient(filter: $filter) {
       id
       name
+      typeID
       type {
         id
         name
@@ -241,6 +242,7 @@ export const onUpdateIngredient = /* GraphQL */ `
     onUpdateIngredient(filter: $filter) {
       id
       name
+      typeID
       type {
         id
         name
@@ -267,6 +269,7 @@ export const onDeleteIngredient = /* GraphQL */ `
     onDeleteIngredient(filter: $filter) {
       id
       name
+      typeID
       type {
         id
         name
@@ -405,6 +408,7 @@ export const onCreateRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
@@ -445,6 +449,7 @@ export const onUpdateRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
@@ -485,6 +490,7 @@ export const onDeleteRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId

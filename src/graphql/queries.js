@@ -120,6 +120,7 @@ export const getIngredient = /* GraphQL */ `
     getIngredient(id: $id) {
       id
       name
+      typeID
       type {
         id
         name
@@ -149,6 +150,7 @@ export const listIngredients = /* GraphQL */ `
       items {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
@@ -249,6 +251,7 @@ export const getRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
