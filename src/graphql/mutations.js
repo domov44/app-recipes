@@ -216,6 +216,7 @@ export const createIngredient = /* GraphQL */ `
     createIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
       type {
         id
         name
@@ -243,6 +244,7 @@ export const updateIngredient = /* GraphQL */ `
     updateIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
       type {
         id
         name
@@ -270,6 +272,7 @@ export const deleteIngredient = /* GraphQL */ `
     deleteIngredient(input: $input, condition: $condition) {
       id
       name
+      typeID
       type {
         id
         name
@@ -421,6 +424,7 @@ export const createRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
@@ -462,6 +466,7 @@ export const updateRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId
@@ -503,6 +508,7 @@ export const deleteRecipeIngredient = /* GraphQL */ `
       ingredient {
         id
         name
+        typeID
         createdAt
         updatedAt
         ingredientTypeIngredientsId

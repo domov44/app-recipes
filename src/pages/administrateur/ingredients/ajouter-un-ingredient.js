@@ -35,6 +35,7 @@ export default function AddRecipes() {
                     input: {
                         name: title,
                         ingredientTypeId: type,
+                        typeID: type
                     }
                 }
             });
