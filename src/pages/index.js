@@ -36,12 +36,10 @@ function Home() {
         }
     };
 
-    console.log(recipes)
-
     return (
         <>
             <Head>
-                <title>L&apos;application de recipe Miamze</title>
+                <title>L'application de recipe Miamze</title>
                 <meta name="description" content="Description de la page" />
                 <meta property="og:image" content="URL_de_votre_image" />
             </Head>
@@ -64,7 +62,7 @@ function Home() {
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
-                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.user.picture}></img>
+                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.user.avatar}></img>
                                             <Stack direction="column" spacing="0px">
                                                 <Title fontfamily="medium" level={4}>
                                                     {recipe.user.pseudo}

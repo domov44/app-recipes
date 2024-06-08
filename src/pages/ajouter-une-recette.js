@@ -32,7 +32,7 @@ import { useUser } from '@/utils/UserContext';
 const client = generateClient();
 
 const AjouterRecette = () => {
-    const {user} = useUser();
+    const { user } = useUser();
     const [step, setStep] = useState(1);
     const [errors, setErrors] = useState({});
     const [formData1, setFormData1] = useState({ nom: '' });
@@ -50,12 +50,12 @@ const AjouterRecette = () => {
                 query: createRecipe,
                 variables: {
                     input: {
-                        "title": formData1.nom,
-                        "image": "https://cdn.vuetifyjs.com/images/cards/cooking.png",
-                        "steps": JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
-                        "categoryID": formData2.categorie,
-                        "userID": user.sub,
-                        "owner": user.sub,
+                        title: formData1.nom,
+                        image: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
+                        steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
+                        recipeCategoryId: formData2.categorie,
+                        recipeUserId: user.sub,
+                        owner: user.sub,
                     }
                 }
             });
@@ -67,9 +67,9 @@ const AjouterRecette = () => {
                     query: createRecipeIngredient,
                     variables: {
                         input: {
-                            "recipeID": recipeID,
-                            "ingredientID": ingredient.id,
-                            "quantity": ingredient.quantity,
+                            recipeIngredientRecipeId: recipeID,
+                            recipeIngredientIngredientId: ingredient.id,
+                            quantity: ingredient.quantity,
                         }
                     }
                 });
@@ -82,6 +82,8 @@ const AjouterRecette = () => {
             console.error("Erreur lors de la création de la recette :", error);
         }
     }
+
+
 
     const handleImageDelete = () => {
         setFormData5({ image: null });
