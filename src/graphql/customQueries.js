@@ -232,6 +232,7 @@ export const listIngredients = /* GraphQL */ `
           nextToken
           __typename
         }
+        typeID
         createdAt
         updatedAt
         __typename

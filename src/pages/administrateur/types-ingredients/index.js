@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { generateClient } from "aws-amplify/api";
-import { listIngredientTypes } from '@/graphql/customQueries';
+import { listIngredientTypes, listIngredients } from '@/graphql/customQueries';
 import Table from '@/components/ui/table/Table';
 import Td from '@/components/ui/table/Td';
 import Th from '@/components/ui/table/Th';
@@ -25,7 +25,7 @@ import AnimationComponent from "@/components/animation/Animation";
 import Empty from '@/components/animation/storageAnimation/empty.json';
 import TextLink from '@/components/ui/textual/TextLink';
 
-const listIngredientTypeClient = generateClient();
+const client = generateClient();
 
 function TypesIngredientsPage() {
     const [ingredientTypes, setIngredients] = useState([]);
@@ -39,7 +39,7 @@ function TypesIngredientsPage() {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const result = await listIngredientTypeClient.graphql({
+            const result = await client.graphql({
                 query: listIngredientTypes,
                 variables: { limit: 10 },
             });
@@ -88,25 +88,31 @@ function TypesIngredientsPage() {
                 variant: "danger"
             })) {
                 await Promise.all(checkedIngredientTypeIds.map(async (typeId) => {
-                    // Fetch ingredients by typeID
-                    const ingredientsResult = await listIngredientTypeClient.graphql({
-                        query: ingredientsByTypeID,
-                        variables: { typeID: typeId }
-                    });
-                    const ingredients = ingredientsResult.data.ingredientsByTypeID.items;
 
-                    // Delete all ingredients of the type
-                    await Promise.all(ingredients.map(async (ingredient) => {
-                        await listIngredientTypeClient.graphql({
-                            query: deleteIngredient,
-                            variables: {
-                                input: { id: ingredient.id }
+                    const filter = {
+                        filter: {
+                            typeID: {
+                                eq: typeId
                             }
+                        }
+                    };
+    
+                    const ingredientsResult = await client.graphql({
+                        query: listIngredients,
+                        variables: filter,
+                    });
+    
+                    const ingredients = ingredientsResult.data.listIngredients.items;
+
+                    await Promise.all(ingredients.map(async (ingredient) => {
+                        await client.graphql({
+                            query: deleteIngredient,
+                            variables: { input: { id: ingredient.id } }
                         });
                     }));
 
                     // Delete the ingredient type
-                    await listIngredientTypeClient.graphql({
+                    await client.graphql({
                         query: deleteIngredientType,
                         variables: {
                             input: { id: typeId }
@@ -128,35 +134,49 @@ function TypesIngredientsPage() {
 
     const handleDeleteIngredientType = async (ingredientTypeId) => {
         try {
-            if (await confirm({
+            const confirmed = await confirm({
                 title: `Voulez-vous vraiment supprimer ce type d'ingrédient ?`,
                 content: "Ce type d'ingrédient et tous les ingrédients associés seront supprimés de l'application",
                 variant: "danger"
-            })) {
-                // Récupérer tous les ingrédients associés à ce type d'ingrédient
-                const ingredientsResult = await listIngredientTypeClient.graphql({
-                    query: ingredientsByTypeID,
-                    variables: { typeID: ingredientTypeId }
+            });
+
+            if (confirmed) {
+                console.log("Confirmation received, proceeding with deletion");
+                console.log(ingredientTypeId)
+
+                const filter = {
+                    filter: {
+                        typeID: {
+                            eq: ingredientTypeId
+                        }
+                    }
+                };
+
+                const ingredientsResult = await client.graphql({
+                    query: listIngredients,
+                    variables: filter,
                 });
 
-                const ingredients = ingredientsResult.data.ingredientsByTypeID.items;
+                const ingredients = ingredientsResult.data.listIngredients.items;
+
+                console.log("Ingrédients à supprimer : ", ingredients);
 
                 // Supprimer tous les ingrédients associés
                 await Promise.all(ingredients.map(async (ingredient) => {
-                    await listIngredientTypeClient.graphql({
+                    await client.graphql({
                         query: deleteIngredient,
                         variables: { input: { id: ingredient.id } }
                     });
                 }));
 
                 // Supprimer le type d'ingrédient
-                await listIngredientTypeClient.graphql({
+                await client.graphql({
                     query: deleteIngredientType,
                     variables: { input: { id: ingredientTypeId } }
                 });
 
                 notifySuccess("Type d'ingrédient et ses ingrédients associés supprimés avec succès");
-                fetchData();
+                fetchData(); 
             }
         } catch (error) {
             console.error("Error on deleting ingredientType and its ingredients", error);

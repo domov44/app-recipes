@@ -38,6 +38,7 @@ type Ingredient @model @auth(rules: [
 ]) {
   id: ID!
   name: String!
+  typeID: String!
   type: IngredientType @hasOne
   recipes:[RecipeIngredient] @hasMany
 }
