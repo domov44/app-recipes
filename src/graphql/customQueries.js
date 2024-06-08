@@ -221,14 +221,17 @@ export const listIngredients = /* GraphQL */ `
       items {
         id
         name
-        typeID
-        type {
-         id
-         name
-         createdAt
-         updatedAt
-         __typename
-      }
+          type {
+          id
+          name
+          createdAt
+          updatedAt
+          __typename
+        }
+        recipes {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
