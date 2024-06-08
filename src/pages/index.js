@@ -39,7 +39,7 @@ function Home() {
     return (
         <>
             <Head>
-                <title>L'application de recipe Miamze</title>
+                <title>L&apos;application de recipe Miamze</title>
                 <meta name="description" content="Description de la page" />
                 <meta property="og:image" content="URL_de_votre_image" />
             </Head>
