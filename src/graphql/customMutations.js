@@ -76,16 +76,18 @@ export const createRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
       steps
       ingredients {
         nextToken
         __typename
       }
-      categoryID
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
