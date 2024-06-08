@@ -83,13 +83,6 @@ export const createRecipe = /* GraphQL */ `
         __typename
       }
       categoryID
-      category {
-        id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
       owner
       createdAt
       updatedAt

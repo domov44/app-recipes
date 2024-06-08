@@ -88,35 +88,39 @@ export const listRecipes = /* GraphQL */ `
         id
         title
         image
-        userID
-        steps
-        categoryID
-        owner
-        createdAt
-        updatedAt
-        user{
+          user {
           id
           pseudo
+          name
+          surname
           avatar
+          description
+          birthdate
+          owner
+          createdAt
+          updatedAt
+          __typename
+        }
+        steps
+        ingredients {
+          nextToken
+          __typename
         }
         category {
           id
           name
+          createdAt
+          updatedAt
+          __typename
         }
-        ingredients {
-          items {
-            id
-            quantity
-            ingredient {
-              id
-              name
-              type {
-                id
-                name
-              }
-            }
-          }
-        }
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
         __typename
       }
       nextToken

@@ -53,7 +53,6 @@ export const getRecipe = /* GraphQL */ `
       id
       title
       image
-      userID
       user {
         id
         pseudo
@@ -72,7 +71,6 @@ export const getRecipe = /* GraphQL */ `
         nextToken
         __typename
       }
-      categoryID
       category {
         id
         name
@@ -83,6 +81,10 @@ export const getRecipe = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -98,76 +100,14 @@ export const listRecipes = /* GraphQL */ `
         id
         title
         image
-        userID
         steps
-        categoryID
         owner
         createdAt
         updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const recipesByUserID = /* GraphQL */ `
-  query RecipesByUserID(
-    $userID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelRecipeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    recipesByUserID(
-      userID: $userID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        title
-        image
-        userID
-        steps
-        categoryID
-        owner
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const recipesByCategoryID = /* GraphQL */ `
-  query RecipesByCategoryID(
-    $categoryID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelRecipeFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    recipesByCategoryID(
-      categoryID: $categoryID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        title
-        image
-        userID
-        steps
-        categoryID
-        owner
-        createdAt
-        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
         __typename
       }
       nextToken
@@ -180,7 +120,6 @@ export const getIngredient = /* GraphQL */ `
     getIngredient(id: $id) {
       id
       name
-      typeID
       type {
         id
         name
@@ -194,6 +133,8 @@ export const getIngredient = /* GraphQL */ `
       }
       createdAt
       updatedAt
+      ingredientTypeIngredientsId
+      ingredientTypeId
       __typename
     }
   }
@@ -208,37 +149,10 @@ export const listIngredients = /* GraphQL */ `
       items {
         id
         name
-        typeID
         createdAt
         updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const ingredientsByTypeID = /* GraphQL */ `
-  query IngredientsByTypeID(
-    $typeID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelIngredientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    ingredientsByTypeID(
-      typeID: $typeID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        name
-        typeID
-        createdAt
-        updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
         __typename
       }
       nextToken
@@ -318,21 +232,36 @@ export const getRecipeIngredient = /* GraphQL */ `
   query GetRecipeIngredient($id: ID!) {
     getRecipeIngredient(id: $id) {
       id
-      recipeID
-      ingredientID
-      quantity
+      recipe {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
       ingredient {
         id
         name
-        typeID
         createdAt
         updatedAt
+        ingredientTypeIngredientsId
+        ingredientTypeId
         __typename
       }
-      name
-      typeName
+      quantity
       createdAt
       updatedAt
+      recipeIngredientsId
+      ingredientRecipesId
+      recipeIngredientRecipeId
+      recipeIngredientIngredientId
       __typename
     }
   }
@@ -350,75 +279,13 @@ export const listRecipeIngredients = /* GraphQL */ `
     ) {
       items {
         id
-        recipeID
-        ingredientID
         quantity
-        name
-        typeName
         createdAt
         updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const recipeIngredientsByRecipeID = /* GraphQL */ `
-  query RecipeIngredientsByRecipeID(
-    $recipeID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelRecipeIngredientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    recipeIngredientsByRecipeID(
-      recipeID: $recipeID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        recipeID
-        ingredientID
-        quantity
-        name
-        typeName
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const recipeIngredientsByIngredientID = /* GraphQL */ `
-  query RecipeIngredientsByIngredientID(
-    $ingredientID: ID!
-    $sortDirection: ModelSortDirection
-    $filter: ModelRecipeIngredientFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    recipeIngredientsByIngredientID(
-      ingredientID: $ingredientID
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        recipeID
-        ingredientID
-        quantity
-        name
-        typeName
-        createdAt
-        updatedAt
+        recipeIngredientsId
+        ingredientRecipesId
+        recipeIngredientRecipeId
+        recipeIngredientIngredientId
         __typename
       }
       nextToken
