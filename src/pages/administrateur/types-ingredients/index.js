@@ -4,6 +4,7 @@ import { listIngredientTypes, listIngredients } from '@/graphql/customQueries';
 import Table from '@/components/ui/table/Table';
 import Td from '@/components/ui/table/Td';
 import Th from '@/components/ui/table/Th';
+import Tr from '@/components/ui/table/Tr';
 import Checkbox from '@/components/ui/form/CheckboxItem';
 import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from "react-icons/ci";
@@ -96,12 +97,12 @@ function TypesIngredientsPage() {
                             }
                         }
                     };
-    
+
                     const ingredientsResult = await client.graphql({
                         query: listIngredients,
                         variables: filter,
                     });
-    
+
                     const ingredients = ingredientsResult.data.listIngredients.items;
 
                     await Promise.all(ingredients.map(async (ingredient) => {
@@ -176,7 +177,7 @@ function TypesIngredientsPage() {
                 });
 
                 notifySuccess("Type d'ingrédient et ses ingrédients associés supprimés avec succès");
-                fetchData(); 
+                fetchData();
             }
         } catch (error) {
             console.error("Error on deleting ingredientType and its ingredients", error);
@@ -254,15 +255,17 @@ function TypesIngredientsPage() {
                                 </tr>
                             ))
                         ) : (
-                            <Td colSpan={4}>
-                                <Stack direction="column" align="center">
-                                    <AnimationComponent animationData={Empty} width="150px" />
-                                    <Text>Aucun type d&apos;ingrédient.</Text>
-                                    <IconButton variant="action" href="/administrateur/types-ingredients/ajouter-un-type">
-                                        <IoMdAdd /> Ajouter un type d&apos;ingrédient
-                                    </IconButton>
-                                </Stack>
-                            </Td>
+                            <Tr>
+                                <Td colSpan={4}>
+                                    <Stack direction="column" align="center">
+                                        <AnimationComponent animationData={Empty} width="150px" />
+                                        <Text>Aucun type d&apos;ingrédient.</Text>
+                                        <IconButton variant="action" href="/administrateur/types-ingredients/ajouter-un-type">
+                                            <IoMdAdd /> Ajouter un type d&apos;ingrédient
+                                        </IconButton>
+                                    </Stack>
+                                </Td>
+                            </Tr>
                         )
                     )}
                 </tbody>

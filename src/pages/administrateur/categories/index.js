@@ -4,6 +4,7 @@ import { listCategories } from '@/graphql/customQueries';
 import Table from '@/components/ui/table/Table';
 import Td from '@/components/ui/table/Td';
 import Th from '@/components/ui/table/Th';
+import Tr from '@/components/ui/table/Tr';
 import Checkbox from '@/components/ui/form/CheckboxItem';
 import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from "react-icons/ci";
@@ -195,15 +196,17 @@ function CategoriesPage() {
                                 </tr>
                             ))
                         ) : (
-                            <Td colSpan={4}>
-                                <Stack direction="column" align="center">
-                                    <AnimationComponent animationData={Empty} width="150px" />
-                                    <Text>Aucune catégorie.</Text>
-                                    <IconButton variant="action" href="/administrateur/categories/ajouter-une-categorie">
-                                        <IoMdAdd /> Ajouter une catégorie
-                                    </IconButton>
-                                </Stack>
-                            </Td>
+                            <Tr>
+                                <Td colSpan={4}>
+                                    <Stack direction="column" align="center">
+                                        <AnimationComponent animationData={Empty} width="150px" />
+                                        <Text>Aucune catégorie.</Text>
+                                        <IconButton variant="action" href="/administrateur/categories/ajouter-une-categorie">
+                                            <IoMdAdd /> Ajouter une catégorie
+                                        </IconButton>
+                                    </Stack>
+                                </Td>
+                            </Tr>
                         )
                     )}
                 </tbody>
