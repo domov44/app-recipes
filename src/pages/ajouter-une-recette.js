@@ -32,6 +32,7 @@ import { useUser } from '@/utils/UserContext';
 const client = generateClient();
 
 const AjouterRecette = () => {
+    const [disable, setDisable] = useState(false);
     const { user } = useUser();
     const [step, setStep] = useState(1);
     const [errors, setErrors] = useState({});
@@ -45,6 +46,7 @@ const AjouterRecette = () => {
     const ingredientsOptions = useIngredientsOptions();
 
     async function create() {
+        setDisable(true);
         try {
             const newRecipe = await client.graphql({
                 query: createRecipe,
@@ -74,10 +76,12 @@ const AjouterRecette = () => {
                     }
                 });
             }
+            setDisable(false);
 
             notifySuccess("Recette ajoutée");
             console.log("Nouvelle recette :", newRecipe);
         } catch (error) {
+            setDisable(false);
             notifyError("Erreur lors de la création de la recette");
             console.error("Erreur lors de la création de la recette :", error);
         }

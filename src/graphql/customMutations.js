@@ -130,25 +130,7 @@ export const deleteRecipe = /* GraphQL */ `
     deleteRecipe(input: $input, condition: $condition) {
       id
       title
-      image
-      userID
-      steps
-      ingredients {
-        nextToken
-        __typename
-      }
-      categoryID
-      category {
-        id
-        name
-        createdAt
-        updatedAt
-        __typename
-      }
       owner
-      createdAt
-      updatedAt
-      __typename
     }
   }
 `;

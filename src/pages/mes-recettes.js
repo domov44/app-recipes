@@ -4,6 +4,7 @@ import { listRecipes } from '@/graphql/customQueries';
 import Table from '@/components/ui/table/Table';
 import Td from '@/components/ui/table/Td';
 import Th from '@/components/ui/table/Th';
+import Tr from '@/components/ui/table/Tr';
 import Checkbox from '@/components/ui/form/CheckboxItem';
 import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from "react-icons/ci";
@@ -19,7 +20,7 @@ import Hero from '@/components/ui/wrapper/Hero';
 import Stack from '@/components/ui/wrapper/Stack';
 import { useUser } from '@/utils/UserContext';
 import Chip from '@/components/ui/textual/Chip';
-import { deleteRecipe } from "@/graphql/mutations";
+import { deleteRecipe } from "@/graphql/customMutations";
 import AnimationComponent from "@/components/animation/Animation";
 import Empty from '@/components/animation/storageAnimation/empty.json';
 import TextLink from '@/components/ui/textual/TextLink';
@@ -65,6 +66,8 @@ function MyRecipePage() {
         }
     };
 
+    console.log(recipes)
+
     useEffect(() => {
         setDeleteButtonState(selectedCount > 0 ? false : true);
     }, [selectedCount]);
@@ -99,7 +102,6 @@ function MyRecipePage() {
                         variables: {
                             input: {
                                 id: id,
-                                // owner: user.id,
                             }
                         }
                     });
@@ -119,13 +121,12 @@ function MyRecipePage() {
     const handleDeleteRecipe = async (id) => {
         try {
             console.log(id)
-            if (await confirm({ title: `Voulez-vous vraiment supprimer cet ingrédient ?`, content: "Cette recette sera supprimée de l'application", variant: "danger" })) {
+            if (await confirm({ title: `Voulez-vous vraiment supprimer votre recette ?`, content: "Votre recette sera supprimée de l'application", variant: "danger" })) {
                 const deletedClient = await client.graphql({
                     query: deleteRecipe,
                     variables: {
                         input: {
                             id: id,
-                            // owner: user.id,
                         }
                     }
                 });
@@ -140,93 +141,95 @@ function MyRecipePage() {
 
     return (
         <ProtectedRoutes>
-        <Hero>
-            <Stack justify="end">
-                {isAdmin && (
-                    <Stack justify="end" spacing="10px">
-                        <IconButton
-                            type='submit'
-                            disable={deleteButtonState}
-                            variant="danger"
-                            onClick={deleteCheckedRecipes}
-                        >
-                            <CiTrash /> Supprimer ({selectedCount})
-                        </IconButton>
-                        <IconButton variant="action" href="/ajouter-une-recette">
-                            <IoMdAdd /> Ajouter
-                        </IconButton>
-                    </Stack>
-                )}
-            </Stack>
-            <Table>
-                <thead>
-                    <tr>
-                        {isAdmin && (
-                            <Th>
-                                <Checkbox
-                                    checked={allChecked}
-                                    onChange={handleParentCheckboxChange}
-                                />
-                            </Th>
-                        )}
-                        <Th>Nom</Th>
-                        <Th>Type</Th>
-                        {isAdmin && <Th>Actions</Th>}
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ? (
-                        <tr>
-                            <Td colSpan={3}>
-                                <Stack direction="column" align="center">
-                                    <Text>Chargement...</Text>
-                                </Stack>
-                            </Td>
-                        </tr>
-                    ) : (
-                        recipes.length > 0 ? (
-                            recipes.map((recipe) => (
-                                <tr key={recipe.id}>
-                                    {isAdmin && (
-                                        <Td>
-                                            <Checkbox
-                                                checked={checkedItems[recipe.id] || false}
-                                                onChange={() => handleChildCheckboxChange(recipe.id)}
-                                            />
-                                        </Td>
-                                    )}
-                                    <Td>
-                                        <TextLink href={`/recipes/${recipe.id}`}>{recipe.title}</TextLink>
-                                    </Td>
-                                    <Td>
-                                        <Chip variant={handleTypeIngredientVariant(recipe.category.name)}>{recipe.category.name}</Chip>
-                                    </Td>
-                                    {isAdmin && (
-                                        <Td>
-                                            <Stack spacing="10px">
-                                                <IconButton onClick={() => handleDeleteRecipe(recipe.id)} variant="danger">
-                                                    <CiTrash />
-                                                </IconButton>
-                                            </Stack>
-                                        </Td>
-                                    )}
-                                </tr>
-                            ))
-                        ) : (
-                            <Td colSpan={4}>
-                                <Stack direction="column" align="center">
-                                    <AnimationComponent animationData={Empty} width="150px" />
-                                    <Text>Vous n&apos;avez pas encore de recette.</Text>
-                                    <IconButton variant="action" href="/ajouter-une-recette">
-                                        <IoMdAdd /> Ajouter une recette
-                                    </IconButton>
-                                </Stack>
-                            </Td>
-                        )
+            <Hero>
+                <Stack justify="end">
+                    {isAdmin && (
+                        <Stack justify="end" spacing="10px">
+                            <IconButton
+                                type='submit'
+                                disable={deleteButtonState}
+                                variant="danger"
+                                onClick={deleteCheckedRecipes}
+                            >
+                                <CiTrash /> Supprimer ({selectedCount})
+                            </IconButton>
+                            <IconButton variant="action" href="/ajouter-une-recette">
+                                <IoMdAdd /> Ajouter
+                            </IconButton>
+                        </Stack>
                     )}
-                </tbody>
-            </Table>
-        </Hero>
+                </Stack>
+                <Table>
+                    <thead>
+                        <tr>
+                            {isAdmin && (
+                                <Th>
+                                    <Checkbox
+                                        checked={allChecked}
+                                        onChange={handleParentCheckboxChange}
+                                    />
+                                </Th>
+                            )}
+                            <Th>Nom</Th>
+                            <Th>Catégorie</Th>
+                            {isAdmin && <Th>Actions</Th>}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            <tr>
+                                <Td colSpan={3}>
+                                    <Stack direction="column" align="center">
+                                        <Text>Chargement...</Text>
+                                    </Stack>
+                                </Td>
+                            </tr>
+                        ) : (
+                            recipes.length > 0 ? (
+                                recipes.map((recipe) => (
+                                    <tr key={recipe.id}>
+                                        {isAdmin && (
+                                            <Td>
+                                                <Checkbox
+                                                    checked={checkedItems[recipe.id] || false}
+                                                    onChange={() => handleChildCheckboxChange(recipe.id)}
+                                                />
+                                            </Td>
+                                        )}
+                                        <Td>
+                                            <TextLink href={`/recipes/${recipe.id}`}>{recipe.title}</TextLink>
+                                        </Td>
+                                        <Td>
+                                            <Chip variant={handleTypeIngredientVariant(recipe.category.name)}>{recipe.category.name}</Chip>
+                                        </Td>
+                                        {isAdmin && (
+                                            <Td>
+                                                <Stack spacing="10px">
+                                                    <IconButton onClick={() => handleDeleteRecipe(recipe.id)} variant="danger">
+                                                        <CiTrash />
+                                                    </IconButton>
+                                                </Stack>
+                                            </Td>
+                                        )}
+                                    </tr>
+                                ))
+                            ) : (
+                                <Tr>
+                                    <Td colSpan={4}>
+                                        <Stack direction="column" align="center">
+                                            <AnimationComponent animationData={Empty} width="150px" />
+                                            <Text>Vous n&apos;avez pas encore de recette.</Text>
+                                            <IconButton variant="action" href="/ajouter-une-recette">
+                                                <IoMdAdd /> Ajouter une recette
+                                            </IconButton>
+                                        </Stack>
+                                    </Td>
+                                </Tr>
+                            )
+                        )}
+                    </tbody>
+                </Table>
+            </Hero>
         </ProtectedRoutes>
     );
 }
