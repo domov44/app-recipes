@@ -86,7 +86,7 @@ function Aside({ isopen, toggleSidebar }) {
           {isLoggedIn &&
             <ul className='menu'>
               <Chip variant="success">Mon espace</Chip>
-              <NavComponent href="/profil" icon={PiStorefront}>Mes recettes</NavComponent>
+              <NavComponent href="/mes-recettes" icon={PiStorefront}>Mes recettes</NavComponent>
               <NavComponent href="/profil" icon={PiUser}>Profil</NavComponent>
             </ul>
           }
