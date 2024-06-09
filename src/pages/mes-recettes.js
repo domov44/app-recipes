@@ -30,7 +30,7 @@ import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
 const client = generateClient();
 
 function MyRecipePage() {
-    const { isAdmin, user } = useUser();
+    const { user } = useUser();
     const [recipes, setRecipes] = useState([]);
     const [allChecked, setAllChecked] = useState(false);
     const [checkedItems, setCheckedItems] = useState({});
@@ -143,36 +143,32 @@ function MyRecipePage() {
         <ProtectedRoutes>
             <Hero>
                 <Stack justify="end">
-                    {isAdmin && (
-                        <Stack justify="end" spacing="10px">
-                            <IconButton
-                                type='submit'
-                                disable={deleteButtonState}
-                                variant="danger"
-                                onClick={deleteCheckedRecipes}
-                            >
-                                <CiTrash /> Supprimer ({selectedCount})
-                            </IconButton>
-                            <IconButton variant="action" href="/ajouter-une-recette">
-                                <IoMdAdd /> Ajouter
-                            </IconButton>
-                        </Stack>
-                    )}
+                    <Stack justify="end" spacing="10px">
+                        <IconButton
+                            type='submit'
+                            disable={deleteButtonState}
+                            variant="danger"
+                            onClick={deleteCheckedRecipes}
+                        >
+                            <CiTrash /> Supprimer ({selectedCount})
+                        </IconButton>
+                        <IconButton variant="action" href="/ajouter-une-recette">
+                            <IoMdAdd /> Ajouter
+                        </IconButton>
+                    </Stack>
                 </Stack>
                 <Table>
                     <thead>
                         <tr>
-                            {isAdmin && (
-                                <Th>
-                                    <Checkbox
-                                        checked={allChecked}
-                                        onChange={handleParentCheckboxChange}
-                                    />
-                                </Th>
-                            )}
+                            <Th>
+                                <Checkbox
+                                    checked={allChecked}
+                                    onChange={handleParentCheckboxChange}
+                                />
+                            </Th>
                             <Th>Nom</Th>
                             <Th>Catégorie</Th>
-                            {isAdmin && <Th>Actions</Th>}
+                            <Th>Actions</Th>
                         </tr>
                     </thead>
                     <tbody>
@@ -188,29 +184,25 @@ function MyRecipePage() {
                             recipes.length > 0 ? (
                                 recipes.map((recipe) => (
                                     <tr key={recipe.id}>
-                                        {isAdmin && (
-                                            <Td>
-                                                <Checkbox
-                                                    checked={checkedItems[recipe.id] || false}
-                                                    onChange={() => handleChildCheckboxChange(recipe.id)}
-                                                />
-                                            </Td>
-                                        )}
+                                        <Td>
+                                            <Checkbox
+                                                checked={checkedItems[recipe.id] || false}
+                                                onChange={() => handleChildCheckboxChange(recipe.id)}
+                                            />
+                                        </Td>
                                         <Td>
                                             <TextLink href={`/recipes/${recipe.id}`}>{recipe.title}</TextLink>
                                         </Td>
                                         <Td>
                                             <Chip variant={handleTypeIngredientVariant(recipe.category.name)}>{recipe.category.name}</Chip>
                                         </Td>
-                                        {isAdmin && (
-                                            <Td>
-                                                <Stack spacing="10px">
-                                                    <IconButton onClick={() => handleDeleteRecipe(recipe.id)} variant="danger">
-                                                        <CiTrash />
-                                                    </IconButton>
-                                                </Stack>
-                                            </Td>
-                                        )}
+                                        <Td>
+                                            <Stack spacing="10px">
+                                                <IconButton onClick={() => handleDeleteRecipe(recipe.id)} variant="danger">
+                                                    <CiTrash />
+                                                </IconButton>
+                                            </Stack>
+                                        </Td>
                                     </tr>
                                 ))
                             ) : (
