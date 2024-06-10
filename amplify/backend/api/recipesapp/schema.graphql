@@ -1,11 +1,12 @@
-type Profile @model @auth(rules: [
-  {allow: owner, ownerField: "owner"},
-  {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-  {allow: groups, groups: ["Members"], operations: [read]},
+type Profile @model
+@auth(rules: [
+  { allow: owner, ownerField: "owner" },
+  { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] },
+  { allow: groups, groups: ["Members"], operations: [read] },
   { allow: public, provider: iam, operations: [read] }
 ]) {
-  id: ID!
-  pseudo: String!
+  id: ID! @primaryKey
+  pseudo: String! @index(name: "byPseudo", queryField: "profileByPseudo")
   name: String!
   surname: String!
   avatar: String
@@ -15,6 +16,7 @@ type Profile @model @auth(rules: [
   owner: String
 }
 
+
 type Recipe @model @auth(rules: [
   {allow: owner, ownerField: "owner"},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
@@ -22,7 +24,7 @@ type Recipe @model @auth(rules: [
   { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
-  title: String!
+  title: String! @index(name: "byTitle", queryField: "RecipeByTitle")
   image: String
   user: Profile @hasOne
   steps: AWSJSON
@@ -59,7 +61,7 @@ type Category @model @auth(rules: [
   { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
-  name: String!
+  name: String! @index(name: "byName", queryField: "CategoryByname")
   recipes: [Recipe] @hasMany
 }
 
