@@ -24,11 +24,52 @@ export const getProfile = /* GraphQL */ `
 `;
 export const listProfiles = /* GraphQL */ `
   query ListProfiles(
+    $id: ID
+    $filter: ModelProfileFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listProfiles(
+      id: $id
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const profileByPseudo = /* GraphQL */ `
+  query ProfileByPseudo(
+    $pseudo: String!
+    $sortDirection: ModelSortDirection
     $filter: ModelProfileFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    profileByPseudo(
+      pseudo: $pseudo
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         pseudo
@@ -96,6 +137,40 @@ export const listRecipes = /* GraphQL */ `
     $nextToken: String
   ) {
     listRecipes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        title
+        image
+        steps
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const RecipeByTitle = /* GraphQL */ `
+  query RecipeByTitle(
+    $title: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeByTitle(
+      title: $title
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         title
@@ -218,6 +293,33 @@ export const listCategories = /* GraphQL */ `
     $nextToken: String
   ) {
     listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const CategoryByname = /* GraphQL */ `
+  query CategoryByname(
+    $name: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    CategoryByname(
+      name: $name
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
       items {
         id
         name
