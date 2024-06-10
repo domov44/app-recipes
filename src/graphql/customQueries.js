@@ -1,8 +1,10 @@
 export const getProfile = /* GraphQL */ `
-  query GetProfile($id: ID!) {
-    getProfile(id: $id) {
+  query GetProfile($pseudo: String!) {
+    getProfile(pseudo: $pseudo) {
       id
+      pseudo
       name
+      surname
       avatar
       description
       birthdate
@@ -13,6 +15,39 @@ export const getProfile = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      __typename
+    }
+  }
+`;
+export const profileByPseudo = /* GraphQL */ `
+  query ProfileByPseudo(
+    $pseudo: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelProfileFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    profileByPseudo(
+      pseudo: $pseudo
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
       __typename
     }
   }
