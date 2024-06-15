@@ -12,6 +12,7 @@ type Profile @model
   avatar: String
   description: String
   birthdate: AWSDate
+  recipes: [Recipe] @hasMany
   owner: String
 }
 
@@ -60,6 +61,7 @@ type Category @model @auth(rules: [
 ]) {
   id: ID!
   name: String! @index(name: "byName", queryField: "CategoryByname")
+  recipes: [Recipe] @hasMany
 }
 
 type RecipeIngredient @model @auth(rules: [
