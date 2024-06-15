@@ -136,6 +136,7 @@ export async function getServerSideProps(context) {
         });
 
         const recipe = recipeResult.data.RecipeByTitle.items;
+        console.log(recipe)
 
         return {
             props: {
