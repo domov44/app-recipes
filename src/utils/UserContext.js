@@ -19,27 +19,29 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthState = async () => {
       try {
-        const currentUser = await getCurrentUser();
-        console.log(currentUser);
-        const userProfile = await getUserProfile(currentUser.userId);
-        console.log(userProfile);
         const session = await fetchAuthSession();
-        const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
-        console.log(cognitoGroups);
-        setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
-        setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
+        if (session.userSub) {
+          const currentUser = await getCurrentUser();
+          console.log(currentUser);
+          const userProfile = await getUserProfile(currentUser.userId);
+          console.log(userProfile);
+          const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
+          console.log(cognitoGroups);
+          setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
+          setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
 
-        const userAttributes = await fetchUserAttributes();
-        setUser({
-          ...userAttributes,
-          age: userProfile.birthdate ? calculateAge(userProfile.birthdate) : 0,
-          pseudo: currentUser ? currentUser.username : 'User',
-          id: currentUser ? currentUser.userId : 0,
-          profile: userProfile,
-        });
-        setProfile(userProfile);
-        setLoggedIn(true);
-        fetchProfilePictureURL(userAttributes.picture);
+          const userAttributes = await fetchUserAttributes();
+          setUser({
+            ...userAttributes,
+            age: userProfile.birthdate ? calculateAge(userProfile.birthdate) : 0,
+            pseudo: currentUser ? currentUser.username : 'User',
+            id: currentUser ? currentUser.userId : 0,
+            profile: userProfile,
+          });
+          setProfile(userProfile);
+          setLoggedIn(true);
+          fetchProfilePictureURL(userAttributes.picture);
+        }
       } catch (error) {
         console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
         setLoggedIn(false);

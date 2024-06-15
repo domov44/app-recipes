@@ -1,7 +1,6 @@
 // pages/[pseudo]/index.js
 
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BackgroundContainer from '@/components/ui/wrapper/BackgroundContainer';
 import Stack from '@/components/ui/wrapper/Stack';
 import Title from '@/components/ui/textual/Title';
@@ -21,34 +20,10 @@ import { generateClient } from 'aws-amplify/api';
 
 const client = generateClient();
 
-function ProfilPage() {
-    const router = useRouter();
-    const { pseudo } = router.query;
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            const result = await client.graphql({
-                query: profileByPseudo,
-                variables: { pseudo },
-            });
-            setUser(result.data.profileByPseudo.items[0]);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-            setLoading(false);
-        }
-    };
-
-    console.log('result user', user)
-
-    useEffect(() => {
-        if (pseudo) {
-            fetchData();
-        }
-    }, [pseudo]);
+const ProfilPage = ({ pseudo, user, error }) => {
+    if (error) {
+        return <p>Erreur: {error}</p>;
+    }
 
     return (
         <>
@@ -59,21 +34,17 @@ function ProfilPage() {
             </Head>
             <BackgroundContainer>
                 <Button variant="primary" position="fixed" right="20px" bottom="20px" zindex="2" href="/ajouter-une-recette" icon={PiPlus}>Ajouter une recette</Button>
-                {loading ? (
-                    <p>Chargement...</p>
-                ) : (
-                    <Container>
-                        <Section>
-                            <Stack>
-                                <Title>{`${user?.name} ${user?.surname}`}</Title>
-                                <img src={user?.avatar} alt={`${user?.pseudo}'s avatar`} />
-                                <Text>{user?.description}</Text>
-                                <Chip>{convertirFormatDate(user?.birthdate)}</Chip>
-                                {/* Ajoutez d'autres informations utilisateur ici */}
-                            </Stack>
-                        </Section>
-                    </Container>
-                )}
+                <Container>
+                    <Section>
+                        <Stack>
+                            <Title>{`${user?.name} ${user?.surname}`}</Title>
+                            <img src={user?.avatar} alt={`${user?.pseudo}'s avatar`} />
+                            <Text>{user?.description}</Text>
+                            <Chip>{convertirFormatDate(user?.birthdate)}</Chip>
+                            {/* Ajoutez d'autres informations utilisateur ici */}
+                        </Stack>
+                    </Section>
+                </Container>
             </BackgroundContainer>
             <Section>
                 <Container direction="row" responsive="yes">
@@ -130,7 +101,39 @@ function ProfilPage() {
             </Section>
         </>
     );
+};
+
+export async function getServerSideProps(context) {
+    const { pseudo } = context.params;
+
+    try {
+        const result = await client.graphql({
+            query: profileByPseudo,
+            variables: { pseudo },
+            authMode: "apiKey",
+        });
+
+        const user = result.data.profileByPseudo.items[0];
+
+        if (!user) {
+            return {
+                notFound: true,
+            };
+        }
+
+        return {
+            props: {
+                pseudo,
+                user,
+            },
+        };
+    } catch (error) {
+        return {
+            props: {
+                error: 'Failed to fetch data',
+            },
+        };
+    }
 }
 
 export default ProfilPage;
-
