@@ -27,7 +27,8 @@ function Home() {
     const fetchRecipes = async () => {
         try {
             const recipeData = await client.graphql({
-                query: listRecipes
+                query: listRecipes,
+                authMode: "apiKey"
             });
             const recipesList = recipeData.data.listRecipes.items;
             setRecipes(recipesList);

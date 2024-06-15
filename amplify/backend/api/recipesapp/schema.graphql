@@ -1,9 +1,9 @@
 type Profile @model
 @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   { allow: owner, ownerField: "owner" },
   { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] },
   { allow: groups, groups: ["Members"], operations: [read] },
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID! @primaryKey
   pseudo: String! @index(name: "byPseudo", queryField: "profileByPseudo")
@@ -18,10 +18,10 @@ type Profile @model
 
 
 type Recipe @model @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   {allow: owner, ownerField: "owner"},
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   title: String! @index(name: "byTitle", queryField: "RecipeByTitle")
@@ -34,9 +34,9 @@ type Recipe @model @auth(rules: [
 }
 
 type Ingredient @model @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String!
@@ -46,9 +46,9 @@ type Ingredient @model @auth(rules: [
 }
 
 type IngredientType @model @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String!
@@ -56,9 +56,9 @@ type IngredientType @model @auth(rules: [
 }
 
 type Category @model @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   name: String! @index(name: "byName", queryField: "CategoryByname")
@@ -66,9 +66,9 @@ type Category @model @auth(rules: [
 }
 
 type RecipeIngredient @model @auth(rules: [
+  {allow: public, provider: apiKey, operations: [read]}
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
   {allow: groups, groups: ["Members"], operations: [read]},
-  { allow: public, provider: iam, operations: [read] }
 ]) {
   id: ID!
   recipe: Recipe @hasOne

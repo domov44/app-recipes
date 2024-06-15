@@ -13,7 +13,8 @@
     },
     "categories": {
       "auth": {
-        "recipesapp4f20ed6a": {}
+        "recipesapp4f20ed6a": {},
+        "userPoolGroups": {}
       },
       "function": {
         "createProfileOnSignup": {
@@ -21,7 +22,11 @@
           "s3Key": "amplify-builds/createProfileOnSignup-764453733452662f616a-build.zip"
         },
         "recipesapp": {},
-        "recipesapp4f20ed6a": {}
+        "recipesapp4f20ed6a": {},
+        "recipesapp4f20ed6aPostConfirmation": {}
+      },
+      "storage": {
+        "s3cffd06a6": {}
       }
     }
   },
