@@ -96,6 +96,7 @@ export const createRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -141,6 +142,7 @@ export const updateRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -186,6 +188,7 @@ export const deleteRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -224,13 +227,8 @@ export const createIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -252,13 +250,8 @@ export const updateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -280,13 +273,8 @@ export const deleteIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -300,10 +288,6 @@ export const createIngredientType = /* GraphQL */ `
     createIngredientType(input: $input, condition: $condition) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -318,10 +302,6 @@ export const updateIngredientType = /* GraphQL */ `
     updateIngredientType(input: $input, condition: $condition) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -336,10 +316,6 @@ export const deleteIngredientType = /* GraphQL */ `
     deleteIngredientType(input: $input, condition: $condition) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -407,36 +383,19 @@ export const createRecipeIngredient = /* GraphQL */ `
   ) {
     createRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }
@@ -449,36 +408,19 @@ export const updateRecipeIngredient = /* GraphQL */ `
   ) {
     updateRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }
@@ -491,36 +433,19 @@ export const deleteRecipeIngredient = /* GraphQL */ `
   ) {
     deleteRecipeIngredient(input: $input, condition: $condition) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }

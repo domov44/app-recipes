@@ -28,6 +28,7 @@ type Recipe @model @auth(rules: [
   image: String
   user: Profile @hasOne
   steps: AWSJSON
+  description: String
   ingredients: [RecipeIngredient] @hasMany
   category: Category @hasOne
   owner: String
@@ -42,7 +43,6 @@ type Ingredient @model @auth(rules: [
   name: String!
   typeID: String!
   type: IngredientType @hasOne
-  recipes:[RecipeIngredient] @hasMany
 }
 
 type IngredientType @model @auth(rules: [
@@ -52,7 +52,6 @@ type IngredientType @model @auth(rules: [
 ]) {
   id: ID!
   name: String!
-  ingredients: [Ingredient] @hasMany
 }
 
 type Category @model @auth(rules: [
@@ -71,7 +70,6 @@ type RecipeIngredient @model @auth(rules: [
   {allow: groups, groups: ["Members"], operations: [read]},
 ]) {
   id: ID!
-  recipe: Recipe @hasOne
-  ingredient: Ingredient @hasOne
   quantity: String
+  ingredient: Ingredient @hasOne
 }

@@ -77,6 +77,7 @@ export const createRecipe = /* GraphQL */ `
       title
       image
       steps
+      description
       ingredients {
         nextToken
         __typename

@@ -108,6 +108,7 @@ export const getRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -142,6 +143,7 @@ export const listRecipes = /* GraphQL */ `
         title
         image
         steps
+        description
         owner
         createdAt
         updatedAt
@@ -176,6 +178,7 @@ export const RecipeByTitle = /* GraphQL */ `
         title
         image
         steps
+        description
         owner
         createdAt
         updatedAt
@@ -203,13 +206,8 @@ export const getIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -228,7 +226,6 @@ export const listIngredients = /* GraphQL */ `
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
@@ -242,10 +239,6 @@ export const getIngredientType = /* GraphQL */ `
     getIngredientType(id: $id) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -336,36 +329,19 @@ export const getRecipeIngredient = /* GraphQL */ `
   query GetRecipeIngredient($id: ID!) {
     getRecipeIngredient(id: $id) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }
@@ -388,8 +364,6 @@ export const listRecipeIngredients = /* GraphQL */ `
         createdAt
         updatedAt
         recipeIngredientsId
-        ingredientRecipesId
-        recipeIngredientRecipeId
         recipeIngredientIngredientId
         __typename
       }

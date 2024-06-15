@@ -26,7 +26,8 @@ import IconButton from '@/components/ui/button/IconButton';
 import { CiTrash } from 'react-icons/ci';
 import { confirm } from '@/utils/ConfirmGlobal';
 import { PiPlus } from 'react-icons/pi';
-import { createRecipe, createRecipeIngredient } from "@/graphql/customMutations";
+import { createRecipeIngredient } from "@/graphql/mutations";
+import { createRecipe } from "@/graphql/customMutations";
 import { generateClient } from "aws-amplify/api";
 import { useUser } from '@/utils/UserContext';
 const client = generateClient();
@@ -57,6 +58,7 @@ const AjouterRecette = () => {
                         steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
                         recipeCategoryId: formData2.categorie,
                         recipeUserId: user.sub,
+                        description: formData2.description, 
                         owner: user.sub,
                     }
                 }
@@ -69,7 +71,7 @@ const AjouterRecette = () => {
                     query: createRecipeIngredient,
                     variables: {
                         input: {
-                            recipeIngredientRecipeId: recipeID,
+                            recipeIngredientsId: recipeID,
                             recipeIngredientIngredientId: ingredient.id,
                             quantity: ingredient.quantity,
                         }
