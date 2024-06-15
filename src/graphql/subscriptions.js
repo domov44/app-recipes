@@ -96,6 +96,7 @@ export const onCreateRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -141,6 +142,7 @@ export const onUpdateRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -186,6 +188,7 @@ export const onDeleteRecipe = /* GraphQL */ `
         __typename
       }
       steps
+      description
       ingredients {
         nextToken
         __typename
@@ -223,13 +226,8 @@ export const onCreateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -250,13 +248,8 @@ export const onUpdateIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -277,13 +270,8 @@ export const onDeleteIngredient = /* GraphQL */ `
         updatedAt
         __typename
       }
-      recipes {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
-      ingredientTypeIngredientsId
       ingredientTypeId
       __typename
     }
@@ -296,10 +284,6 @@ export const onCreateIngredientType = /* GraphQL */ `
     onCreateIngredientType(filter: $filter) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -313,10 +297,6 @@ export const onUpdateIngredientType = /* GraphQL */ `
     onUpdateIngredientType(filter: $filter) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -330,10 +310,6 @@ export const onDeleteIngredientType = /* GraphQL */ `
     onDeleteIngredientType(filter: $filter) {
       id
       name
-      ingredients {
-        nextToken
-        __typename
-      }
       createdAt
       updatedAt
       __typename
@@ -391,36 +367,19 @@ export const onCreateRecipeIngredient = /* GraphQL */ `
   ) {
     onCreateRecipeIngredient(filter: $filter) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }
@@ -432,36 +391,19 @@ export const onUpdateRecipeIngredient = /* GraphQL */ `
   ) {
     onUpdateRecipeIngredient(filter: $filter) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }
@@ -473,36 +415,19 @@ export const onDeleteRecipeIngredient = /* GraphQL */ `
   ) {
     onDeleteRecipeIngredient(filter: $filter) {
       id
-      recipe {
-        id
-        title
-        image
-        steps
-        owner
-        createdAt
-        updatedAt
-        profileRecipesId
-        categoryRecipesId
-        recipeUserId
-        recipeCategoryId
-        __typename
-      }
+      quantity
       ingredient {
         id
         name
         typeID
         createdAt
         updatedAt
-        ingredientTypeIngredientsId
         ingredientTypeId
         __typename
       }
-      quantity
       createdAt
       updatedAt
       recipeIngredientsId
-      ingredientRecipesId
-      recipeIngredientRecipeId
       recipeIngredientIngredientId
       __typename
     }

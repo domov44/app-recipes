@@ -227,6 +227,66 @@ export const recipesByCategoryID = /* GraphQL */ `
     }
   }
 `;
+
+export const RecipeByTitle = /* GraphQL */ `
+  query RecipeByTitle(
+    $title: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeByTitle(
+      title: $title
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        description
+        image
+        steps
+          category {
+          id
+          name
+          createdAt
+          updatedAt
+          __typename
+        }
+        owner
+          ingredients {
+              items{
+                id
+                quantity
+                ingredient {
+                  id
+                  name
+                  type {
+                    id
+                    name
+                    createdAt
+                    updatedAt
+                    __typename
+                  }
+                }
+              }
+          }
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getIngredient = /* GraphQL */ `
   query GetIngredient($id: ID!) {
     getIngredient(id: $id) {
@@ -261,10 +321,6 @@ export const listIngredients = /* GraphQL */ `
           name
           createdAt
           updatedAt
-          __typename
-        }
-        recipes {
-          nextToken
           __typename
         }
         typeID
