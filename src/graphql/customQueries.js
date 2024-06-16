@@ -137,6 +137,7 @@ export const listRecipes = /* GraphQL */ `
           __typename
         }
         steps
+        description
         ingredients {
           nextToken
           __typename

@@ -9,6 +9,10 @@ import FormError from '../form/formError';
 import Chip from '../textual/Chip';
 import TextInput from '../form/TextInput';
 import { PiClock } from 'react-icons/pi';
+import { generateClient } from 'aws-amplify/api';
+import { listRecipes } from '@/graphql/customQueries';
+
+const client = generateClient();
 
 const OverlayWrapper = styled.div`
   position: fixed;
@@ -46,7 +50,7 @@ const SearchInput = styled.input`
   border-radius: 5px;
   width: 100%;
   margin-bottom: 10px;
-  font-size:20px;
+  font-size: 20px;
 `;
 
 const ResultItem = styled.li`
@@ -56,22 +60,21 @@ const ResultItem = styled.li`
   border-radius: 5px;
   transition: 0.3s;
 
-  &:hover{
+  &:hover {
     background: var(--secondary-bg-color);
   }
 `;
 
 const SearchResult = styled.ul`
-    margin-bottom: 10px;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap:10px;
-    padding: 15px;
-    border-radius: 5px;
-    border:2px solid var(--grey-color);
+  margin-bottom: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  border: 2px solid var(--grey-color);
 `;
-
 
 const RecipeImage = styled.img`
   width: 150px;
@@ -81,7 +84,7 @@ const RecipeImage = styled.img`
   object-fit: cover;
 `;
 
-function SearchOverlay({ showOverlay, onClose }) {
+function SearchOverlay({ showOverlay, onClose, recipe }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -95,17 +98,17 @@ function SearchOverlay({ showOverlay, onClose }) {
   }, [typingTimeout]);
 
   const handleSearchChange = (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
+    const title = event.target.value;
+    setSearchQuery(title);
 
     clearTimeout(typingTimeout);
     setLoading(false);
     setSearching(true);
 
-    if (query.trim().length > 0) {
+    if (title.trim().length > 0) {
       setTypingTimeout(setTimeout(() => {
         setLoading(true);
-        fetchResults(query.trim());
+        fetchResults(title.trim());
         setSearching(false);
       }, 1000));
     } else {
@@ -114,36 +117,30 @@ function SearchOverlay({ showOverlay, onClose }) {
     }
   };
 
-  const fetchResults = async (query) => {
+  const fetchResults = async (title) => {
     try {
-      const response = await fetch(`http://localhost:8081/recettes/search/${query}`);
-      if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des résultats de recherche');
-      }
-      const data = await response.json();
-      if (!data || !Array.isArray(data)) {
-        throw new Error('La réponse du serveur est invalide ou ne contient pas de recettes');
-      }
-      const resultsWithTotalDuration = data.map(recette => {
-        let totalDuration = 0;
-        if (typeof recette.steps === 'string') {
-          const stepsArray = JSON.parse(recette.steps);
-          if (Array.isArray(stepsArray)) {
-            totalDuration = stepsArray.reduce((acc, step) => acc + (step.duration || 0), 0);
+      const filter = {
+        filter: {
+          title: {
+            contains: title
           }
         }
-        return { ...recette, totalDuration };
+      };
+
+      const recipeResult = await client.graphql({
+        query: listRecipes,
+        variables: filter,
+        authMode: "apiKey"
       });
-      setSearchResults(resultsWithTotalDuration);
+
+      const recipes = recipeResult.data.listRecipes.items;
+      setSearchResults(recipes);
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des résultats de recherche :', error.message);
       setLoading(false);
     }
   };
-
-
-
 
   return (
     <OverlayWrapper $showOverlay={showOverlay}>
@@ -152,7 +149,10 @@ function SearchOverlay({ showOverlay, onClose }) {
         <Stack direction="column">
           <Title level={3}>Recherche de Recettes</Title>
           <TextInput
-            type="text" label="Rechercher une recette" value={searchQuery} onChange={handleSearchChange}
+            type="text"
+            label="Rechercher une recette"
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
           {loading && <Text>Chargement...</Text>}
           {!loading && searchResults.length === 0 && !searching && searchQuery.length > 0 && (
@@ -163,30 +163,31 @@ function SearchOverlay({ showOverlay, onClose }) {
               <Chip variant="success">
                 {searchResults.length} résultat{searchResults.length <= 1 ? '' : 's'} :
               </Chip>
-              {searchResults.map((recette) => (
-                <ResultItem key={recette.id}>
-                  <InvisibleLink onClick={onClose} href={`http://localhost:3000/${recette.user.pseudo}/${recette.slug}`}>
-                    <Stack align="center">
-                      <RecipeImage src={recette.image} alt={recette.nom} />
-                      <Stack direction="column" spacing="0px">
-                        <Stack justify="space-between">
-                          <Stack align="center" spacing="6px">
-                            <Text size="lg" fontfamily="semi-bold" variant="contrasted">{recette.nom}</Text>
-                            <Text size="sm">de
-                            </Text>
-                            <img src={recette.user.picture} className='user-picture-min' alt={recette.user.pseudo}></img>
-                            <Text size="sm">
-                              {recette.user.pseudo}
-                            </Text>
+              {searchResults.map((recipe, index) => {
+                const steps = recipe.steps ? JSON.parse(recipe.steps) : [];
+                const totalDuration = steps.reduce((total, step) => total + parseInt(step.duration, 10), 0);
+
+                return (
+                  <ResultItem key={recipe.id ?? index}>
+                    <InvisibleLink onClick={onClose} href={`/${recipe.user.pseudo}/${recipe.title}`}>
+                      <Stack align="center">
+                        <RecipeImage src={recipe.image} alt={recipe.title} />
+                        <Stack direction="column" spacing="0px" width={"100%"}>
+                          <Stack justify="space-between">
+                            <Stack align="center" spacing="6px">
+                              <Text size="lg" fontfamily="semi-bold" variant="contrasted">{recipe.title}</Text>
+                              <img src={recipe.user.avatar} className='user-picture-min' alt={recipe.user.pseudo} />
+                              <Text size="sm">de {recipe.user.pseudo}</Text>
+                            </Stack>
+                            <Chip icon={PiClock} variant="success">{totalDuration} minutes</Chip>
                           </Stack>
-                          <Chip icon={PiClock} variant="success">{recette.totalDuration} minutes</Chip>
+                          <Text size="sm">{recipe.description}</Text>
                         </Stack>
-                        <Text size="sm">{recette.description}</Text>
                       </Stack>
-                    </Stack>
-                  </InvisibleLink>
-                </ResultItem>
-              ))}
+                    </InvisibleLink>
+                  </ResultItem>
+                );
+              })}
             </SearchResult>
           )}
         </Stack>
