@@ -119,22 +119,19 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
 
   const fetchResults = async (title) => {
     try {
-      const filter = {
-        filter: {
-          title: {
-            contains: title
-          }
-        }
-      };
-
       const recipeResult = await client.graphql({
         query: listRecipes,
-        variables: filter,
         authMode: "apiKey"
       });
 
       const recipes = recipeResult.data.listRecipes.items;
-      setSearchResults(recipes);
+
+      const lowerCaseTitle = title.toLowerCase();
+      const filteredRecipes = recipes.filter(recipe =>
+        recipe.title.toLowerCase().includes(lowerCaseTitle)
+      );
+
+      setSearchResults(filteredRecipes);
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des résultats de recherche :', error.message);
