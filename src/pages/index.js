@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Hero from '@/components/ui/wrapper/Hero';
 import Bento from '@/components/ui/wrapper/Bento';
 import Head from 'next/head';
 import Title from '@/components/ui/textual/Title';
 import Text from '@/components/ui/textual/Text';
 import Button from '@/components/ui/button/Button';
-import { PiPlus, PiTimer } from 'react-icons/pi';
+import { PiPlus } from 'react-icons/pi';
 import { generateClient } from 'aws-amplify/api';
 import { listRecipes } from '@/graphql/customQueries';
 import IconButton from '@/components/ui/button/IconButton';
-import Chip from '@/components/ui/textual/Chip';
+import { convertirFormatDate } from '@/utils/convertirFormatDate';
 import Column from '@/components/ui/wrapper/Column';
 import Container from '@/components/ui/wrapper/Container';
 import Stack from '@/components/ui/wrapper/Stack';
@@ -17,26 +17,7 @@ import InvisibleLink from '@/components/ui/button/InvisibleLink';
 
 const client = generateClient();
 
-function Home() {
-    const [recipes, setRecipes] = useState([]);
-
-    useEffect(() => {
-        fetchRecipes();
-    }, []);
-
-    const fetchRecipes = async () => {
-        try {
-            const recipeData = await client.graphql({
-                query: listRecipes,
-                authMode: "apiKey"
-            });
-            const recipesList = recipeData.data.listRecipes.items;
-            setRecipes(recipesList);
-        } catch (error) {
-            console.error("Error fetching recipes:", error);
-        }
-    };
-
+const Home = ({ recipes = [] }) => {
     return (
         <>
             <Head>
@@ -58,7 +39,7 @@ function Home() {
                 </Button>
                 <Container direction="row" responsive="yes">
                     <Column width="60%" gap="30px">
-                        {recipes.length > 0 && (
+                        {recipes.length > 0 ? (
                             recipes.map((recipe) => (
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
@@ -68,6 +49,7 @@ function Home() {
                                                 <Title fontfamily="medium" level={4}>
                                                     {recipe.user.pseudo}
                                                 </Title>
+                                                <Text>{`${convertirFormatDate(recipe.createdAt)}`}</Text>
                                             </Stack>
                                         </Stack>
                                     </InvisibleLink>
@@ -82,6 +64,8 @@ function Home() {
                                     <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.title}`}>Suivre cette recette</Button>
                                 </Bento>
                             ))
+                        ) : (
+                            <Text>Aucune recette trouvée.</Text>
                         )}
                     </Column>
                     <Column width="40%" gap="10px">
@@ -103,6 +87,29 @@ function Home() {
             </Hero>
         </>
     );
-}
+};
+
+export const getServerSideProps = async () => {
+    try {
+        const recipeData = await client.graphql({
+            query: listRecipes,
+            variables: { limit: 5 },
+            authMode: "apiKey"
+        });
+        const recipesList = recipeData.data.listRecipes.items;
+        return {
+            props: {
+                recipes: recipesList || []
+            }
+        };
+    } catch (error) {
+        console.error("Error fetching recipes:", error);
+        return {
+            props: {
+                recipes: []
+            }
+        };
+    }
+};
 
 export default Home;

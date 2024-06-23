@@ -20,12 +20,13 @@ import Hero from '@/components/ui/wrapper/Hero';
 import Stack from '@/components/ui/wrapper/Stack';
 import { useUser } from '@/utils/UserContext';
 import Chip from '@/components/ui/textual/Chip';
-import { deleteRecipe } from "@/graphql/mutations";
+import { deleteRecipe } from "@/graphql/customMutations";
 import AnimationComponent from "@/components/animation/Animation";
 import Empty from '@/components/animation/storageAnimation/empty.json';
 import TextLink from '@/components/ui/textual/TextLink';
 import { handleTypeIngredientVariant } from '@/utils/typeIngredientHandler';
 import ProtectedRoutes from '@/hooks/login-gestion/ProtectedRoute';
+import { onDeleteRecipe } from '@/graphql/subscriptions';
 
 const client = generateClient();
 
@@ -37,9 +38,12 @@ function MyRecipePage() {
     const [selectedCount, setSelectedCount] = useState(0);
     const [deleteButtonState, setDeleteButtonState] = useState(false);
     const [loading, setLoading] = useState(true);
+    let subscription;
 
     useEffect(() => {
         fetchRecipes();
+        subscribeToDeleteRecipe();
+        return () => unsubscribeFromDeleteRecipe();
     }, []);
 
     const fetchRecipes = async () => {
@@ -61,8 +65,8 @@ function MyRecipePage() {
         setDeleteButtonState(selectedCount > 0 ? false : true);
     }, [selectedCount]);
 
-    const handleChildCheckboxChange = (ingredientId) => {
-        const updatedCheckedItems = { ...checkedItems, [ingredientId]: !checkedItems[ingredientId] };
+    const handleChildCheckboxChange = (recipeId) => {
+        const updatedCheckedItems = { ...checkedItems, [recipeId]: !checkedItems[recipeId] };
         const count = Object.values(updatedCheckedItems).filter(Boolean).length;
         setSelectedCount(count);
         setCheckedItems(updatedCheckedItems);
@@ -82,23 +86,16 @@ function MyRecipePage() {
     };
 
     const deleteCheckedRecipes = async () => {
-        const checkedIngredientsIds = Object.keys(checkedItems).filter((id) => checkedItems[id]);
+        const checkedRecipeIds = Object.keys(checkedItems).filter((id) => checkedItems[id]);
         try {
             if (await confirm({ title: `Voulez-vous vraiment supprimer ces recettes ?`, content: "Ces recettes seront supprimées de l'application", variant: "danger" })) {
-                await Promise.all(checkedIngredientsIds.map(async (id) => {
-                    const deletedClient = await client.graphql({
-                        query: deleteRecipe,
-                        variables: {
-                            input: {
-                                id: id,
-                            }
-                        }
-                    });
+                await Promise.all(checkedRecipeIds.map(async (id) => {
+                    await deleteRecipeById(id);
                 }));
                 setCheckedItems({});
                 setAllChecked(false);
                 setSelectedCount(0);
-                notifySuccess(`${checkedIngredientsIds.length} recettes supprimées avec succès`);
+                notifySuccess(`${checkedRecipeIds.length} recettes supprimées avec succès`);
                 fetchRecipes();
             }
         } catch (error) {
@@ -107,24 +104,59 @@ function MyRecipePage() {
         }
     };
 
+    const deleteRecipeById = async (id) => {
+        try {
+            const deletedRecipe = await client.graphql({
+                query: deleteRecipe,
+                variables: {
+                    input: {
+                        id: id,
+                    }
+                }
+            });
+            notifySuccess("Recette supprimée avec succès");
+        } catch (error) {
+            console.error("Error on deleting recipe", error);
+            notifyError("Erreur lors de la suppression de la recette");
+        }
+    };
+
+    const subscribeToDeleteRecipe = () => {
+        subscription = client
+            .graphql({
+                query: onDeleteRecipe,
+                variables: {
+                }
+            })
+            .subscribe({
+                next: (data) => {
+                    console.log('Subscription data:', data);
+                    handleSubscriptionEvent(data);
+                },
+                error: (error) => {
+                    console.error('Subscription error:', error);
+                }
+            });
+    };
+
+    const unsubscribeFromDeleteRecipe = () => {
+        if (subscription) {
+            subscription.unsubscribe();
+        }
+    };
+
+    const handleSubscriptionEvent = (data) => {
+        fetchRecipes();
+    };
+
     const handleDeleteRecipe = async (id) => {
         try {
-            console.log(id)
-            if (await confirm({ title: `Voulez-vous vraiment supprimer cet ingrédient ?`, content: "Cette recette sera supprimée de l'application", variant: "danger" })) {
-                const deletedClient = await client.graphql({
-                    query: deleteRecipe,
-                    variables: {
-                        input: {
-                            id: id,
-                        }
-                    }
-                });
-                notifySuccess("Recette supprimée avec succès");
-                fetchRecipes();
+            if (await confirm({ title: `Voulez-vous vraiment supprimer cette recette ?`, content: "Cette recette sera supprimée de l'application", variant: "danger" })) {
+                await deleteRecipeById(id);
             }
         } catch (error) {
             console.error("Error on deleting recipe", error);
-            notifyError("Erreur lors de la suppression de l'ingrédient");
+            notifyError("Erreur lors de la suppression de la recette");
         }
     };
 
