@@ -118,20 +118,25 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
   };
 
   const fetchResults = async (title) => {
+    const filter = {
+      filter: {
+        title: {
+          contains: title
+        }
+      },
+      limit: 10
+    };
+
     try {
       const recipeResult = await client.graphql({
         query: listRecipes,
-        authMode: "apiKey"
+        authMode: "apiKey",
+        variables: filter
       });
 
       const recipes = recipeResult.data.listRecipes.items;
 
-      const lowerCaseTitle = title.toLowerCase();
-      const filteredRecipes = recipes.filter(recipe =>
-        recipe.title.toLowerCase().includes(lowerCaseTitle)
-      );
-
-      setSearchResults(filteredRecipes);
+      setSearchResults(recipes);
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des résultats de recherche :', error.message);
