@@ -30,6 +30,7 @@ import { createRecipeIngredient } from "@/graphql/mutations";
 import { createRecipe } from "@/graphql/customMutations";
 import { generateClient } from "aws-amplify/api";
 import { useUser } from '@/utils/UserContext';
+import { uploadData, getUrl } from 'aws-amplify/storage';
 const client = generateClient();
 
 const AjouterRecette = () => {
@@ -49,16 +50,29 @@ const AjouterRecette = () => {
     async function create() {
         setDisable(true);
         try {
+            let imageKey = null;
+
+            if (formData5.image) {
+                imageKey = `images/recipes/${new Date().getTime()}-${formData5.image.name}`;
+                await uploadData({
+                    key: imageKey,
+                    data: formData5.image,
+                    options: {
+                        level: 'guest'
+                    }
+                });
+            }
+
             const newRecipe = await client.graphql({
                 query: createRecipe,
                 variables: {
                     input: {
                         title: formData1.nom,
-                        image: "https://cdn.vuetifyjs.com/images/cards/cooking.png",
+                        image: imageKey,
                         steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
                         recipeCategoryId: formData2.categorie,
                         recipeUserId: user.sub,
-                        description: formData2.description, 
+                        description: formData2.description,
                         owner: user.sub,
                     }
                 }
@@ -78,8 +92,8 @@ const AjouterRecette = () => {
                     }
                 });
             }
-            setDisable(false);
 
+            setDisable(false);
             notifySuccess("Recette ajoutée");
             console.log("Nouvelle recette :", newRecipe);
         } catch (error) {
@@ -88,7 +102,6 @@ const AjouterRecette = () => {
             console.error("Erreur lors de la création de la recette :", error);
         }
     }
-
 
 
     const handleImageDelete = () => {
