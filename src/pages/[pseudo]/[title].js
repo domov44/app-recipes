@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Stack from '@/components/ui/wrapper/Stack';
 import Title from '@/components/ui/textual/Title';
 import Text from '@/components/ui/textual/Text';
@@ -15,10 +15,11 @@ import { PiClock, PiMapPin } from 'react-icons/pi';
 import Hero from '@/components/ui/wrapper/Hero';
 import IconButton from '@/components/ui/button/IconButton';
 import { handleTypeIngredientVariant } from '@/utils/typeIngredientHandler';
+import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
-const RecipePage = ({ pseudo, title, recipe, error, profile }) => {
+const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl }) => {
     if (error) {
         return <p>Erreur: {error}</p>;
     }
@@ -30,8 +31,8 @@ const RecipePage = ({ pseudo, title, recipe, error, profile }) => {
         <>
             <Head>
                 <title>{`Recette ${recipe?.[0]?.title} de ${pseudo}`}</title>
-                <meta name="description" content={`Recette ${recipe?.[0]?.title} de ${pseudo}`} />
-                <meta property="og:image" content={recipe?.[0]?.image || 'URL_de_votre_image'} />
+                <meta name="description" content={`${recipe?.[0]?.description}`} />
+                <meta property="og:image" content={imageUrl || 'URL_de_votre_image_par_défaut'} />
             </Head>
             <Hero>
                 <Stack direction="column" spacing="5px">
@@ -39,7 +40,7 @@ const RecipePage = ({ pseudo, title, recipe, error, profile }) => {
                     <Text>{`Publiée le ${convertirFormatDate(recipe?.[0]?.createdAt)}`}</Text>
                     <Chip icon={PiClock} variant="success">Durée totale : {totalDuration} minutes</Chip>
                 </Stack>
-                {recipe?.[0]?.image && <img className="recette-image" src={recipe?.[0]?.image} alt={recipe?.[0]?.title} />}
+                {imageUrl && <img className="recette-image" src={imageUrl} alt={recipe?.[0]?.title} />}
                 <Container direction="row">
                     <Column width="40%">
                         <Bento highlight="highlight">
@@ -136,7 +137,13 @@ export async function getServerSideProps(context) {
         });
 
         const recipe = recipeResult.data.RecipeByTitle.items;
-        console.log(recipe)
+
+        let imageUrl = '';
+
+        if (recipe?.[0]?.image) {
+            const imageUrlObject = await getS3Path(recipe[0].image);
+            imageUrl = imageUrlObject.href;
+        }
 
         return {
             props: {
@@ -144,9 +151,11 @@ export async function getServerSideProps(context) {
                 title,
                 recipe,
                 profile,
+                imageUrl,
             },
         };
     } catch (error) {
+        console.error('Error fetching data:', error);
         return {
             props: {
                 error: 'Failed to fetch data',
@@ -154,5 +163,6 @@ export async function getServerSideProps(context) {
         };
     }
 }
+
 
 export default RecipePage;
