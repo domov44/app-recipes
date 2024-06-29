@@ -31,7 +31,7 @@ const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl }) => {
         <>
             <Head>
                 <title>{`Recette ${recipe?.[0]?.title} de ${pseudo}`}</title>
-                <meta name="description" content={`Recette ${recipe?.[0]?.title} de ${pseudo}`} />
+                <meta name="description" content={`${recipe?.[0]?.description}`} />
                 <meta property="og:image" content={imageUrl || 'URL_de_votre_image_par_défaut'} />
             </Head>
             <Hero>
