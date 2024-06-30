@@ -14,6 +14,7 @@ import Column from '@/components/ui/wrapper/Column';
 import Container from '@/components/ui/wrapper/Container';
 import Stack from '@/components/ui/wrapper/Stack';
 import InvisibleLink from '@/components/ui/button/InvisibleLink';
+import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
@@ -53,7 +54,7 @@ const Home = ({ recipes = [] }) => {
                                             </Stack>
                                         </Stack>
                                     </InvisibleLink>
-                                    <img className="recipe-image" alt={recipe.title} src={recipe.image}></img>
+                                    {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl}></img>}
                                     <Stack>
                                         <IconButton variant="action" href={`/categories/${recipe.category.name}`}>{recipe.category.name}</IconButton>
                                     </Stack>
@@ -97,9 +98,24 @@ export const getServerSideProps = async () => {
             authMode: "apiKey"
         });
         const recipesList = recipeData.data.listRecipes.items;
+
+        const recipesWithImages = await Promise.all(
+            recipesList.map(async (recipe) => {
+                let imageUrl = '';
+                if (recipe.image) {
+                    const imageUrlObject = await getS3Path(recipe.image);
+                    imageUrl = imageUrlObject.href;
+                }
+                return {
+                    ...recipe,
+                    imageUrl
+                };
+            })
+        );
+
         return {
             props: {
-                recipes: recipesList || []
+                recipes: recipesWithImages || []
             }
         };
     } catch (error) {

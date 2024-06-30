@@ -20,6 +20,7 @@ import Empty from '@/components/animation/storageAnimation/empty.json';
 import IconButton from "@/components/ui/button/IconButton";
 import { listRecipes } from "@/graphql/customQueries";
 import InvisibleLink from "@/components/ui/button/InvisibleLink";
+import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
@@ -48,7 +49,23 @@ export default function Profil() {
                 variables: filter,
             });
             const recipesList = recipeData.data.listRecipes.items;
-            setRecipes(recipesList);
+
+            // Fetch the image URLs for each recipe
+            const recipesWithImages = await Promise.all(
+                recipesList.map(async (recipe) => {
+                    let imageUrl = '';
+                    if (recipe.image) {
+                        const imageUrlObject = await getS3Path(recipe.image);
+                        imageUrl = imageUrlObject.href;
+                    }
+                    return {
+                        ...recipe,
+                        imageUrl
+                    };
+                })
+            );
+
+            setRecipes(recipesWithImages);
             setLoading(false);
         } catch (error) {
             setLoading(false);
@@ -113,7 +130,7 @@ export default function Profil() {
                                                     </Stack>
                                                 </Stack>
                                             </InvisibleLink>
-                                            <img className="recipe-image" alt={recipe.title} src={recipe.image} />
+                                            {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl} />}
                                             <Stack>
                                                 <IconButton variant="action" href={`/categories/${recipe.category.name}`}>
                                                     {recipe.category.name}
@@ -130,7 +147,7 @@ export default function Profil() {
                                     <Stack direction="column" align="center">
                                         <AnimationComponent animationData={Empty} width="150px" />
                                         <Text>Vous n&apos;avez pas encore de recette</Text>
-                                        <IconButton variant="action" href="/ajouter-une-reccette">
+                                        <IconButton variant="action" href="/ajouter-une-recette">
                                             <PiPlus /> Ajouter une recette
                                         </IconButton>
                                     </Stack>
