@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Hero from '@/components/ui/wrapper/Hero';
 import Bento from '@/components/ui/wrapper/Bento';
 import Head from 'next/head';
@@ -18,7 +18,62 @@ import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
-const Home = ({ recipes = [] }) => {
+const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
+    const [recipes, setRecipes] = useState(initialRecipes);
+    const [nextToken, setNextToken] = useState(initialNextToken);
+    const [loading, setLoading] = useState(false);
+    const [noMoreRecipes, setNoMoreRecipes] = useState(false);
+
+    const fetchMoreRecipes = useCallback(async () => {
+        if (loading || !nextToken) return;
+        setLoading(true);
+        try {
+            const recipeData = await client.graphql({
+                query: listRecipes,
+                variables: { limit: 2, nextToken },
+                authMode: "apiKey"
+            });
+            const newRecipes = recipeData.data.listRecipes.items;
+            const newNextToken = recipeData.data.listRecipes.nextToken;
+
+            if (newRecipes.length === 0 || !newNextToken) {
+                setNoMoreRecipes(true);
+            }
+
+            const recipesWithImages = await Promise.all(
+                newRecipes.map(async (recipe) => {
+                    let imageUrl = '';
+                    if (recipe.image) {
+                        const imageUrlObject = await getS3Path(recipe.image);
+                        imageUrl = imageUrlObject.href;
+                    }
+                    return {
+                        ...recipe,
+                        imageUrl
+                    };
+                })
+            );
+
+            setRecipes((prevRecipes) => [...prevRecipes, ...recipesWithImages]);
+            setNextToken(newNextToken);
+        } catch (error) {
+            console.error("Error fetching more recipes:", error);
+        } finally {
+            setLoading(false);
+        }
+    }, [loading, nextToken]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200 && !loading) {
+                fetchMoreRecipes();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [fetchMoreRecipes, loading]);
+
     return (
         <>
             <Head>
@@ -68,6 +123,8 @@ const Home = ({ recipes = [] }) => {
                         ) : (
                             <Text>Aucune recette trouvée.</Text>
                         )}
+                        {loading && <Text>Chargement des recettes suivantes...</Text>}
+                        {!loading && noMoreRecipes && <Text>Il n&apos;y a pas d&apos;autres recettes.</Text>}
                     </Column>
                     <Column width="40%" gap="10px">
                         <Bento position="sticky" top="80px" highlight="highlight">
@@ -94,10 +151,11 @@ export const getServerSideProps = async () => {
     try {
         const recipeData = await client.graphql({
             query: listRecipes,
-            variables: { limit: 5 },
+            variables: { limit: 2 },
             authMode: "apiKey"
         });
         const recipesList = recipeData.data.listRecipes.items;
+        const nextToken = recipeData.data.listRecipes.nextToken;
 
         const recipesWithImages = await Promise.all(
             recipesList.map(async (recipe) => {
@@ -115,14 +173,16 @@ export const getServerSideProps = async () => {
 
         return {
             props: {
-                recipes: recipesWithImages || []
+                initialRecipes: recipesWithImages || [],
+                nextToken
             }
         };
     } catch (error) {
         console.error("Error fetching recipes:", error);
         return {
             props: {
-                recipes: []
+                initialRecipes: [],
+                nextToken: null
             }
         };
     }
