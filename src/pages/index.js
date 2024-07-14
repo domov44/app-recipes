@@ -15,10 +15,12 @@ import Container from '@/components/ui/wrapper/Container';
 import Stack from '@/components/ui/wrapper/Stack';
 import InvisibleLink from '@/components/ui/button/InvisibleLink';
 import { getS3Path } from '@/utils/getS3Path';
+import { useUser } from '@/utils/UserContext';
 
 const client = generateClient();
 
 const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
+    const { isLoggedIn } = useUser();
     const [recipes, setRecipes] = useState(initialRecipes);
     const [nextToken, setNextToken] = useState(initialNextToken);
     const [loading, setLoading] = useState(false);
@@ -31,7 +33,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
             const recipeData = await client.graphql({
                 query: listRecipes,
                 variables: { limit: 2, nextToken },
-                authMode: "identityPool"
+                authMode: isLoggedIn ? "userPool" : "identityPool"
             });
             const newRecipes = recipeData.data.listRecipes.items;
             const newNextToken = recipeData.data.listRecipes.nextToken;

@@ -11,6 +11,7 @@ import TextInput from '../form/TextInput';
 import { PiClock } from 'react-icons/pi';
 import { generateClient } from 'aws-amplify/api';
 import { listRecipes } from '@/graphql/customQueries';
+import { useUser } from '@/utils/UserContext';
 
 const client = generateClient();
 
@@ -85,6 +86,7 @@ const RecipeImage = styled.img`
 `;
 
 function SearchOverlay({ showOverlay, onClose, recipe }) {
+  const { isLoggedIn } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -130,7 +132,7 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
     try {
       const recipeResult = await client.graphql({
         query: listRecipes,
-        authMode: "apiKey",
+        authMode: isLoggedIn ? "userPool" : "identityPool",
         variables: filter
       });
 
