@@ -130,7 +130,7 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
     try {
       const recipeResult = await client.graphql({
         query: listRecipes,
-        authMode: "apiKey",
+        authMode: "identityPool",
         variables: filter
       });
 
