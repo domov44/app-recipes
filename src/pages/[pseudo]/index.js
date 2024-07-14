@@ -110,7 +110,7 @@ export async function getServerSideProps(context) {
         const result = await client.graphql({
             query: profileByPseudo,
             variables: { pseudo },
-            authMode: "apiKey",
+            authMode: "identityPool",
         });
 
         const user = result.data.profileByPseudo.items[0];

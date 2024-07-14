@@ -117,7 +117,7 @@ export async function getServerSideProps(context) {
         const profileResult = await client.graphql({
             query: profileByPseudo,
             variables: { pseudo },
-            authMode: "apiKey"
+            authMode: "identityPool"
         });
 
         const profile = profileResult.data.profileByPseudo.items[0];
@@ -133,7 +133,7 @@ export async function getServerSideProps(context) {
         const recipeResult = await client.graphql({
             query: RecipeByTitle,
             variables: { title, filter: { owner: { eq: owner } } },
-            authMode: "apiKey"
+            authMode: "identityPool"
         });
 
         const recipe = recipeResult.data.RecipeByTitle.items;
