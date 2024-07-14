@@ -31,7 +31,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
             const recipeData = await client.graphql({
                 query: listRecipes,
                 variables: { limit: 2, nextToken },
-                authMode: "apiKey"
+                authMode: "identityPool"
             });
             const newRecipes = recipeData.data.listRecipes.items;
             const newNextToken = recipeData.data.listRecipes.nextToken;
@@ -152,7 +152,7 @@ export const getServerSideProps = async () => {
         const recipeData = await client.graphql({
             query: listRecipes,
             variables: { limit: 2 },
-            authMode: "apiKey"
+            authMode: "identityPool"
         });
         const recipesList = recipeData.data.listRecipes.items;
         const nextToken = recipeData.data.listRecipes.nextToken;
