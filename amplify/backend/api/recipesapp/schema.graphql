@@ -67,7 +67,7 @@ type Category @model @auth(rules: [
 type RecipeIngredient @model @auth(rules: [
   {allow: public, provider: identityPool, operations: [read]}
   {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-  {allow: groups, groups: ["Members"], operations: [read]},
+  {allow: groups, groups: ["Members"], operations: [read, create]},
 ]) {
   id: ID!
   quantity: String
