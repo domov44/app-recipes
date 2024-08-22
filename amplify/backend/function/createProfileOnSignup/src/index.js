@@ -40,12 +40,8 @@ exports.handler = async (event, context, callback) => {
             Item: {
                 id: sub,
                 createdAt: now,
-                name: "Ronan",
-                surname: "Scotet",
                 pseudo: userName,
                 email: email,
-                avatar: "https://www.avatar.com",
-                description: "Test description",
                 birthdate: "1998-08-21",
                 owner: sub,
                 updatedAt: now,

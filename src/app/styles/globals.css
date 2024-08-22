@@ -227,6 +227,14 @@ fieldset {
   margin-left: 18px;
 }
 
+.big-user-picture {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
 .profil-container {
   left: 20px;
   bottom: 20px;

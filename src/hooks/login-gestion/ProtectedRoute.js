@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 import { getCurrentUser } from 'aws-amplify/auth';
 import { useUser } from '@/utils/UserContext';
+import Loading from '@/components/Loading';
 
 async function checkAuthState() {
     try {
@@ -13,23 +14,38 @@ async function checkAuthState() {
 }
 
 function ProtectedRoutes({ children }) {
-    const { isLoggedIn } = useUser();
+    const { isLoggedIn, profileCompleted } = useUser();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
             const isAuthenticated = await checkAuthState();
             if (!isAuthenticated) {
                 Router.push('/se-connecter');
+                return;
             }
-        }
-        fetchData();
-    }, []);
 
-    if (isLoggedIn) {
-        return children;
-    } else {
-        return null;
+            if (isLoggedIn && profileCompleted === false) {
+                Router.push('/completer-mon-profil');
+                return;
+            }
+
+            setLoading(false);
+        }
+
+        fetchData();
+    }, [isLoggedIn, profileCompleted]);
+
+    if (loading || isLoggedIn === null) {
+        return <Loading />;
     }
+
+    if (isLoggedIn && profileCompleted === true) {
+        return children;
+    }
+
+    return null;
 }
 
 export default ProtectedRoutes;
+

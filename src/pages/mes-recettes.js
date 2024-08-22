@@ -38,24 +38,20 @@ function MyRecipePage() {
     const [deleteButtonState, setDeleteButtonState] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const filter = {
-        filter: {
-            owner: {
-                eq: user?.id
-            }
-        }
-    };
-
-    useEffect(() => {
-        fetchRecipes();
-    }, []);
-
     const fetchRecipes = async () => {
+        if (!user?.id) return;
+
         setLoading(true);
         try {
             const recipeData = await client.graphql({
                 query: listRecipes,
-                variables: filter
+                variables: {
+                    filter: {
+                        owner: {
+                            eq: user.id
+                        }
+                    }
+                }
             });
             const recipesList = recipeData.data.listRecipes.items;
             setRecipes(recipesList);
@@ -66,14 +62,18 @@ function MyRecipePage() {
         }
     };
 
-    console.log(recipes)
+    useEffect(() => {
+        if (user?.id) {
+            fetchRecipes();
+        }
+    }, [user]);
 
     useEffect(() => {
-        setDeleteButtonState(selectedCount > 0 ? false : true);
+        setDeleteButtonState(selectedCount === 0);
     }, [selectedCount]);
 
-    const handleChildCheckboxChange = (ingredientId) => {
-        const updatedCheckedItems = { ...checkedItems, [ingredientId]: !checkedItems[ingredientId] };
+    const handleChildCheckboxChange = (recipeId) => {
+        const updatedCheckedItems = { ...checkedItems, [recipeId]: !checkedItems[recipeId] };
         const count = Object.values(updatedCheckedItems).filter(Boolean).length;
         setSelectedCount(count);
         setCheckedItems(updatedCheckedItems);
@@ -93,11 +93,11 @@ function MyRecipePage() {
     };
 
     const deleteCheckedRecipes = async () => {
-        const checkedIngredientsIds = Object.keys(checkedItems).filter((id) => checkedItems[id]);
+        const checkedRecipeIds = Object.keys(checkedItems).filter((id) => checkedItems[id]);
         try {
             if (await confirm({ title: `Voulez-vous vraiment supprimer ces recettes ?`, content: "Ces recettes seront supprimées de l'application", variant: "danger" })) {
-                await Promise.all(checkedIngredientsIds.map(async (id) => {
-                    const deletedClient = await client.graphql({
+                await Promise.all(checkedRecipeIds.map(async (id) => {
+                    await client.graphql({
                         query: deleteRecipe,
                         variables: {
                             input: {
@@ -109,7 +109,7 @@ function MyRecipePage() {
                 setCheckedItems({});
                 setAllChecked(false);
                 setSelectedCount(0);
-                notifySuccess(`${checkedIngredientsIds.length} recettes supprimées avec succès`);
+                notifySuccess(`${checkedRecipeIds.length} recettes supprimées avec succès`);
                 fetchRecipes();
             }
         } catch (error) {
@@ -120,9 +120,8 @@ function MyRecipePage() {
 
     const handleDeleteRecipe = async (id) => {
         try {
-            console.log(id)
             if (await confirm({ title: `Voulez-vous vraiment supprimer votre recette ?`, content: "Votre recette sera supprimée de l'application", variant: "danger" })) {
-                const deletedClient = await client.graphql({
+                await client.graphql({
                     query: deleteRecipe,
                     variables: {
                         input: {
@@ -135,7 +134,7 @@ function MyRecipePage() {
             }
         } catch (error) {
             console.error("Error on deleting recipe", error);
-            notifyError("Erreur lors de la suppression de l'ingrédient");
+            notifyError("Erreur lors de la suppression de la recette");
         }
     };
 
