@@ -154,7 +154,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                         {profilePictureURL ? (
                             <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
                         ) : (
-                            <img src="/illustration/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
+                            <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
                         )}
                         <Stack direction="column" spacing="0px">
                             <Title level={2}>
