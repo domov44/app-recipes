@@ -7,8 +7,8 @@ type Profile @model
 ]) {
   id: ID! @primaryKey
   pseudo: String! @index(name: "byPseudo", queryField: "profileByPseudo")
-  name: String!
-  surname: String!
+  name: String
+  surname: String
   avatar: String
   description: String
   birthdate: AWSDate
