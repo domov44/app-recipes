@@ -173,9 +173,9 @@ function SearchOverlay({ showOverlay, onClose }) {
         <CloseButton onClick={onClose}>Fermer</CloseButton>
         <Stack direction="column">
           <Title level={3}>Recherche de Recettes</Title>
-          <SearchInput
+          <TextInput
             type="text"
-            placeholder="Rechercher une recette"
+            label="Rechercher une recette"
             value={searchQuery}
             onChange={handleSearchChange}
           />
