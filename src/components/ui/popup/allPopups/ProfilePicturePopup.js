@@ -43,7 +43,7 @@ const ProfilePicturePopup = ({ open, onClose, onProgressChange, onUploadStart, o
       {profilePictureURL ? (
         <img src={profilePictureURL} className="big-user-picture" alt={user.profile.name} />
       ) : (
-        <img src="/illustration/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
+        <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
       )}
       <Text>
         {profilePictureURL
