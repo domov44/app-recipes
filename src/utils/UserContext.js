@@ -3,8 +3,7 @@ import { getCurrentUser, fetchUserAttributes, fetchAuthSession } from 'aws-ampli
 import { getUrl } from 'aws-amplify/storage';
 import Loading from '@/components/Loading';
 import { getProfile } from '@/graphql/queries';
-import { generateClient } from 'aws-amplify/api'; // Assurez-vous que cela est correctement configuré et importé.
-
+import { generateClient } from 'aws-amplify/api';
 const UserContext = createContext();
 const client = generateClient();
 
@@ -22,14 +21,10 @@ export const UserProvider = ({ children }) => {
         const session = await fetchAuthSession();
        if (session.userSub) {
         const currentUser = await getCurrentUser();
-        console.log(currentUser);
         const userProfile = await getUserProfile(currentUser.userId);
-        console.log(userProfile);
         const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
-        console.log(cognitoGroups);
         setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
         setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
-
         const userAttributes = await fetchUserAttributes();
         setUser({
           ...userAttributes,
@@ -40,7 +35,7 @@ export const UserProvider = ({ children }) => {
         });
         setProfile(userProfile);
         setLoggedIn(true);
-        fetchProfilePictureURL(userAttributes.picture);
+        fetchProfilePictureURL(userProfile.avatar);
       }
       } catch (error) {
         console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
@@ -54,12 +49,9 @@ export const UserProvider = ({ children }) => {
   const refreshUser = async () => {
     try {
       const currentUser = await getCurrentUser();
-      console.log(currentUser);
       const userProfile = await getUserProfile(currentUser.userId);
-      console.log(userProfile);
       const session = await fetchAuthSession();
       const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
-      console.log(cognitoGroups);
       setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
       setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
 
@@ -73,7 +65,7 @@ export const UserProvider = ({ children }) => {
       });
       setProfile(userProfile);
       setLoggedIn(true);
-      fetchProfilePictureURL(userAttributes.picture);
+      fetchProfilePictureURL(userProfile.avatar);
     } catch (error) {
       console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
       setLoggedIn(false);
@@ -128,14 +120,14 @@ export const UserProvider = ({ children }) => {
         const imageObject = await getUrl({
           key: pictureKey,
           options: {
-            accessLevel: 'private',
+            accessLevel: 'public',
             expiresIn: 3600,
           },
         });
         setProfilePictureURL(imageObject.url);
       }
     } catch (error) {
-      console.error('Error fetching profile picture:', error);
+      console.error('Error fetching profile avatar:', error);
     }
   };
 
