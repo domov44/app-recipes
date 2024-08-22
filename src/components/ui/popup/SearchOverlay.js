@@ -12,6 +12,7 @@ import { PiClock } from 'react-icons/pi';
 import { generateClient } from 'aws-amplify/api';
 import { listRecipes } from '@/graphql/customQueries';
 import { useUser } from '@/utils/UserContext';
+import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
@@ -85,7 +86,7 @@ const RecipeImage = styled.img`
   object-fit: cover;
 `;
 
-function SearchOverlay({ showOverlay, onClose, recipe }) {
+function SearchOverlay({ showOverlay, onClose }) {
   const { isLoggedIn } = useUser();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -138,7 +139,27 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
 
       const recipes = recipeResult.data.listRecipes.items;
 
-      setSearchResults(recipes);
+      const recipesWithImages = await Promise.all(
+        recipes.map(async (recipe) => {
+          let imageUrl = '';
+          let profileUrl = '';
+          if (recipe.image) {
+            const imageUrlObject = await getS3Path(recipe.image);
+            imageUrl = imageUrlObject.href;
+          }
+
+          if (recipe.user?.avatar) {
+            const imageUrlObject = await getS3Path(recipe.user.avatar);
+            profileUrl = imageUrlObject.href;
+          }
+          return {
+            ...recipe,
+            imageUrl,
+            profileUrl
+          };
+        })
+      );
+      setSearchResults(recipesWithImages);
       setLoading(false);
     } catch (error) {
       console.error('Erreur lors de la récupération des résultats de recherche :', error.message);
@@ -152,9 +173,9 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
         <CloseButton onClick={onClose}>Fermer</CloseButton>
         <Stack direction="column">
           <Title level={3}>Recherche de Recettes</Title>
-          <TextInput
+          <SearchInput
             type="text"
-            label="Rechercher une recette"
+            placeholder="Rechercher une recette"
             value={searchQuery}
             onChange={handleSearchChange}
           />
@@ -173,15 +194,17 @@ function SearchOverlay({ showOverlay, onClose, recipe }) {
 
                 return (
                   <ResultItem key={recipe.id ?? index}>
-                    <InvisibleLink onClick={onClose} href={`/${recipe.user.pseudo}/${recipe.title}`}>
+                    <InvisibleLink onClick={onClose} href={`/${recipe.user?.pseudo}/${recipe.title}`}>
                       <Stack align="center">
-                        <RecipeImage src={recipe.image} alt={recipe.title} />
+                        <RecipeImage src={recipe.imageUrl} alt={recipe.title} />
                         <Stack direction="column" spacing="0px" width={"100%"}>
                           <Stack justify="space-between">
                             <Stack align="center" spacing="6px">
                               <Text size="lg" fontfamily="semi-bold" variant="contrasted">{recipe.title}</Text>
-                              <img src={recipe.user.avatar} className='user-picture-min' alt={recipe.user.pseudo} />
-                              <Text size="sm">de {recipe.user.pseudo}</Text>
+                              {recipe.user?.avatar && (
+                                <img src={recipe.profileUrl} className='user-picture-min' alt={recipe.user?.pseudo} />
+                              )}
+                              <Text size="sm">de {recipe.user?.pseudo}</Text>
                             </Stack>
                             <Chip icon={PiClock} variant="success">{totalDuration} minutes</Chip>
                           </Stack>

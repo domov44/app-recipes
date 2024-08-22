@@ -109,7 +109,7 @@ function Header({ isopen, toggleSidebar }) {
                                     {profilePictureURL ? (
                                         <img src={profilePictureURL} className="user-picture-2" alt={user.profile.name} />
                                     ) : (
-                                        <img src="/illustration/svg/utilisateur.svg" className="user-picture-2" alt="avatar" />
+                                        <img src="/svg/utilisateur.svg" className="user-picture-2" alt="avatar" />
                                     )}
                                 </InvisibleLink>
                             }
