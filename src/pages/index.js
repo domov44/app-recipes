@@ -45,13 +45,20 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
             const recipesWithImages = await Promise.all(
                 newRecipes.map(async (recipe) => {
                     let imageUrl = '';
+                    let profileUrl = '';
                     if (recipe.image) {
                         const imageUrlObject = await getS3Path(recipe.image);
                         imageUrl = imageUrlObject.href;
                     }
+
+                    if (recipe.user.avatar) {
+                        const imageUrlObject = await getS3Path(recipe.user.avatar);
+                        profileUrl = imageUrlObject.href;
+                    }
                     return {
                         ...recipe,
-                        imageUrl
+                        imageUrl,
+                        profileUrl
                     };
                 })
             );
@@ -102,7 +109,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
-                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.user.avatar}></img>
+                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.profileUrl}></img>
                                             <Stack direction="column" spacing="0px">
                                                 <Title fontfamily="medium" level={4}>
                                                     {recipe.user.pseudo}
@@ -162,13 +169,20 @@ export const getServerSideProps = async () => {
         const recipesWithImages = await Promise.all(
             recipesList.map(async (recipe) => {
                 let imageUrl = '';
+                let profileUrl = '';
                 if (recipe.image) {
                     const imageUrlObject = await getS3Path(recipe.image);
                     imageUrl = imageUrlObject.href;
                 }
+
+                if (recipe.user.avatar) {
+                    const imageUrlObject = await getS3Path(recipe.user.avatar);
+                    profileUrl = imageUrlObject.href;
+                }
                 return {
                     ...recipe,
-                    imageUrl
+                    imageUrl,
+                    profileUrl
                 };
             })
         );
