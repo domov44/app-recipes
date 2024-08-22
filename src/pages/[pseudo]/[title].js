@@ -19,7 +19,7 @@ import { getS3Path } from '@/utils/getS3Path';
 
 const client = generateClient();
 
-const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl }) => {
+const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl, profileUrl }) => {
     if (error) {
         return <p>Erreur: {error}</p>;
     }
@@ -46,7 +46,7 @@ const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl }) => {
                         <Bento highlight="highlight">
                             <Stack justify="space-between" align="center">
                                 <Stack>
-                                    <img className="user-picture" alt={profile.name} src={profile.avatar}></img>
+                                    <img className="user-picture" alt={profile.name} src={profileUrl}></img>
                                     <Stack direction="column" spacing="0px">
                                         <Title fontfamily="medium" level={2}>
                                             {profile.pseudo}
@@ -139,10 +139,16 @@ export async function getServerSideProps(context) {
         const recipe = recipeResult.data.RecipeByTitle.items;
 
         let imageUrl = '';
+        let profileUrl = '';
 
         if (recipe?.[0]?.image) {
             const imageUrlObject = await getS3Path(recipe[0].image);
             imageUrl = imageUrlObject.href;
+        }
+        
+        if (profile.avatar) {
+            const imageUrlObject = await getS3Path(profile.avatar);
+            profileUrl = imageUrlObject.href;
         }
 
         return {
@@ -152,6 +158,7 @@ export async function getServerSideProps(context) {
                 recipe,
                 profile,
                 imageUrl,
+                profileUrl
             },
         };
     } catch (error) {
