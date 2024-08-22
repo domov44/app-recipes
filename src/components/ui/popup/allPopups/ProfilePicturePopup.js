@@ -78,7 +78,7 @@ const ProfilePicturePopup = ({ open, onClose, onProgressChange, onUploadStart, o
         closePopup={handleClose}
         acceptedTypes="image/png, image/jpeg, image/jpg, image/PNG"
       />
-      <Text size="sm">Assurez-vous que votre image est au format JPG, PNG, JPEG et qu'elle ne dépasse pas la taille maximale autorisée de 3mo.</Text>
+      <Text size="sm">Assurez-vous que votre image est au format JPG, PNG, JPEG et qu&apos;elle ne dépasse pas la taille maximale autorisée de 3mo.</Text>
     </Stack>
   );
 
