@@ -8,6 +8,7 @@ import { applyTheme } from '../utils/theme/theme.js';
 import '../app/fonts/fonts.css';
 import { Amplify } from 'aws-amplify';
 import config from '@/amplifyconfiguration.json';
+import { PopupProvider } from '@/utils/PopupContext.js';
 Amplify.configure(config);
 
 function MyApp({ Component, pageProps, router }) {
@@ -16,9 +17,11 @@ function MyApp({ Component, pageProps, router }) {
   return (
     <UserProvider>
       <DefaultLayout>
-        <ToastContainer />
-        <ConfirmGlobal />
-        <Component {...pageProps} />
+        <PopupProvider>
+          <ToastContainer />
+          <ConfirmGlobal />
+          <Component {...pageProps} />
+        </PopupProvider>
       </DefaultLayout>
     </UserProvider>
   );
