@@ -289,6 +289,13 @@ fieldset {
   }
 }
 
+.big-user-picture {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .profil-container {
   left: 20px;
   bottom: 20px;

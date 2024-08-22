@@ -91,9 +91,7 @@ function Aside({ isopen, toggleSidebar }) {
             </ul>
           }
           {isAdmin &&
-            <ul className='menu'>
-              <AdminMenu />
-            </ul>
+            <AdminMenu />
           }
           {isLoggedIn &&
             <ul className='menu'>

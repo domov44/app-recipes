@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
   const [profilePictureURL, setProfilePictureURL] = useState(null);
   const [cognitoGroups, setCognitoGroups] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [profileCompleted, setProfileCompleted] = useState(null);
 
   useEffect(() => {
     const checkAuthState = async () => {
@@ -36,6 +37,7 @@ export const UserProvider = ({ children }) => {
         setProfile(userProfile);
         setLoggedIn(true);
         fetchProfilePictureURL(userProfile.avatar);
+        checkProfileCompletion(userProfile);
       }
       } catch (error) {
         console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
@@ -66,6 +68,7 @@ export const UserProvider = ({ children }) => {
       setProfile(userProfile);
       setLoggedIn(true);
       fetchProfilePictureURL(userProfile.avatar);
+      checkProfileCompletion(userProfile);
     } catch (error) {
       console.error('Erreur lors de la vérification de l\'état d\'authentification :', error);
       setLoggedIn(false);
@@ -85,8 +88,21 @@ export const UserProvider = ({ children }) => {
     setIsAdmin(false);
   };
 
-  const updateUser = (newUserData) => {
-    setUser({ ...newUserData, age: calculateAge(newUserData.birthdate) });
+  const updateUser = async (newUserData) => {
+    try {
+      setUser({ ...newUserData, age: calculateAge(newUserData.birthdate) });
+      await refreshUser();
+      console.log('User updated:', user);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l\'utilisateur :', error);
+      throw error;
+    }
+  };
+
+  const checkProfileCompletion = (profile) => {
+    const requiredFields = ['name', 'surname'];
+    const isComplete = requiredFields.every(field => profile[field] !== null && profile[field] !== '');
+    setProfileCompleted(isComplete);
   };
 
   const calculateAge = (birthdate) => {
@@ -156,6 +172,7 @@ export const UserProvider = ({ children }) => {
       fetchProfilePictureURL,
       cognitoGroups,
       isAdmin,
+      profileCompleted
     }}>
       {children}
     </UserContext.Provider>

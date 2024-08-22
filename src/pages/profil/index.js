@@ -23,6 +23,7 @@ import InvisibleLink from "@/components/ui/button/InvisibleLink";
 import { getS3Path } from '@/utils/getS3Path';
 import ProfilePicturePopup from "@/components/ui/popup/allPopups/ProfilePicturePopup";
 import { usePopup } from "@/utils/PopupContext";
+import { convertirFormatDate } from '@/utils/convertirFormatDate';
 
 const client = generateClient();
 
@@ -34,20 +35,20 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
     const [nextToken, setNextToken] = useState(null);
     const [noMoreRecipes, setNoMoreRecipes] = useState(false);
 
-    const filter = {
-        filter: {
-            owner: {
-                eq: user?.id
-            }
-        }
-    };
-
     const fetchInitialRecipes = async () => {
+        if (!user?.id) return;
+
         setLoading(true);
         try {
             const recipeData = await client.graphql({
                 query: listRecipes,
-                variables: { ...filter, limit: 2 },
+                variables: {
+                    filter: {
+                        owner: {
+                            eq: user.id
+                        }
+                    }, limite: 2
+                }
             });
             const recipesList = recipeData.data.listRecipes.items;
             const newNextToken = recipeData.data.listRecipes.nextToken;
@@ -76,13 +77,25 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
         }
     };
 
+    useEffect(() => {
+        if (user?.id) {
+            fetchInitialRecipes();
+        }
+    }, [user]);
+
     const fetchMoreRecipes = useCallback(async () => {
         if (loading || noMoreRecipes || !nextToken) return;
         setLoading(true);
         try {
             const recipeData = await client.graphql({
                 query: listRecipes,
-                variables: { ...filter, limit: 2, nextToken },
+                variables: {
+                    filter: {
+                        owner: {
+                            eq: user.id
+                        }
+                    }, limite: 2, nextToken
+                }
             });
             const recipesList = recipeData.data.listRecipes.items;
             const newNextToken = recipeData.data.listRecipes.nextToken;
@@ -115,10 +128,6 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
     }, [loading, nextToken, noMoreRecipes]);
 
     useEffect(() => {
-        fetchInitialRecipes();
-    }, []);
-
-    useEffect(() => {
         const handleScroll = () => {
             if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 200 && !loading) {
                 fetchMoreRecipes();
@@ -140,8 +149,8 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                 Ajouter une recette
             </Button>
             <Section>
-                <BackgroundContainer coverUrl="https://api-prod-minimal-v510.vercel.app/assets/images/cover/cover_4.jpg">
-                    <Stack position="absolute" left="15px" bottom="15px">
+                <BackgroundContainer coverUrl="background/cover_4.jpg">
+                <div className="profil-container">
                         {profilePictureURL ? (
                             <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
                         ) : (
@@ -153,7 +162,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                             </Title>
                             <Text>{user?.pseudo}</Text>
                         </Stack>
-                    </Stack>
+                    </div>
                 </BackgroundContainer>
                 <Container direction="row" responsive="yes">
                     <Column width="35%">
@@ -180,6 +189,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                                                 <Title fontFamily="medium" level={4}>
                                                     {recipe.user.pseudo}
                                                 </Title>
+                                                <Text>{`${convertirFormatDate(recipe.createdAt)}`}</Text>
                                             </Stack>
                                         </Stack>
                                     </InvisibleLink>
