@@ -93,7 +93,7 @@ const StyledAsideButton = styled.button`
 `;
 
 function Header({ isopen, toggleSidebar }) {
-    const { user, isLoggedIn } = useUser();
+    const { user, isLoggedIn, profilePictureURL } = useUser();
     return (
         <>
             <StyledHeader $isopen={isopen}>
@@ -106,7 +106,11 @@ function Header({ isopen, toggleSidebar }) {
                             </HeaderSearch>
                             {isLoggedIn && user?.pseudo &&
                                 <InvisibleLink href="/profil" lineheight="0">
-                                    <img className="user-picture-2" alt={user.pseudo} src="https://lh3.googleusercontent.com/ogw/AF2bZyjtjwRu-VKvzKCDe2olcMFTJRDJ4H5mTLcw6q8kBTggCRY=s32-c-mo"></img>
+                                    {profilePictureURL ? (
+                                        <img src={profilePictureURL} className="user-picture-2" alt={user.profile.name} />
+                                    ) : (
+                                        <img src="/illustration/svg/utilisateur.svg" className="user-picture-2" alt="avatar" />
+                                    )}
                                 </InvisibleLink>
                             }
                         </>

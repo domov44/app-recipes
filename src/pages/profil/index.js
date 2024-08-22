@@ -21,12 +21,15 @@ import IconButton from "@/components/ui/button/IconButton";
 import { listRecipes } from "@/graphql/customQueries";
 import InvisibleLink from "@/components/ui/button/InvisibleLink";
 import { getS3Path } from '@/utils/getS3Path';
+import ProfilePicturePopup from "@/components/ui/popup/allPopups/ProfilePicturePopup";
+import { usePopup } from "@/utils/PopupContext";
 
 const client = generateClient();
 
-export default function Profil() {
+export default function Profil({ onProgressChange, onUploadStart, onUploadEnd }) {
+    const { popups, openPopup, closePopup } = usePopup();
     const [loading, setLoading] = useState(true);
-    const { isLoggedIn, user } = useUser();
+    const { isLoggedIn, user, profilePictureURL } = useUser();
     const [recipes, setRecipes] = useState([]);
     const [nextToken, setNextToken] = useState(null);
     const [noMoreRecipes, setNoMoreRecipes] = useState(false);
@@ -137,10 +140,13 @@ export default function Profil() {
                 Ajouter une recette
             </Button>
             <Section>
-                <Title level={1}>Votre Profil</Title>
                 <BackgroundContainer coverUrl="https://api-prod-minimal-v510.vercel.app/assets/images/cover/cover_4.jpg">
                     <Stack position="absolute" left="15px" bottom="15px">
-                        <img className="user-picture" alt={user?.pseudo} src={user?.profile.avatar} />
+                        {profilePictureURL ? (
+                            <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
+                        ) : (
+                            <img src="/illustration/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
+                        )}
                         <Stack direction="column" spacing="0px">
                             <Title level={2}>
                                 {user?.profile.name} {user?.profile.surname}
@@ -154,7 +160,7 @@ export default function Profil() {
                         <Bento position="sticky" top="80px" highlight="highlight">
                             <Stack align="center">
                                 <Title level={4}>Profil</Title>
-                                <IconButton variant="secondary-action" href="/profil/modifier-mon-profil">
+                                <IconButton variant="secondary-action" onClick={() => openPopup('popupProfilePicture')}>
                                     <PiPen /> Modifier
                                 </IconButton>
                             </Stack>
@@ -169,7 +175,7 @@ export default function Profil() {
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
-                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.user.avatar} />
+                                            <img className="user-picture" alt={recipe.user.pseudo} src={profilePictureURL} />
                                             <Stack direction="column" spacing="0px">
                                                 <Title fontFamily="medium" level={4}>
                                                     {recipe.user.pseudo}
@@ -204,6 +210,13 @@ export default function Profil() {
                     </Column>
                 </Container>
             </Section>
+            <ProfilePicturePopup
+                open={popups['popupProfilePicture']}
+                onClose={() => closePopup('popupProfilePicture')}
+                onProgressChange={onProgressChange}
+                onUploadStart={onUploadStart}
+                onUploadEnd={onUploadEnd}
+            />
         </ProtectedRoutes>
     );
 }
