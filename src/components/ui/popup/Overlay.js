@@ -13,8 +13,8 @@ const OverlayWrapper = styled.div`
   z-index: 1000; 
 `;
 
-function Overlay() {
-  return <OverlayWrapper />;
+function Overlay({onClick}) {
+  return <OverlayWrapper onClick={onClick}/>;
 }
 
 export default Overlay;
