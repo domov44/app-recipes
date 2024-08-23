@@ -1,5 +1,4 @@
-// ConfirmDialog.js
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Dialog from '../components/ui/popup/Dialog';
 import Title from '../components/ui/textual/Title';
@@ -17,38 +16,37 @@ function ConfirmDialog({
     onConfirm,
     onCancel,
 }) {
-    // Toujours créer la référence du conteneur de dialogue
-    const dialogContainerRef = useRef(null);
+    const [isClient, setIsClient] = useState(false);
 
-    // Vérifier si le code s'exécute côté client
-    const isClient = typeof window !== 'undefined';
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setIsClient(true);
+        }
+    }, []);
 
-    // Utiliser useEffect conditionnellement pour gérer l'ajout et la suppression du conteneur de dialogue
     useEffect(() => {
         if (isClient) {
-            // Créer le conteneur de dialogue si ce n'est pas encore fait
-            if (!dialogContainerRef.current) {
-                dialogContainerRef.current = document.createElement('div');
+            const body = document.body;
+            if (open) {
+                body.classList.add('no-scroll');
+            } else {
+                body.classList.remove('no-scroll');
             }
 
-            const appContainer = document.getElementById('__next');
-            appContainer.appendChild(dialogContainerRef.current);
-
             return () => {
-                appContainer.removeChild(dialogContainerRef.current);
+                body.classList.remove('no-scroll');
             };
         }
-    }, [isClient]); // Utiliser [isClient] comme dépendance
+    }, [open, isClient]);
 
-    // Si le dialogue n'est pas ouvert ou que le conteneur n'est pas prêt, retourner null
-    if (!open || !isClient || !dialogContainerRef.current) {
-        return null;
-    }
+    if (!isClient) return null;
+    
+    const appContainer = document.getElementById('__next');
+    if (!appContainer || !open) return null;
 
-    // Rendu du composant avec createPortal
     return createPortal(
         <>
-            <Overlay />
+            <Overlay onClick={onCancel}/>
             <Dialog open={open} onCancel={onCancel} variant={variant}>
                 <form className="dialog-content" onSubmit={onConfirm} method="dialog">
                     <Title level={3}>{title || "Confirmation"}</Title>
@@ -60,7 +58,7 @@ function ConfirmDialog({
                 </form>
             </Dialog>
         </>,
-        dialogContainerRef.current
+        appContainer
     );
 }
 
