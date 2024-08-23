@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Stack from '@/components/ui/wrapper/Stack';
 import Title from '@/components/ui/textual/Title';
 import Text from '@/components/ui/textual/Text';
@@ -111,7 +111,8 @@ const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl, profileUr
 };
 
 export async function getServerSideProps(context) {
-    const { pseudo, title } = context.params;
+    const { res, params } = context;
+    const { pseudo, title } = params;
 
     try {
         const profileResult = await client.graphql({
@@ -151,6 +152,8 @@ export async function getServerSideProps(context) {
             profileUrl = imageUrlObject.href;
         }
 
+        res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+
         return {
             props: {
                 pseudo,
@@ -170,6 +173,5 @@ export async function getServerSideProps(context) {
         };
     }
 }
-
 
 export default RecipePage;

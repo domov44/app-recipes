@@ -20,6 +20,8 @@ padding: 30px;
 `;
 
 function Dialog({ children, open, onCancel, variant }) {
+  if (!open) return null;
+  
   return (
     <DialogElement open={open} onCancel={onCancel} $variant={variant}>
       {children}

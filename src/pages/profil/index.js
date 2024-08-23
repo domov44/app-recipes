@@ -24,6 +24,8 @@ import { getS3Path } from '@/utils/getS3Path';
 import ProfilePicturePopup from "@/components/ui/popup/allPopups/ProfilePicturePopup";
 import { usePopup } from "@/utils/PopupContext";
 import { convertirFormatDate } from '@/utils/convertirFormatDate';
+import EditProfilePopup from "@/components/ui/popup/allPopups/EditProfilePopup";
+import TextHover from "@/components/ui/hover/TextHover";
 
 const client = generateClient();
 
@@ -150,12 +152,19 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
             </Button>
             <Section>
                 <BackgroundContainer coverUrl="background/cover_4.jpg">
-                <div className="profil-container">
-                        {profilePictureURL ? (
-                            <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
-                        ) : (
-                            <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
-                        )}
+                    <div className="profil-container">
+                        <TextHover
+                            text={"Changer de Photo de profil"}
+                            onClick={() =>
+                                openPopup('popupProfilePicture')
+                            }
+                        >
+                            {profilePictureURL ? (
+                                <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
+                            ) : (
+                                <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
+                            )}
+                        </TextHover>
                         <Stack direction="column" spacing="0px">
                             <Title level={2}>
                                 {user?.profile.name} {user?.profile.surname}
@@ -168,8 +177,8 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                     <Column width="35%">
                         <Bento position="sticky" top="80px" highlight="highlight">
                             <Stack align="center">
-                                <Title level={4}>Profil</Title>
-                                <IconButton variant="secondary-action" onClick={() => openPopup('popupProfilePicture')}>
+                                <Title level={4}>À propos</Title>
+                                <IconButton variant="secondary-action" onClick={() => openPopup('popupEditProfile')}>
                                     <PiPen /> Modifier
                                 </IconButton>
                             </Stack>
@@ -226,6 +235,10 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                 onProgressChange={onProgressChange}
                 onUploadStart={onUploadStart}
                 onUploadEnd={onUploadEnd}
+            />
+            <EditProfilePopup
+                open={popups['popupEditProfile']}
+                onClose={() => closePopup('popupEditProfile')}
             />
         </ProtectedRoutes>
     );
