@@ -16,11 +16,13 @@ import Stack from '@/components/ui/wrapper/Stack';
 import InvisibleLink from '@/components/ui/button/InvisibleLink';
 import { getS3Path } from '@/utils/getS3Path';
 import { useUser } from '@/utils/UserContext';
+import { IoMdAdd } from 'react-icons/io';
+import { CiEdit } from 'react-icons/ci';
 
 const client = generateClient();
 
 const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
-    const { isLoggedIn } = useUser();
+    const { isLoggedIn, profilePictureURL } = useUser();
     const [recipes, setRecipes] = useState(initialRecipes);
     const [nextToken, setNextToken] = useState(initialNextToken);
     const [loading, setLoading] = useState(false);
@@ -104,6 +106,35 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
                 </Button>
                 <Container direction="row" responsive="yes">
                     <Column width="60%" gap="30px">
+                        {isLoggedIn && (
+                            <Bento highlight={"highlight"} overflow={"visible"}>
+                                <Stack direction={"column"}>
+                                    <Stack separator align={"center"} spacing={"20px"}>
+                                        <img
+                                            src={profilePictureURL || "/illustration/svg/utilisateur.svg"}
+                                            className="user-picture"
+                                            alt="avatar"
+                                        />
+                                        <Stack direction={"column"}>
+                                            <Title level={5}>
+                                                On cuisine quoi aujourd&apos;hui ?
+                                            </Title>
+                                            <Text>
+                                                Voici les actions que vous pouvez faire
+                                            </Text>
+                                        </Stack>
+                                    </Stack>
+                                    <Stack>
+                                        <IconButton variant="action" href={`/ajouter-une-recette`}>
+                                            <IoMdAdd /> Ajouter une recette
+                                        </IconButton>
+                                        <IconButton variant="secondary-action" href={`/mes-recettes`}>
+                                            <CiEdit /> Gérer mes recettes
+                                        </IconButton>
+                                    </Stack>
+                                </Stack>
+                            </Bento>
+                        )}
                         {recipes.length > 0 ? (
                             recipes.map((recipe) => (
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
