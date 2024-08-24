@@ -6,7 +6,7 @@ import { useUser } from '@/utils/UserContext';
 import Head from "next/head";
 import Button from "@/components/ui/button/Button";
 import Chip from "@/components/ui/textual/Chip";
-import { PiCake, PiEnvelope, PiPlus, PiPen } from 'react-icons/pi';
+import { PiCake, PiEnvelope, PiPlus, PiPen, PiEye } from 'react-icons/pi';
 import Section from "@/components/ui/wrapper/Section";
 import Bento from "@/components/ui/wrapper/Bento";
 import Container from "@/components/ui/wrapper/Container";
@@ -26,6 +26,8 @@ import { usePopup } from "@/utils/PopupContext";
 import { convertirFormatDate } from '@/utils/convertirFormatDate';
 import EditProfilePopup from "@/components/ui/popup/allPopups/EditProfilePopup";
 import TextHover from "@/components/ui/hover/TextHover";
+import { IoMdAdd } from "react-icons/io";
+import { CiEdit } from "react-icons/ci";
 
 const client = generateClient();
 
@@ -147,7 +149,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                 <meta name="description" content="Description de la page" />
                 <meta property="og:image" content="URL_de_votre_image" />
             </Head>
-            <Button variant="primary" position="fixed" right="20px" bottom="20px" zIndex="2" href="/ajouter-une-recette" icon={PiPlus}>
+            <Button variant="primary" position="fixed" right="20px" bottom="20px" zindex={2} href="/ajouter-une-recette" icon={PiPlus}>
                 Ajouter une recette
             </Button>
             <Section>
@@ -166,10 +168,15 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                             )}
                         </TextHover>
                         <Stack direction="column" spacing="0px">
-                            <Title level={2}>
-                                {user?.profile.name} {user?.profile.surname}
-                            </Title>
-                            <Text>{user?.pseudo}</Text>
+                            <Stack>
+                                <Title level={1}>
+                                    {user?.pseudo}
+                                </Title>
+                                <IconButton variant="secondary-action" href={`/${user?.pseudo}`}>
+                                    <PiEye /> Voir mon profil public
+                                </IconButton>
+                            </Stack>
+                            <Text>{user?.profile.name} {user?.profile.surname}</Text>
                         </Stack>
                     </div>
                 </BackgroundContainer>
@@ -188,6 +195,33 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                         </Bento>
                     </Column>
                     <Column width="65%" gap="30px">
+                        <Bento highlight={"highlight"} overflow={"visible"}>
+                            <Stack direction={"column"}>
+                                <Stack separator align={"center"} spacing={"20px"}>
+                                    <img
+                                        src={profilePictureURL || "/illustration/svg/utilisateur.svg"}
+                                        className="user-picture"
+                                        alt="avatar"
+                                    />
+                                    <Stack direction={"column"}>
+                                        <Title level={5}>
+                                            On cuisine quoi aujourd&apos;hui ?
+                                        </Title>
+                                        <Text>
+                                            Voici les actions que vous pouvez faire
+                                        </Text>
+                                    </Stack>
+                                </Stack>
+                                <Stack>
+                                    <IconButton variant="action" href={`/ajouter-une-recette`}>
+                                        <IoMdAdd /> Ajouter une recette
+                                    </IconButton>
+                                    <IconButton variant="secondary-action" href={`/mes-recettes`}>
+                                        <CiEdit /> Gérer mes recettes
+                                    </IconButton>
+                                </Stack>
+                            </Stack>
+                        </Bento>
                         {recipes.length > 0 ? (
                             recipes.map((recipe) => (
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>

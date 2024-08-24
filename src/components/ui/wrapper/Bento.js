@@ -2,9 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 const BentoDiv = styled.div`
-  position: relative;
+  position: ${props => props.$position || "relative"};
   overflow: hidden;
   gap: 10px;
+  top: ${props => props.$top || ""};
+  right: ${props => props.$right || ""};
+  bottom: ${props => props.$bottom || ""};
+  left: ${props => props.$left || ""};
   display: flex;
   flex-direction: ${props => (props.$direction === "row" ? "row" : "column")};
   justify-content: center;
@@ -26,10 +30,15 @@ const BentoDiv = styled.div`
   }
 `;
 
-function Bento({ children, align, direction, highlight, width, padding, responsive }) {
+function Bento({ children, align, position, direction, highlight, top, right, bottom, left, width, padding, responsive }) {
   return (
     <BentoDiv
       $align={align}
+      $position={position}
+      $top={top}
+      $right={right}
+      $bottom={bottom}
+      $left={left}
       $direction={direction}
       $highlight={highlight}
       $width={width}
