@@ -152,8 +152,6 @@ export async function getServerSideProps(context) {
             profileUrl = imageUrlObject.href;
         }
 
-        res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
-
         return {
             props: {
                 pseudo,
