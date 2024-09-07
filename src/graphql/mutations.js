@@ -81,6 +81,7 @@ export const createRecipe = /* GraphQL */ `
     createRecipe(input: $input, condition: $condition) {
       id
       title
+      slug
       image
       user {
         id
@@ -104,6 +105,7 @@ export const createRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -127,6 +129,7 @@ export const updateRecipe = /* GraphQL */ `
     updateRecipe(input: $input, condition: $condition) {
       id
       title
+      slug
       image
       user {
         id
@@ -150,6 +153,7 @@ export const updateRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -173,6 +177,7 @@ export const deleteRecipe = /* GraphQL */ `
     deleteRecipe(input: $input, condition: $condition) {
       id
       title
+      slug
       image
       user {
         id
@@ -196,6 +201,7 @@ export const deleteRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -330,6 +336,7 @@ export const createCategory = /* GraphQL */ `
     createCategory(input: $input, condition: $condition) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename
@@ -348,6 +355,7 @@ export const updateCategory = /* GraphQL */ `
     updateCategory(input: $input, condition: $condition) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename
@@ -366,6 +374,7 @@ export const deleteCategory = /* GraphQL */ `
     deleteCategory(input: $input, condition: $condition) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename

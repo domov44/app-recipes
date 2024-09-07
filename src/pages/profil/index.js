@@ -164,7 +164,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                             {profilePictureURL ? (
                                 <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
                             ) : (
-                                <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
+                                <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
                             )}
                         </TextHover>
                         <Stack direction="column" spacing="0px">
@@ -227,7 +227,11 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
-                                            <img className="user-picture" alt={recipe.user.pseudo} src={profilePictureURL} />
+                                            {profilePictureURL ? (
+                                                <img src={profilePictureURL} className="user-picture" alt={recipe.user.pseudo} />
+                                            ) : (
+                                                <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
+                                            )}
                                             <Stack direction="column" spacing="0px">
                                                 <Title fontFamily="medium" level={4}>
                                                     {recipe.user.pseudo}
@@ -244,7 +248,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                                     </Stack>
                                     <Title level={3}>{recipe.title}</Title>
                                     <Text>{recipe.description}</Text>
-                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.title}`}>
+                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.slug}`}>
                                         Voir ma recette
                                     </Button>
                                 </Bento>

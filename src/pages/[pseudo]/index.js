@@ -19,11 +19,15 @@ import { profileByPseudo, listRecipes } from '@/graphql/customQueries';
 import { generateClient } from 'aws-amplify/api';
 import { getS3Path } from '@/utils/getS3Path';
 import { useUser } from '@/utils/UserContext';
+import TextHover from '@/components/ui/hover/TextHover';
+import { usePopup } from "@/utils/PopupContext";
+import ViewProfilePicturePopup from '@/components/ui/popup/allPopups/ViewProfilePicturePopup';
 
 const client = generateClient();
 
 const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextToken: initialNextToken, error }) => {
     const [recipes, setRecipes] = useState(initialRecipes);
+    const { popups, openPopup, closePopup } = usePopup();
     const { isLoggedIn } = useUser();
     const [nextToken, setNextToken] = useState(initialNextToken);
     const [loading, setLoading] = useState(false);
@@ -105,11 +109,12 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                 </Button>
                 <BackgroundContainer coverUrl={"background/cover_4.jpg"}>
                     <div className="profil-container">
-                        {profileUrl ? (
-                            <img src={profileUrl} className="user-picture" alt={user.pseudo} />
-                        ) : (
-                            <img src="/svg/utilisateur.svg" className="big-user-picture" alt="avatar" />
-                        )}
+                            {profileUrl ? (
+                                <img src={profileUrl} className="user-picture pointer" alt={user.pseudo} onClick={() => openPopup('viewProfilePicture')}/>
+                            ) : (
+                                <img src="/svg/utilisateur.svg" className="user-picture pointer" alt="avatar" onClick={() => openPopup('viewProfilePicture')}/>
+                            )}
+ 
                         <Stack direction="column" spacing="0px">
                             <Title level={1}>
                                 {user?.pseudo}
@@ -134,7 +139,11 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                             recipes.map(recipe => (
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <Stack>
-                                        <img className="user-picture" alt={recipe.user.pseudo} src={profileUrl}></img>
+                                        {profileUrl ? (
+                                            <img src={profileUrl} className="user-picture" alt={recipe.user.pseudo} />
+                                        ) : (
+                                            <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
+                                        )}
                                         <Stack direction="column" spacing="0px">
                                             <Title fontFamily="medium" level={4}>
                                                 {recipe.user.pseudo}
@@ -161,6 +170,12 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                     </Column>
                 </Container>
             </Section>
+            <ViewProfilePicturePopup
+                open={popups['viewProfilePicture']}
+                picture={profileUrl}
+                pseudo={user.pseudo}
+                onClose={() => closePopup('viewProfilePicture')}
+            />
         </>
     );
 };
