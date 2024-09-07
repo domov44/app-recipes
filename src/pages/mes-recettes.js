@@ -190,7 +190,7 @@ function MyRecipePage() {
                                             />
                                         </Td>
                                         <Td>
-                                            <TextLink href={`/recipes/${recipe.id}`}>{recipe.title}</TextLink>
+                                            <TextLink href={`/${recipe.user.pseudo}/${recipe.slug}`}>{recipe.title}</TextLink>
                                         </Td>
                                         <Td>
                                             <Chip variant={handleTypeIngredientVariant(recipe.category.name)}>{recipe.category.name}</Chip>

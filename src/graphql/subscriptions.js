@@ -81,6 +81,7 @@ export const onCreateRecipe = /* GraphQL */ `
     onCreateRecipe(filter: $filter, owner: $owner) {
       id
       title
+      slug
       image
       user {
         id
@@ -104,6 +105,7 @@ export const onCreateRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -127,6 +129,7 @@ export const onUpdateRecipe = /* GraphQL */ `
     onUpdateRecipe(filter: $filter, owner: $owner) {
       id
       title
+      slug
       image
       user {
         id
@@ -150,6 +153,7 @@ export const onUpdateRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -173,6 +177,7 @@ export const onDeleteRecipe = /* GraphQL */ `
     onDeleteRecipe(filter: $filter, owner: $owner) {
       id
       title
+      slug
       image
       user {
         id
@@ -196,6 +201,7 @@ export const onDeleteRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -321,6 +327,7 @@ export const onCreateCategory = /* GraphQL */ `
     onCreateCategory(filter: $filter) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename
@@ -336,6 +343,7 @@ export const onUpdateCategory = /* GraphQL */ `
     onUpdateCategory(filter: $filter) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename
@@ -351,6 +359,7 @@ export const onDeleteCategory = /* GraphQL */ `
     onDeleteCategory(filter: $filter) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename

@@ -111,7 +111,7 @@ function SearchOverlay({ showOverlay, onClose }) {
     if (title.trim().length > 0) {
       setTypingTimeout(setTimeout(() => {
         setLoading(true);
-        fetchResults(title.trim());
+        fetchResults(title.trim().toLowerCase());
         setSearching(false);
       }, 1000));
     } else {
@@ -194,7 +194,7 @@ function SearchOverlay({ showOverlay, onClose }) {
 
                 return (
                   <ResultItem key={recipe.id ?? index}>
-                    <InvisibleLink onClick={onClose} href={`/${recipe.user?.pseudo}/${recipe.title}`}>
+                    <InvisibleLink onClick={onClose} href={`/${recipe.user?.pseudo}/${recipe.slug}`}>
                       <Stack align="center">
                         <RecipeImage src={recipe.imageUrl} alt={recipe.title} />
                         <Stack direction="column" spacing="0px" width={"100%"}>

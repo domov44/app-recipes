@@ -81,6 +81,7 @@ export const getRecipe = /* GraphQL */ `
       id
       title
       image
+      slug
       userID
       steps
       ingredients {
@@ -122,6 +123,7 @@ export const listRecipes = /* GraphQL */ `
       items {
         id
         title
+        slug
         image
           user {
           id
@@ -183,6 +185,7 @@ export const recipesByUserID = /* GraphQL */ `
         id
         title
         image
+        slug
         userID
         steps
         categoryID
@@ -214,6 +217,7 @@ export const recipesByCategoryID = /* GraphQL */ `
       items {
         id
         title
+        slug
         image
         userID
         steps
@@ -247,6 +251,69 @@ export const RecipeByTitle = /* GraphQL */ `
       items {
         id
         title
+        slug
+        description
+        image
+        steps
+          category {
+          id
+          name
+          createdAt
+          updatedAt
+          __typename
+        }
+        owner
+          ingredients {
+              items{
+                id
+                quantity
+                ingredient {
+                  id
+                  name
+                  type {
+                    id
+                    name
+                    createdAt
+                    updatedAt
+                    __typename
+                  }
+                }
+              }
+          }
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+
+
+export const RecipeBySlug = /* GraphQL */ `
+  query RecipeBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        slug
         description
         image
         steps

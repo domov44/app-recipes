@@ -5,7 +5,7 @@ import Text from '@/components/ui/textual/Text';
 import Container from '@/components/ui/wrapper/Container';
 import Section from '@/components/ui/wrapper/Section';
 import Head from 'next/head';
-import { RecipeByTitle, profileByPseudo } from '@/graphql/customQueries';
+import { RecipeBySlug, profileByPseudo } from '@/graphql/customQueries';
 import { generateClient } from 'aws-amplify/api';
 import { convertirFormatDate } from '@/utils/convertirFormatDate';
 import Chip from '@/components/ui/textual/Chip';
@@ -112,7 +112,7 @@ const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl, profileUr
 
 export async function getServerSideProps(context) {
     const { res, params } = context;
-    const { pseudo, title } = params;
+    const { pseudo, slug } = params;
 
     try {
         const profileResult = await client.graphql({
@@ -132,12 +132,12 @@ export async function getServerSideProps(context) {
         const owner = profile.id;
 
         const recipeResult = await client.graphql({
-            query: RecipeByTitle,
-            variables: { title, filter: { owner: { eq: owner } } },
+            query: RecipeBySlug,
+            variables: { slug, filter: { owner: { eq: owner } } },
             authMode: "identityPool"
         });
 
-        const recipe = recipeResult.data.RecipeByTitle.items;
+        const recipe = recipeResult.data.RecipeBySlug.items;
 
         let imageUrl = '';
         let profileUrl = '';
@@ -155,7 +155,7 @@ export async function getServerSideProps(context) {
         return {
             props: {
                 pseudo,
-                title,
+                slug,
                 recipe,
                 profile,
                 imageUrl,
