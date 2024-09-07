@@ -25,6 +25,7 @@ type Recipe @model @auth(rules: [
 ]) {
   id: ID!
   title: String! @index(name: "byTitle", queryField: "RecipeByTitle")
+  slug: String! @index(name: "bySlug", queryField: "RecipeBySlug")
   image: String
   user: Profile @hasOne
   steps: AWSJSON
@@ -61,6 +62,7 @@ type Category @model @auth(rules: [
 ]) {
   id: ID!
   name: String! @index(name: "byName", queryField: "CategoryByname")
+  slug: String! @index(name: "bySlug", queryField: "CategoryBySlug")
   recipes: [Recipe] @hasMany
 }
 

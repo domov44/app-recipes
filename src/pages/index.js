@@ -22,7 +22,7 @@ import { CiEdit } from 'react-icons/ci';
 const client = generateClient();
 
 const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
-    const { isLoggedIn, profilePictureURL } = useUser();
+    const { isLoggedIn, profilePictureURL, user } = useUser();
     const [recipes, setRecipes] = useState(initialRecipes);
     const [nextToken, setNextToken] = useState(initialNextToken);
     const [loading, setLoading] = useState(false);
@@ -110,11 +110,15 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
                             <Bento highlight={"highlight"} overflow={"visible"}>
                                 <Stack direction={"column"}>
                                     <Stack separator align={"center"} spacing={"20px"}>
-                                        <img
-                                            src={profilePictureURL || "/illustration/svg/utilisateur.svg"}
-                                            className="user-picture"
-                                            alt="avatar"
-                                        />
+                                        {isLoggedIn && user?.pseudo &&
+                                            <InvisibleLink href="/profil" lineheight="0">
+                                                {profilePictureURL ? (
+                                                    <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
+                                                ) : (
+                                                    <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
+                                                )}
+                                            </InvisibleLink>
+                                        }
                                         <Stack direction={"column"}>
                                             <Title level={5}>
                                                 On cuisine quoi aujourd&apos;hui ?
@@ -140,7 +144,11 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
-                                            <img className="user-picture" alt={recipe.user.pseudo} src={recipe.profileUrl}></img>
+                                            {recipe.profileUrl ? (
+                                                <img src={recipe.profileUrl} className="user-picture" alt={recipe.user.pseudo} />
+                                            ) : (
+                                                <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
+                                            )}
                                             <Stack direction="column" spacing="0px">
                                                 <Title fontfamily="medium" level={4}>
                                                     {recipe.user.pseudo}
@@ -157,7 +165,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken }) => {
                                     <Text>
                                         {recipe.description}
                                     </Text>
-                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.title}`}>Suivre cette recette</Button>
+                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.slug}`}>Suivre cette recette</Button>
                                 </Bento>
                             ))
                         ) : (

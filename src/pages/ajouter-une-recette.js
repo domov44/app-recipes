@@ -28,9 +28,11 @@ import { confirm } from '@/utils/ConfirmGlobal';
 import { PiPlus } from 'react-icons/pi';
 import { createRecipeIngredient } from "@/graphql/mutations";
 import { createRecipe } from "@/graphql/customMutations";
+import { RecipeBySlug } from '@/graphql/customQueries';
 import { generateClient } from "aws-amplify/api";
 import { useUser } from '@/utils/UserContext';
 import { uploadData, getUrl } from 'aws-amplify/storage';
+import { slugify } from '@/utils/slugify';
 const client = generateClient();
 
 const AjouterRecette = () => {
@@ -47,8 +49,38 @@ const AjouterRecette = () => {
     const categoriesOptions = useCategoriesOptions();
     const ingredientsOptions = useIngredientsOptions();
 
+    const generateUniqueSlug = async (baseSlug) => {
+        let slug = baseSlug;
+        let increment = 1;
+
+        while (true) {
+            const existingRecipe = await client.graphql({
+                query: RecipeBySlug,
+                variables: {
+                    slug,
+                    filter: {
+                        owner: {
+                            eq: user.id
+                        }
+                    },
+                }
+            });
+
+            if (existingRecipe.data.RecipeBySlug.items.length === 0) {
+                break;
+            }
+
+            slug = `${baseSlug}-${increment}`;
+            increment++;
+        }
+
+        return slug;
+    };
+
     async function create() {
         setDisable(true);
+        const baseSlug = await slugify(formData1.nom);
+        const uniqueSlug = await generateUniqueSlug(baseSlug);
         try {
             let imageKey = null;
 
@@ -67,7 +99,8 @@ const AjouterRecette = () => {
                 query: createRecipe,
                 variables: {
                     input: {
-                        title: formData1.nom,
+                        title: formData1.nom.toLowerCase(),
+                        slug: uniqueSlug,
                         image: imageKey,
                         steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
                         recipeCategoryId: formData2.categorie,

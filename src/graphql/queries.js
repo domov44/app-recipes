@@ -93,6 +93,7 @@ export const getRecipe = /* GraphQL */ `
     getRecipe(id: $id) {
       id
       title
+      slug
       image
       user {
         id
@@ -116,6 +117,7 @@ export const getRecipe = /* GraphQL */ `
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -141,6 +143,7 @@ export const listRecipes = /* GraphQL */ `
       items {
         id
         title
+        slug
         image
         steps
         description
@@ -176,6 +179,43 @@ export const RecipeByTitle = /* GraphQL */ `
       items {
         id
         title
+        slug
+        image
+        steps
+        description
+        owner
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const RecipeBySlug = /* GraphQL */ `
+  query RecipeBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        slug
         image
         steps
         description
@@ -269,6 +309,7 @@ export const getCategory = /* GraphQL */ `
     getCategory(id: $id) {
       id
       name
+      slug
       recipes {
         nextToken
         __typename
@@ -289,6 +330,7 @@ export const listCategories = /* GraphQL */ `
       items {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -316,6 +358,35 @@ export const CategoryByname = /* GraphQL */ `
       items {
         id
         name
+        slug
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const CategoryBySlug = /* GraphQL */ `
+  query CategoryBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    CategoryBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        slug
         createdAt
         updatedAt
         __typename

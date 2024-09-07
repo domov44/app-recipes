@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Dialog from './Dialog';
 import Overlay from './Overlay';
@@ -8,9 +8,11 @@ import IconButton from '../button/IconButton';
 import { LiaTimesSolid } from 'react-icons/lia';
 
 function Popup({ open, onClose, children, title }) {
-    const appContainer = document.getElementById('__next');
+    const [appContainer, setAppContainer] = useState(null);
 
     useEffect(() => {
+        setAppContainer(document.getElementById('__next'));
+
         if (open) {
             document.body.classList.add('no-scroll');
         } else {
