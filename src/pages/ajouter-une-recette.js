@@ -104,7 +104,9 @@ const AjouterRecette = () => {
                         image: imageKey,
                         steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
                         recipeCategoryId: formData2.categorie,
+                        categoryRecipesId: formData2.categorie,
                         recipeUserId: user.sub,
+                        profileRecipesId: user.sub,
                         description: formData2.description,
                         owner: user.sub,
                     }

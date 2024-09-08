@@ -155,7 +155,7 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                                     </Stack>
                                     {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl} />}
                                     <Stack>
-                                        <IconButton variant="action" href={`/categories/${recipe.category.name}`}>{recipe.category.name}</IconButton>
+                                        <IconButton variant="action" href={`/categories/${recipe.category.slug}`}>{recipe.category.name}</IconButton>
                                     </Stack>
                                     <Title level={3}>{recipe.title}</Title>
                                     <Text>{recipe.description}</Text>
@@ -194,6 +194,7 @@ export async function getServerSideProps(context) {
         });
 
         const user = userResult.data.profileByPseudo.items[0];
+        console.log(user)
 
         if (!user) {
             return {
