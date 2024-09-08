@@ -242,7 +242,7 @@ export default function Profil({ onProgressChange, onUploadStart, onUploadEnd })
                                     </InvisibleLink>
                                     {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl} />}
                                     <Stack>
-                                        <IconButton variant="action" href={`/categories/${recipe.category.name}`}>
+                                        <IconButton variant="action" href={`/categories/${recipe.category.slug}`}>
                                             {recipe.category.name}
                                         </IconButton>
                                     </Stack>

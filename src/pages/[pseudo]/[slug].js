@@ -68,7 +68,7 @@ const RecipePage = ({ pseudo, title, recipe, error, profile, imageUrl, profileUr
                             <Title level={3}>{recipe?.[0]?.title}</Title>
                             <Text>{recipe?.[0]?.description}</Text>
                             <Stack>
-                                <IconButton variant="action" href={`/categories/${recipe?.[0]?.category.name}`}>{recipe?.[0]?.category.name}</IconButton>
+                                <IconButton variant="action" href={`/categories/${recipe?.[0]?.category.slug}`}>{recipe?.[0]?.category.name}</IconButton>
                                 <Chip icon={PiMapPin} variant="success">Oran, Algérie</Chip>
                             </Stack>
                         </Bento>
@@ -138,6 +138,7 @@ export async function getServerSideProps(context) {
         });
 
         const recipe = recipeResult.data.RecipeBySlug.items;
+        console.log(recipe)
 
         let imageUrl = '';
         let profileUrl = '';
