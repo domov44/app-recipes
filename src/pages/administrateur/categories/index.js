@@ -182,7 +182,7 @@ function CategoriesPage() {
                                         </Td>
                                     )}
                                     <Td>
-                                        <TextLink href={`/categories/${category.id}`}>{category.name}</TextLink>
+                                        <TextLink href={`/categories/${category.slug}`}>{category.name}</TextLink>
                                     </Td>
                                     {isAdmin && (
                                         <Td>

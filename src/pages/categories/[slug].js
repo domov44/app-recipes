@@ -1,44 +1,52 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Hero from '@/components/ui/wrapper/Hero';
 import Bento from '@/components/ui/wrapper/Bento';
-import Head from 'next/head';
 import Title from '@/components/ui/textual/Title';
 import Text from '@/components/ui/textual/Text';
 import Button from '@/components/ui/button/Button';
-import { PiPlus } from 'react-icons/pi';
-import { generateClient } from 'aws-amplify/api';
-import { listRecipes, listCategories } from '@/graphql/customQueries';
-import IconButton from '@/components/ui/button/IconButton';
-import { convertirFormatDate } from '@/utils/convertirFormatDate';
+import Stack from '@/components/ui/wrapper/Stack';
 import Column from '@/components/ui/wrapper/Column';
 import Container from '@/components/ui/wrapper/Container';
-import Stack from '@/components/ui/wrapper/Stack';
-import InvisibleLink from '@/components/ui/button/InvisibleLink';
+import Head from 'next/head';
+import { CategoryBySlug, listCategories } from '@/graphql/customQueries';
+import { generateClient } from 'aws-amplify/api';
 import { getS3Path } from '@/utils/getS3Path';
+import { convertirFormatDate } from '@/utils/convertirFormatDate';
+import InvisibleLink from '@/components/ui/button/InvisibleLink';
+import IconButton from '@/components/ui/button/IconButton';
 import { useUser } from '@/utils/UserContext';
-import { IoMdAdd } from 'react-icons/io';
-import { CiEdit } from 'react-icons/ci';
 
 const client = generateClient();
 
-const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategories = [] }) => {
-    const { isLoggedIn, profilePictureURL, user } = useUser();
+const CategoryPage = ({ category, initialRecipes, nextToken: initialNextToken, error, categories }) => {
+    const { isLoggedIn } = useUser();
     const [recipes, setRecipes] = useState(initialRecipes);
     const [nextToken, setNextToken] = useState(initialNextToken);
     const [loading, setLoading] = useState(false);
     const [noMoreRecipes, setNoMoreRecipes] = useState(false);
+
+    useEffect(() => {
+        setRecipes(initialRecipes);
+        setNextToken(initialNextToken);
+        setNoMoreRecipes(false);
+    }, [category]);
 
     const fetchMoreRecipes = useCallback(async () => {
         if (loading || !nextToken) return;
         setLoading(true);
         try {
             const recipeData = await client.graphql({
-                query: listRecipes,
-                variables: { limit: 2, nextToken },
+                query: CategoryBySlug,
+                variables: {
+                    slug: category.slug,
+                    recipesLimit: 2,
+                    nextToken,
+                },
                 authMode: isLoggedIn ? "userPool" : "identityPool"
             });
-            const newRecipes = recipeData.data.listRecipes.items;
-            const newNextToken = recipeData.data.listRecipes.nextToken;
+
+            const newRecipes = recipeData.data.CategoryBySlug.items[0].recipes.items;
+            const newNextToken = recipeData.data.CategoryBySlug.items[0].recipes.nextToken;
 
             if (newRecipes.length === 0 || !newNextToken) {
                 setNoMoreRecipes(true);
@@ -54,13 +62,13 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
                     }
 
                     if (recipe.user.avatar) {
-                        const imageUrlObject = await getS3Path(recipe.user.avatar);
-                        profileUrl = imageUrlObject.href;
+                        const profileUrlObject = await getS3Path(recipe.user.avatar);
+                        profileUrl = profileUrlObject.href;
                     }
                     return {
                         ...recipe,
                         imageUrl,
-                        profileUrl
+                        profileUrl,
                     };
                 })
             );
@@ -72,7 +80,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
         } finally {
             setLoading(false);
         }
-    }, [loading, nextToken]);
+    }, [loading, nextToken, category.slug]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -85,62 +93,25 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
         return () => window.removeEventListener('scroll', handleScroll);
     }, [fetchMoreRecipes, loading]);
 
+    if (error) {
+        return <p>Erreur: {error}</p>;
+    }
+
     return (
         <>
             <Head>
-                <title>L&apos;application de recipe Miamze</title>
-                <meta name="description" content="Description de la page" />
-                <meta property="og:image" content="URL_de_votre_image" />
+                <title>{`Recettes de ${category.name}`}</title>
+                <meta name="description" content={`Découvrez toutes les recettes de la catégorie ${category.name}`} />
             </Head>
             <Hero>
-                <Button
-                    zindex="2"
-                    variant="primary"
-                    position="fixed"
-                    right="20px"
-                    bottom="20px"
-                    href="/ajouter-une-recette"
-                    icon={PiPlus}
-                >
-                    Ajouter une recette
-                </Button>
                 <Container direction="row" responsive="yes">
                     <Column width="60%" gap="30px">
-                        {isLoggedIn && (
-                            <Bento highlight={"highlight"} overflow={"visible"}>
-                                <Stack direction={"column"}>
-                                    <Stack separator align={"center"} spacing={"20px"}>
-                                        {isLoggedIn && user?.pseudo &&
-                                            <InvisibleLink href="/profil" lineheight="0">
-                                                {profilePictureURL ? (
-                                                    <img src={profilePictureURL} className="user-picture" alt={user.profile.name} />
-                                                ) : (
-                                                    <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
-                                                )}
-                                            </InvisibleLink>
-                                        }
-                                        <Stack direction={"column"}>
-                                            <Title level={5}>
-                                                On cuisine quoi aujourd&apos;hui ?
-                                            </Title>
-                                            <Text>
-                                                Voici les actions que vous pouvez faire
-                                            </Text>
-                                        </Stack>
-                                    </Stack>
-                                    <Stack>
-                                        <IconButton variant="action" href={`/ajouter-une-recette`}>
-                                            <IoMdAdd /> Ajouter une recette
-                                        </IconButton>
-                                        <IconButton variant="secondary-action" href={`/mes-recettes`}>
-                                            <CiEdit /> Gérer mes recettes
-                                        </IconButton>
-                                    </Stack>
-                                </Stack>
-                            </Bento>
-                        )}
+                        <Bento highlight="highlight" padding="15px" item>
+                            <Title level={3}>{category.name}</Title>
+                            <Text>{category.description || "Découvrez les recettes de cette catégorie."}</Text>
+                        </Bento>
                         {recipes.length > 0 ? (
-                            recipes.map((recipe) => (
+                            recipes.map(recipe => (
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <InvisibleLink href={`/${recipe.user.pseudo}`}>
                                         <Stack width="fit-content">
@@ -157,7 +128,7 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
                                             </Stack>
                                         </Stack>
                                     </InvisibleLink>
-                                    {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl}></img>}
+                                    {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl} />}
                                     <Stack>
                                         <IconButton variant="action" href={`/categories/${recipe.category.slug}`}>{recipe.category.name}</IconButton>
                                     </Stack>
@@ -165,11 +136,11 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
                                     <Text>
                                         {recipe.description}
                                     </Text>
-                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.slug}`}>Suivre cette recette</Button>
+                                    <Button variant="secondary" href={`/${recipe.user.pseudo}/${recipe.slug}`}>Voir la recette</Button>
                                 </Bento>
                             ))
                         ) : (
-                            <Text>Aucune recette trouvée.</Text>
+                            <Text>Aucune recette trouvée dans cette catégorie.</Text>
                         )}
                         {loading && <Text>Chargement des recettes suivantes...</Text>}
                         {!loading && noMoreRecipes && <Text>Il n&apos;y a pas d&apos;autres recettes.</Text>}
@@ -180,10 +151,10 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
                                 Les catégories
                             </Title>
                             <Text>
-                                Les catégories de recettes
+                                Découvrez toutes les catégories disponibles
                             </Text>
                             <Stack flexWrap="wrap">
-                                {initialCategories.map((categorie, index) => (
+                                {categories.map((categorie, index) => (
                                     <IconButton key={index} variant="action" href={`/categories/${categorie.slug}`}>{categorie.name}</IconButton>
                                 ))}
                             </Stack>
@@ -195,15 +166,33 @@ const Home = ({ initialRecipes = [], nextToken: initialNextToken, initialCategor
     );
 };
 
-export const getServerSideProps = async () => {
+export async function getServerSideProps(context) {
+    const { slug } = context.params;
+    let category = null;
+    let recipes = [];
+    let nextToken = null;
+    let categories = [];
+
     try {
-        const recipeData = await client.graphql({
-            query: listRecipes,
-            variables: { limit: 2 },
-            authMode: "identityPool"
+        const categoryResult = await client.graphql({
+            query: CategoryBySlug,
+            variables: {
+                slug,
+                recipesLimit: 2,
+            },
+            authMode: "identityPool",
         });
-        const recipesList = recipeData.data.listRecipes.items;
-        const nextToken = recipeData.data.listRecipes.nextToken;
+
+        category = categoryResult.data.CategoryBySlug.items[0];
+
+        if (!category) {
+            return {
+                notFound: true,
+            };
+        }
+
+        const recipesList = category.recipes.items;
+        nextToken = category.recipes.nextToken;
 
         const recipesWithImages = await Promise.all(
             recipesList.map(async (recipe) => {
@@ -215,40 +204,39 @@ export const getServerSideProps = async () => {
                 }
 
                 if (recipe.user.avatar) {
-                    const imageUrlObject = await getS3Path(recipe.user.avatar);
-                    profileUrl = imageUrlObject.href;
+                    const profileUrlObject = await getS3Path(recipe.user.avatar);
+                    profileUrl = profileUrlObject.href;
                 }
                 return {
                     ...recipe,
                     imageUrl,
-                    profileUrl
+                    profileUrl,
                 };
             })
         );
 
-        const categoryData = await client.graphql({
+        const categoriesResult = await client.graphql({
             query: listCategories,
-            authMode: "identityPool"
+            authMode: "identityPool",
         });
-        const categoriesList = categoryData.data.listCategories.items;
+        categories = categoriesResult.data.listCategories.items;
 
         return {
             props: {
-                initialRecipes: recipesWithImages || [],
+                category,
+                initialRecipes: recipesWithImages,
                 nextToken,
-                initialCategories: categoriesList || []
-            }
+                categories,
+            },
         };
     } catch (error) {
-        console.error("Error fetching recipes or categories:", error);
         return {
             props: {
-                initialRecipes: [],
-                nextToken: null,
-                initialCategories: []
-            }
+                error: 'Failed to fetch data',
+                categories: [],
+            },
         };
     }
-};
+}
 
-export default Home;
+export default CategoryPage;

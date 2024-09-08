@@ -19,6 +19,80 @@ export const getProfile = /* GraphQL */ `
     }
   }
 `;
+export const CategoryBySlug = /* GraphQL */ `
+  query CategoryBySlug(
+    $slug: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelCategoryFilterInput
+    $limit: Int
+    $nextToken: String
+    $recipesLimit: Int
+  ) {
+    CategoryBySlug(
+      slug: $slug
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        slug
+        createdAt
+        updatedAt
+        __typename
+        recipes(limit: $recipesLimit) {
+          items {
+            id
+            title
+            slug
+            image
+              user {
+              id
+              pseudo
+              name
+              surname
+              avatar
+              description
+              birthdate
+              owner
+              createdAt
+              updatedAt
+              __typename
+            }
+            steps
+            description
+            ingredients {
+              nextToken
+              __typename
+            }
+            category {
+              id
+              name
+              slug
+              createdAt
+              updatedAt
+              __typename
+            }
+            steps
+            owner
+            createdAt
+            updatedAt
+            profileRecipesId
+            categoryRecipesId
+            recipeUserId
+            recipeCategoryId
+            __typename
+          }
+          nextToken 
+        }
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const profileByPseudo = /* GraphQL */ `
   query ProfileByPseudo(
     $pseudo: String!
@@ -46,6 +120,17 @@ export const profileByPseudo = /* GraphQL */ `
         createdAt
         updatedAt
         __typename
+        recipes {
+          items {
+            id
+            title
+            description
+            slug
+            createdAt
+            updatedAt
+            __typename
+          }
+        }
       }
       nextToken
       __typename
@@ -146,6 +231,7 @@ export const listRecipes = /* GraphQL */ `
         }
         category {
           id
+          slug
           name
           createdAt
           updatedAt
@@ -319,6 +405,7 @@ export const RecipeBySlug = /* GraphQL */ `
         steps
           category {
           id
+          slug
           name
           createdAt
           updatedAt
@@ -487,6 +574,7 @@ export const listCategories = /* GraphQL */ `
     listCategories(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        slug
         name
         createdAt
         updatedAt
