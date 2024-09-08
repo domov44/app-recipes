@@ -27,6 +27,7 @@ export const CategoryBySlug = /* GraphQL */ `
     $limit: Int
     $nextToken: String
     $recipesLimit: Int
+    $recipesNextToken: String
   ) {
     CategoryBySlug(
       slug: $slug
@@ -42,13 +43,13 @@ export const CategoryBySlug = /* GraphQL */ `
         createdAt
         updatedAt
         __typename
-        recipes(limit: $recipesLimit) {
+        recipes(limit: $recipesLimit, nextToken: $recipesNextToken) {
           items {
             id
             title
             slug
             image
-              user {
+            user {
               id
               pseudo
               name
@@ -85,7 +86,7 @@ export const CategoryBySlug = /* GraphQL */ `
             recipeCategoryId
             __typename
           }
-          nextToken 
+          nextToken
         }
       }
       nextToken
@@ -93,6 +94,7 @@ export const CategoryBySlug = /* GraphQL */ `
     }
   }
 `;
+
 export const profileByPseudo = /* GraphQL */ `
   query ProfileByPseudo(
     $pseudo: String!

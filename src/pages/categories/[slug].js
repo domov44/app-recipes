@@ -40,18 +40,18 @@ const CategoryPage = ({ category, initialRecipes, nextToken: initialNextToken, e
                 variables: {
                     slug: category.slug,
                     recipesLimit: 2,
-                    nextToken,
+                    recipesNextToken: nextToken,
                 },
                 authMode: isLoggedIn ? "userPool" : "identityPool"
             });
-
+    
             const newRecipes = recipeData.data.CategoryBySlug.items[0].recipes.items;
             const newNextToken = recipeData.data.CategoryBySlug.items[0].recipes.nextToken;
-
+    
             if (newRecipes.length === 0 || !newNextToken) {
                 setNoMoreRecipes(true);
             }
-
+    
             const recipesWithImages = await Promise.all(
                 newRecipes.map(async (recipe) => {
                     let imageUrl = '';
@@ -60,7 +60,7 @@ const CategoryPage = ({ category, initialRecipes, nextToken: initialNextToken, e
                         const imageUrlObject = await getS3Path(recipe.image);
                         imageUrl = imageUrlObject.href;
                     }
-
+    
                     if (recipe.user.avatar) {
                         const profileUrlObject = await getS3Path(recipe.user.avatar);
                         profileUrl = profileUrlObject.href;
@@ -72,7 +72,7 @@ const CategoryPage = ({ category, initialRecipes, nextToken: initialNextToken, e
                     };
                 })
             );
-
+    
             setRecipes((prevRecipes) => [...prevRecipes, ...recipesWithImages]);
             setNextToken(newNextToken);
         } catch (error) {
@@ -80,7 +80,7 @@ const CategoryPage = ({ category, initialRecipes, nextToken: initialNextToken, e
         } finally {
             setLoading(false);
         }
-    }, [loading, nextToken, category.slug]);
+    }, [loading, nextToken, category.slug]);    
 
     useEffect(() => {
         const handleScroll = () => {
