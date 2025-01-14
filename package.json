@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/groq": "^1.0.6",
     "@aws-amplify/storage": "^6.4.4",
     "@aws-sdk/client-dynamodb": "^3.588.0",
     "@aws-sdk/lib-dynamodb": "^3.588.0",
     "@fontsource/roboto": "^5.0.8",
+    "@pinecone-database/pinecone": "^4.0.0",
+    "ai": "^4.0.12",
     "aws-amplify": "^6.3.2",
     "aws-sdk": "^2.1632.0",
     "axios": "^1.6.2",

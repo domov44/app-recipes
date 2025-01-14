@@ -167,28 +167,31 @@ export const getRecipe = /* GraphQL */ `
     getRecipe(id: $id) {
       id
       title
-      image
       slug
-      userID
-      steps
-      ingredients {
-        items {
-          id
-          quantity
-          ingredient {
-            id
-            name
-            type {
-              id
-              name
-            }
-          }
-        }
+      image
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
       }
-      categoryID
+      steps
+      description
+      ingredients {
+        nextToken
+        __typename
+      }
       category {
         id
         name
+        slug
         createdAt
         updatedAt
         __typename
@@ -196,6 +199,10 @@ export const getRecipe = /* GraphQL */ `
       owner
       createdAt
       updatedAt
+      profileRecipesId
+      categoryRecipesId
+      recipeUserId
+      recipeCategoryId
       __typename
     }
   }
@@ -228,9 +235,22 @@ export const listRecipes = /* GraphQL */ `
         steps
         description
         ingredients {
-          nextToken
-          __typename
-        }
+              items{
+                id
+                quantity
+                ingredient {
+                  id
+                  name
+                  type {
+                    id
+                    name
+                    createdAt
+                    updatedAt
+                    __typename
+                  }
+                }
+              }
+          }
         category {
           id
           slug
