@@ -101,7 +101,6 @@ export default function UploadFile({ onProgressChange, onUploadStart, onUploadEn
                 variables: {
                     input: {
                         id: user.profile.id,
-                        owner: user.profile.id,
                         avatar: key
                     }
                 }

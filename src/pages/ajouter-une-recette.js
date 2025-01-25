@@ -58,11 +58,7 @@ const AjouterRecette = () => {
                 query: RecipeBySlug,
                 variables: {
                     slug,
-                    filter: {
-                        owner: {
-                            eq: user.id
-                        }
-                    },
+                    owner: user.pseudo
                 }
             });
 
@@ -105,10 +101,8 @@ const AjouterRecette = () => {
                         steps: JSON.stringify(formData4.steps.map((step, index) => ({ ...step, step_number: index + 1 }))),
                         recipeCategoryId: formData2.categorie,
                         categoryRecipesId: formData2.categorie,
-                        recipeUserId: user.sub,
-                        profileRecipesId: user.sub,
+                        profileID: user.sub,
                         description: formData2.description,
-                        owner: user.sub,
                     }
                 }
             });

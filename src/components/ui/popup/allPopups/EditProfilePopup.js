@@ -52,7 +52,6 @@ const EditProfilePopup = ({ open, onClose }) => {
                         surname: formData.surname,
                         description: formData.description,
                         birthdate: formData.birthdate,
-                        owner: user.profile.id,
                     }
                 }
             })

@@ -129,11 +129,12 @@ export async function getServerSideProps(context) {
             };
         }
 
-        const owner = profile.id;
-
         const recipeResult = await client.graphql({
             query: RecipeBySlug,
-            variables: { slug, filter: { owner: { eq: owner } } },
+            variables: {
+                slug: 'paves-de-saumon-au-four',
+                owner: pseudo 
+                },
             authMode: "identityPool"
         });
 
@@ -147,7 +148,7 @@ export async function getServerSideProps(context) {
             const imageUrlObject = await getS3Path(recipe[0].image);
             imageUrl = imageUrlObject.href;
         }
-        
+
         if (profile.avatar) {
             const imageUrlObject = await getS3Path(profile.avatar);
             profileUrl = imageUrlObject.href;
@@ -167,7 +168,7 @@ export async function getServerSideProps(context) {
         console.error('Error fetching data:', error);
         return {
             props: {
-                error: 'Failed to fetch data',
+                error: 'Failed to fetch data' + error,
             },
         };
     }

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/rag": {
+      "name": "/rag",
+      "lambdaFunction": "ragLambda",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

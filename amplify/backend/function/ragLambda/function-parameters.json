@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "api": {
+      "recipesapp": [
+        "Query"
+      ]
+    },
+    "auth": {
+      "recipesapp4f20ed6a": [
+        "read"
+      ]
+    },
+    "storage": {
+      "Profile:@model(appsync)": [
+        "read"
+      ],
+      "Recipe:@model(appsync)": [
+        "read"
+      ],
+      "Ingredient:@model(appsync)": [
+        "read"
+      ],
+      "Category:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "pinecodeKeyProduction",
+      "environmentVariableName": "PINECODE_KEY_PRODUCTION"
+    },
+    {
+      "cloudFormationParameterName": "pineconeKeyDevelop",
+      "environmentVariableName": "PINECONE_KEY_DEVELOP"
+    },
+    {
+      "cloudFormationParameterName": "pineconeApiKeyLocal",
+      "environmentVariableName": "PINECONE_API_KEY_LOCAL"
+    },
+    {
+      "cloudFormationParameterName": "groqApiKey",
+      "environmentVariableName": "GROQ_API_KEY"
+    },
+    {
+      "cloudFormationParameterName": "jinaApiKey",
+      "environmentVariableName": "JINA_API_KEY"
+    }
+  ]
+}
