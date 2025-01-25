@@ -21,6 +21,7 @@ export const UserProvider = ({ children }) => {
       try {
         const session = await fetchAuthSession();
        if (session.userSub) {
+        const accessToken = session.tokens.accessToken.toString();
         const currentUser = await getCurrentUser();
         const userProfile = await getUserProfile(currentUser.userId);
         const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
@@ -33,6 +34,7 @@ export const UserProvider = ({ children }) => {
           pseudo: currentUser ? currentUser.username : 'User',
           id: currentUser ? currentUser.userId : 0,
           profile: userProfile,
+          accessToken,
         });
         setProfile(userProfile);
         setLoggedIn(true);
@@ -53,6 +55,7 @@ export const UserProvider = ({ children }) => {
       const currentUser = await getCurrentUser();
       const userProfile = await getUserProfile(currentUser.userId);
       const session = await fetchAuthSession();
+      const accessToken = session.tokens.accessToken.toString();
       const cognitoGroups = session.tokens.idToken.payload['cognito:groups'];
       setCognitoGroups(cognitoGroups && cognitoGroups.length > 0 ? cognitoGroups : null);
       setIsAdmin(cognitoGroups && cognitoGroups.includes('Admins'));
@@ -64,6 +67,7 @@ export const UserProvider = ({ children }) => {
         pseudo: currentUser ? currentUser.username : 'User',
         id: currentUser ? currentUser.userId : 0,
         profile: userProfile,
+        accessToken,
       });
       setProfile(userProfile);
       setLoggedIn(true);

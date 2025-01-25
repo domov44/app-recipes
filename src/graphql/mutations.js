@@ -18,6 +18,10 @@ export const createProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      tags {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -39,6 +43,10 @@ export const updateProfile = /* GraphQL */ `
       description
       birthdate
       recipes {
+        nextToken
+        __typename
+      }
+      tags {
         nextToken
         __typename
       }
@@ -66,6 +74,10 @@ export const deleteProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      tags {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -83,19 +95,6 @@ export const createRecipe = /* GraphQL */ `
       title
       slug
       image
-      user {
-        id
-        pseudo
-        name
-        surname
-        avatar
-        description
-        birthdate
-        owner
-        createdAt
-        updatedAt
-        __typename
-      }
       steps
       description
       ingredients {
@@ -111,11 +110,28 @@ export const createRecipe = /* GraphQL */ `
         __typename
       }
       owner
+      profileID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tags {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       profileRecipesId
       categoryRecipesId
-      recipeUserId
       recipeCategoryId
       __typename
     }
@@ -131,19 +147,6 @@ export const updateRecipe = /* GraphQL */ `
       title
       slug
       image
-      user {
-        id
-        pseudo
-        name
-        surname
-        avatar
-        description
-        birthdate
-        owner
-        createdAt
-        updatedAt
-        __typename
-      }
       steps
       description
       ingredients {
@@ -159,11 +162,28 @@ export const updateRecipe = /* GraphQL */ `
         __typename
       }
       owner
+      profileID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tags {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       profileRecipesId
       categoryRecipesId
-      recipeUserId
       recipeCategoryId
       __typename
     }
@@ -179,19 +199,6 @@ export const deleteRecipe = /* GraphQL */ `
       title
       slug
       image
-      user {
-        id
-        pseudo
-        name
-        surname
-        avatar
-        description
-        birthdate
-        owner
-        createdAt
-        updatedAt
-        __typename
-      }
       steps
       description
       ingredients {
@@ -207,11 +214,28 @@ export const deleteRecipe = /* GraphQL */ `
         __typename
       }
       owner
+      profileID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tags {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       profileRecipesId
       categoryRecipesId
-      recipeUserId
       recipeCategoryId
       __typename
     }
@@ -456,6 +480,297 @@ export const deleteRecipeIngredient = /* GraphQL */ `
       updatedAt
       recipeIngredientsId
       recipeIngredientIngredientId
+      __typename
+    }
+  }
+`;
+export const createTag = /* GraphQL */ `
+  mutation CreateTag(
+    $input: CreateTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    createTag(input: $input, condition: $condition) {
+      id
+      label
+      profiles {
+        nextToken
+        __typename
+      }
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateTag = /* GraphQL */ `
+  mutation UpdateTag(
+    $input: UpdateTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    updateTag(input: $input, condition: $condition) {
+      id
+      label
+      profiles {
+        nextToken
+        __typename
+      }
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteTag = /* GraphQL */ `
+  mutation DeleteTag(
+    $input: DeleteTagInput!
+    $condition: ModelTagConditionInput
+  ) {
+    deleteTag(input: $input, condition: $condition) {
+      id
+      label
+      profiles {
+        nextToken
+        __typename
+      }
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createTagProfiles = /* GraphQL */ `
+  mutation CreateTagProfiles(
+    $input: CreateTagProfilesInput!
+    $condition: ModelTagProfilesConditionInput
+  ) {
+    createTagProfiles(input: $input, condition: $condition) {
+      id
+      profileId
+      tagId
+      profile {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateTagProfiles = /* GraphQL */ `
+  mutation UpdateTagProfiles(
+    $input: UpdateTagProfilesInput!
+    $condition: ModelTagProfilesConditionInput
+  ) {
+    updateTagProfiles(input: $input, condition: $condition) {
+      id
+      profileId
+      tagId
+      profile {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteTagProfiles = /* GraphQL */ `
+  mutation DeleteTagProfiles(
+    $input: DeleteTagProfilesInput!
+    $condition: ModelTagProfilesConditionInput
+  ) {
+    deleteTagProfiles(input: $input, condition: $condition) {
+      id
+      profileId
+      tagId
+      profile {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const createTagRecipes = /* GraphQL */ `
+  mutation CreateTagRecipes(
+    $input: CreateTagRecipesInput!
+    $condition: ModelTagRecipesConditionInput
+  ) {
+    createTagRecipes(input: $input, condition: $condition) {
+      id
+      recipeId
+      tagId
+      recipe {
+        id
+        title
+        slug
+        image
+        steps
+        description
+        owner
+        profileID
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeCategoryId
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const updateTagRecipes = /* GraphQL */ `
+  mutation UpdateTagRecipes(
+    $input: UpdateTagRecipesInput!
+    $condition: ModelTagRecipesConditionInput
+  ) {
+    updateTagRecipes(input: $input, condition: $condition) {
+      id
+      recipeId
+      tagId
+      recipe {
+        id
+        title
+        slug
+        image
+        steps
+        description
+        owner
+        profileID
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeCategoryId
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const deleteTagRecipes = /* GraphQL */ `
+  mutation DeleteTagRecipes(
+    $input: DeleteTagRecipesInput!
+    $condition: ModelTagRecipesConditionInput
+  ) {
+    deleteTagRecipes(input: $input, condition: $condition) {
+      id
+      recipeId
+      tagId
+      recipe {
+        id
+        title
+        slug
+        image
+        steps
+        description
+        owner
+        profileID
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeCategoryId
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
       __typename
     }
   }

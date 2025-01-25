@@ -75,6 +75,7 @@ export const createRecipe = /* GraphQL */ `
     createRecipe(input: $input, condition: $condition) {
       id
       title
+      slug
       image
       steps
       description
@@ -83,11 +84,11 @@ export const createRecipe = /* GraphQL */ `
         __typename
       }
       owner
+      profileID
       createdAt
       updatedAt
       profileRecipesId
       categoryRecipesId
-      recipeUserId
       recipeCategoryId
       __typename
     }

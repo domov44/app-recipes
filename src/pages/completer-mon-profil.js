@@ -57,7 +57,6 @@ const CompleteProfile = ({ onProgressChange, onUploadStart, onUploadEnd }) => {
         variables: {
           input: {
             id: user.profile.id,
-            owner: user.profile.owner,
             name: name,
             surname: surname,
           }

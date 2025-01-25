@@ -15,6 +15,10 @@ export const getProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      tags {
+        nextToken
+        __typename
+      }
       owner
       createdAt
       updatedAt
@@ -95,19 +99,6 @@ export const getRecipe = /* GraphQL */ `
       title
       slug
       image
-      user {
-        id
-        pseudo
-        name
-        surname
-        avatar
-        description
-        birthdate
-        owner
-        createdAt
-        updatedAt
-        __typename
-      }
       steps
       description
       ingredients {
@@ -123,11 +114,28 @@ export const getRecipe = /* GraphQL */ `
         __typename
       }
       owner
+      profileID
+      user {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tags {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       profileRecipesId
       categoryRecipesId
-      recipeUserId
       recipeCategoryId
       __typename
     }
@@ -148,11 +156,11 @@ export const listRecipes = /* GraphQL */ `
         steps
         description
         owner
+        profileID
         createdAt
         updatedAt
         profileRecipesId
         categoryRecipesId
-        recipeUserId
         recipeCategoryId
         __typename
       }
@@ -184,11 +192,11 @@ export const RecipeByTitle = /* GraphQL */ `
         steps
         description
         owner
+        profileID
         createdAt
         updatedAt
         profileRecipesId
         categoryRecipesId
-        recipeUserId
         recipeCategoryId
         __typename
       }
@@ -200,6 +208,7 @@ export const RecipeByTitle = /* GraphQL */ `
 export const RecipeBySlug = /* GraphQL */ `
   query RecipeBySlug(
     $slug: String!
+    $owner: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelRecipeFilterInput
     $limit: Int
@@ -207,6 +216,7 @@ export const RecipeBySlug = /* GraphQL */ `
   ) {
     RecipeBySlug(
       slug: $slug
+      owner: $owner
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -220,11 +230,47 @@ export const RecipeBySlug = /* GraphQL */ `
         steps
         description
         owner
+        profileID
         createdAt
         updatedAt
         profileRecipesId
         categoryRecipesId
-        recipeUserId
+        recipeCategoryId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const RecipeByOwner = /* GraphQL */ `
+  query RecipeByOwner(
+    $owner: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeByOwner(
+      owner: $owner
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        title
+        slug
+        image
+        steps
+        description
+        owner
+        profileID
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
         recipeCategoryId
         __typename
       }
@@ -436,6 +482,298 @@ export const listRecipeIngredients = /* GraphQL */ `
         updatedAt
         recipeIngredientsId
         recipeIngredientIngredientId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTag = /* GraphQL */ `
+  query GetTag($id: ID!) {
+    getTag(id: $id) {
+      id
+      label
+      profiles {
+        nextToken
+        __typename
+      }
+      recipes {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listTags = /* GraphQL */ `
+  query ListTags(
+    $filter: ModelTagFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTags(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const TagByLabel = /* GraphQL */ `
+  query TagByLabel(
+    $label: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTagFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    TagByLabel(
+      label: $label
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTagProfiles = /* GraphQL */ `
+  query GetTagProfiles($id: ID!) {
+    getTagProfiles(id: $id) {
+      id
+      profileId
+      tagId
+      profile {
+        id
+        pseudo
+        name
+        surname
+        avatar
+        description
+        birthdate
+        owner
+        createdAt
+        updatedAt
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listTagProfiles = /* GraphQL */ `
+  query ListTagProfiles(
+    $filter: ModelTagProfilesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTagProfiles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        profileId
+        tagId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const tagProfilesByProfileId = /* GraphQL */ `
+  query TagProfilesByProfileId(
+    $profileId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTagProfilesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tagProfilesByProfileId(
+      profileId: $profileId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        profileId
+        tagId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const tagProfilesByTagId = /* GraphQL */ `
+  query TagProfilesByTagId(
+    $tagId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTagProfilesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tagProfilesByTagId(
+      tagId: $tagId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        profileId
+        tagId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTagRecipes = /* GraphQL */ `
+  query GetTagRecipes($id: ID!) {
+    getTagRecipes(id: $id) {
+      id
+      recipeId
+      tagId
+      recipe {
+        id
+        title
+        slug
+        image
+        steps
+        description
+        owner
+        profileID
+        createdAt
+        updatedAt
+        profileRecipesId
+        categoryRecipesId
+        recipeCategoryId
+        __typename
+      }
+      tag {
+        id
+        label
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      owner
+      __typename
+    }
+  }
+`;
+export const listTagRecipes = /* GraphQL */ `
+  query ListTagRecipes(
+    $filter: ModelTagRecipesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTagRecipes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        recipeId
+        tagId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const tagRecipesByRecipeId = /* GraphQL */ `
+  query TagRecipesByRecipeId(
+    $recipeId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTagRecipesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tagRecipesByRecipeId(
+      recipeId: $recipeId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        recipeId
+        tagId
+        createdAt
+        updatedAt
+        owner
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const tagRecipesByTagId = /* GraphQL */ `
+  query TagRecipesByTagId(
+    $tagId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelTagRecipesFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    tagRecipesByTagId(
+      tagId: $tagId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        recipeId
+        tagId
+        createdAt
+        updatedAt
+        owner
         __typename
       }
       nextToken

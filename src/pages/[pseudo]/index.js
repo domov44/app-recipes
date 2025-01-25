@@ -15,7 +15,7 @@ import { PiEnvelope, PiMapPin, PiPlus, PiClock } from 'react-icons/pi';
 import { convertirFormatDate } from '@/utils/convertirFormatDate';
 import IconButton from '@/components/ui/button/IconButton';
 import Head from 'next/head';
-import { profileByPseudo, listRecipes } from '@/graphql/customQueries';
+import { profileByPseudo, RecipeByOwner } from '@/graphql/customQueries';
 import { generateClient } from 'aws-amplify/api';
 import { getS3Path } from '@/utils/getS3Path';
 import { useUser } from '@/utils/UserContext';
@@ -37,22 +37,18 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
         if (loading || !nextToken) return;
         setLoading(true);
         try {
+            console.log(`${user.id}::${user.pseudo}`)
             const recipeData = await client.graphql({
-                query: listRecipes,
+                query: RecipeByOwner,
                 variables: {
-                    filter: {
-                        owner: {
-                            eq: user.id
-                        }
-                    },
+                    owner: `${user.id}::${user.pseudo}`,
                     limit: 2,
-                    nextToken,
+                    nextToken: nextToken
                 },
-                authMode: isLoggedIn ? "userPool" : "identityPool"
             });
 
-            const newRecipes = recipeData.data.listRecipes.items;
-            const newNextToken = recipeData.data.listRecipes.nextToken;
+            const newRecipes = recipeData.data.RecipeByOwner.items;
+            const newNextToken = recipeData.data.RecipeByOwner.nextToken;
 
             if (newRecipes.length === 0 || !newNextToken) {
                 setNoMoreRecipes(true);
@@ -79,7 +75,7 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
         } finally {
             setLoading(false);
         }
-    }, [loading, nextToken, user.id]);
+    }, [loading, nextToken]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -109,12 +105,12 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                 </Button>
                 <BackgroundContainer coverUrl={"background/cover_4.jpg"}>
                     <div className="profil-container">
-                            {profileUrl ? (
-                                <img src={profileUrl} className="user-picture pointer" alt={user.pseudo} onClick={() => openPopup('viewProfilePicture')}/>
-                            ) : (
-                                <img src="/svg/utilisateur.svg" className="user-picture pointer" alt="avatar" onClick={() => openPopup('viewProfilePicture')}/>
-                            )}
- 
+                        {profileUrl ? (
+                            <img src={profileUrl} className="user-picture pointer" alt={user.pseudo} onClick={() => openPopup('viewProfilePicture')} />
+                        ) : (
+                            <img src="/svg/utilisateur.svg" className="user-picture pointer" alt="avatar" onClick={() => openPopup('viewProfilePicture')} />
+                        )}
+
                         <Stack direction="column" spacing="0px">
                             <Title level={1}>
                                 {user?.pseudo}
@@ -140,13 +136,13 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                                 <Bento highlight="highlight" padding="15px" item key={recipe.id}>
                                     <Stack>
                                         {profileUrl ? (
-                                            <img src={profileUrl} className="user-picture" alt={recipe.user.pseudo} />
+                                            <img src={profileUrl} className="user-picture" alt={recipe?.user?.pseudo} />
                                         ) : (
                                             <img src="/svg/utilisateur.svg" className="user-picture" alt="avatar" />
                                         )}
                                         <Stack direction="column" spacing="0px">
                                             <Title fontFamily="medium" level={4}>
-                                                {recipe.user.pseudo}
+                                                {recipe?.user?.pseudo}
                                             </Title>
                                             <Text>
                                                 {`Le ${convertirFormatDate(recipe.createdAt)}`}
@@ -155,11 +151,11 @@ const ProfilPage = ({ pseudo, user, recipes: initialRecipes, profileUrl, nextTok
                                     </Stack>
                                     {recipe.imageUrl && <img className="recette-image" alt={recipe.title} src={recipe.imageUrl} />}
                                     <Stack>
-                                        <IconButton variant="action" href={`/categories/${recipe.category.slug}`}>{recipe.category.name}</IconButton>
+                                        <IconButton variant="action" href={`/categories/${recipe?.category?.slug}`}>{recipe?.category?.name}</IconButton>
                                     </Stack>
                                     <Title level={3}>{recipe.title}</Title>
                                     <Text>{recipe.description}</Text>
-                                    <Button variant="primary" href={`/${recipe.user.pseudo}/${recipe.title}`}>Suivre la recette</Button>
+                                    <Button variant="primary" href={`/${recipe?.user?.pseudo}/${recipe.title}`}>Suivre la recette</Button>
                                 </Bento>
                             ))
                         ) : (
@@ -208,20 +204,18 @@ export async function getServerSideProps(context) {
         }
 
         const recipeData = await client.graphql({
-            query: listRecipes,
+            query: RecipeByOwner,
             variables: {
-                filter: {
-                    owner: {
-                        eq: user.id
-                    }
-                },
-                limit: 2
+                owner: `${user.id}::${user.pseudo}`,
+                limit: 2,
+                nextToken: nextToken
             },
             authMode: "identityPool",
         });
 
-        const recipesList = recipeData.data.listRecipes.items;
-        nextToken = recipeData.data.listRecipes.nextToken;
+        console.log(recipeData.data.RecipeByOwner.items)
+        const recipesList = recipeData.data.RecipeByOwner.items;
+        nextToken = recipeData.data.RecipeByOwner.nextToken;
 
         const recipesWithImages = await Promise.all(
             recipesList.map(async (recipe) => {
@@ -247,9 +241,10 @@ export async function getServerSideProps(context) {
             },
         };
     } catch (error) {
+        console.error(error)
         return {
             props: {
-                error: 'Failed to fetch data',
+                error: 'Failed to fetch data' + error,
             },
         };
     }

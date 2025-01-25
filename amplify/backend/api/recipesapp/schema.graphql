@@ -13,27 +13,31 @@ type Profile @model
   description: String
   birthdate: AWSDate
   recipes: [Recipe] @hasMany
-  owner: String
+  tags: [Tag] @manyToMany(relationName: "TagProfiles")
+  owner: String @auth(rules: [{ allow: groups, groups: ["Admins"] }, { allow: groups, groups: ["Members"], operations: [read] }, { allow: owner, ownerField: "owner", operations: [read] }, {allow: public, provider: identityPool, operations: [read]}])
 }
 
 
 type Recipe @model @auth(rules: [
-  {allow: public, provider: identityPool, operations: [read]}
-  {allow: owner, ownerField: "owner"},
-  {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
-  {allow: groups, groups: ["Members"], operations: [read]},
+  { allow: public, provider: identityPool, operations: [read] },
+  { allow: owner, ownerField: "owner" },
+  { allow: groups, groups: ["Admins"], operations: [read, create, update, delete] },
+  { allow: groups, groups: ["Members"], operations: [read] }
 ]) {
   id: ID!
   title: String! @index(name: "byTitle", queryField: "RecipeByTitle")
-  slug: String! @index(name: "bySlug", queryField: "RecipeBySlug")
+  slug: String! @index(name: "bySlug", queryField: "RecipeBySlug", sortKeyFields: ["owner"])
   image: String
-  user: Profile @hasOne
   steps: AWSJSON
   description: String
   ingredients: [RecipeIngredient] @hasMany
   category: Category @hasOne
-  owner: String
+  owner: String @index(name: "byOwner", queryField: "RecipeByOwner") @auth(rules: [{ allow: groups, groups: ["Admins"] }, { allow: groups, groups: ["Members"], operations: [read] }, { allow: owner, ownerField: "owner", operations: [read] }, {allow: public, provider: identityPool, operations: [read]}])
+  profileID: ID!
+  user: Profile @belongsTo(fields: ["profileID"])
+  tags: [Tag] @manyToMany(relationName: "TagRecipes")
 }
+
 
 type Ingredient @model @auth(rules: [
   {allow: public, provider: identityPool, operations: [read]}
@@ -74,4 +78,15 @@ type RecipeIngredient @model @auth(rules: [
   id: ID!
   quantity: String
   ingredient: Ingredient @hasOne
+}
+
+type Tag @model @auth(rules: [
+  {allow: public, provider: identityPool, operations: [read]}
+  {allow: groups, groups: ["Admins"], operations: [read, create, update, delete]},
+  {allow: groups, groups: ["Members"], operations: [read]},
+]) {
+  id: ID!
+  label: String! @index(name: "byLabel", queryField: "TagByLabel")
+  profiles: [Profile] @manyToMany(relationName: "TagProfiles")
+  recipes: [Recipe] @manyToMany(relationName: "TagRecipes")
 }

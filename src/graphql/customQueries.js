@@ -1,3 +1,67 @@
+export const RecipeByOwner = /* GraphQL */ `
+  query RecipeByOwner(
+    $owner: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelRecipeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    RecipeByOwner(
+      owner: $owner
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+      title
+      image
+      user {
+          id
+          pseudo
+          name
+          surname
+          avatar
+          description
+          birthdate
+          createdAt
+          updatedAt
+          __typename
+        }
+      slug
+      steps
+      ingredients {
+        items {
+          id
+          quantity
+          ingredient {
+            id
+            name
+            type {
+              id
+              name
+            }
+          }
+        }
+      }
+      category {
+        id
+        name
+        createdAt
+        updatedAt
+        __typename
+      }
+      owner
+      createdAt
+      updatedAt
+      __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getProfile = /* GraphQL */ `
   query GetProfile($pseudo: String!) {
     getProfile(pseudo: $pseudo) {
@@ -82,7 +146,6 @@ export const CategoryBySlug = /* GraphQL */ `
             updatedAt
             profileRecipesId
             categoryRecipesId
-            recipeUserId
             recipeCategoryId
             __typename
           }
@@ -127,10 +190,8 @@ export const profileByPseudo = /* GraphQL */ `
             id
             title
             description
-            slug
+            owner
             createdAt
-            updatedAt
-            __typename
           }
         }
       }
@@ -139,6 +200,7 @@ export const profileByPseudo = /* GraphQL */ `
     }
   }
 `;
+
 export const listProfiles = /* GraphQL */ `
   query ListProfiles(
     $filter: ModelProfileFilterInput
@@ -168,8 +230,19 @@ export const getRecipe = /* GraphQL */ `
       id
       title
       image
+      user {
+          id
+          pseudo
+          name
+          surname
+          avatar
+          description
+          birthdate
+          createdAt
+          updatedAt
+          __typename
+        }
       slug
-      userID
       steps
       ingredients {
         items {
@@ -185,7 +258,6 @@ export const getRecipe = /* GraphQL */ `
           }
         }
       }
-      categoryID
       category {
         id
         name
@@ -220,7 +292,6 @@ export const listRecipes = /* GraphQL */ `
           avatar
           description
           birthdate
-          owner
           createdAt
           updatedAt
           __typename
@@ -244,8 +315,6 @@ export const listRecipes = /* GraphQL */ `
         createdAt
         updatedAt
         profileRecipesId
-        categoryRecipesId
-        recipeUserId
         recipeCategoryId
         __typename
       }
@@ -372,7 +441,6 @@ export const RecipeByTitle = /* GraphQL */ `
         updatedAt
         profileRecipesId
         categoryRecipesId
-        recipeUserId
         recipeCategoryId
         __typename
       }
@@ -435,7 +503,6 @@ export const RecipeBySlug = /* GraphQL */ `
         updatedAt
         profileRecipesId
         categoryRecipesId
-        recipeUserId
         recipeCategoryId
         __typename
       }

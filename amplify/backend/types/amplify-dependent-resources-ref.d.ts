@@ -1,5 +1,10 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
+    "ragApi": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
+    },
     "recipesapp": {
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string",
@@ -19,6 +24,13 @@ export type AmplifyDependentResourcesAttributes = {
   },
   "function": {
     "createProfileOnSignup": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "ragLambda": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",
